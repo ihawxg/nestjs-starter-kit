@@ -1,0 +1,42 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/project-guardrails.mjs\" --pre",
+            "timeout": 30,
+            "statusMessage": "Checking backend guardrails before edit"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "apply_patch|Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/project-guardrails.mjs\" --post",
+            "timeout": 30,
+            "statusMessage": "Checking backend guardrails after edit"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/project-guardrails.mjs\" --stop",
+            "timeout": 30,
+            "statusMessage": "Final backend guardrail check"
+          }
+        ]
+      }
+    ]
+  }
+}
