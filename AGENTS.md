@@ -29,6 +29,17 @@ Use this file as durable guidance for Codex CLI and other coding agents working 
 
 Executable guardrails are part of the project contract. Run `npm run guardrails` from `api/`, or `npm run verify` for normal backend changes. Codex project hooks also run guardrails around edits when `.codex/hooks.json` is trusted.
 
+Context loading contract:
+
+- `AGENTS.md` is the always-loaded project contract.
+- Hooks remind and enforce, but they do not replace reading relevant docs.
+- Before implementation, read topic docs for changed areas: architecture, core, database, cache, security, skills, and living docs.
+
+Living docs contract:
+
+- Update docs in the same change when behavior, architecture, commands, hooks, schema, auth, cache, storage, skills, or domain scope changes.
+- If docs do not need updates, report why before finishing.
+
 Non-negotiable rules:
 
 - Preserve the domain module structure under `api/src/<domain>`.
@@ -117,6 +128,7 @@ npm run migrations:revert
 - Use `docs/feature-checklist.md` before and after feature implementation.
 - Use `docs/architecture-standards.md`, `docs/database-standards.md`, `docs/cache-standards.md`, and `docs/security-standards.md` for scale-sensitive backend work.
 - Use `docs/core-module-policy.md` before creating app-wide shared providers.
+- Use `docs/hook-context-policy.md` for hook behavior and `docs/living-docs-policy.md` for docs drift rules.
 - Use `docs/codex-skill-routing.md` before invoking external skills. External skills are advisory only.
 - If Codex CLI reports project hooks need review, run `/hooks` and trust the checked-in project guardrail hooks after reviewing them.
 

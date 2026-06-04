@@ -1,5 +1,30 @@
 {
   "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/session-context-summary.mjs\"",
+            "timeout": 30,
+            "statusMessage": "Loading project context summary"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/prompt-doc-router.mjs\"",
+            "timeout": 30,
+            "statusMessage": "Routing prompt to project docs"
+          }
+        ]
+      }
+    ],
     "PreToolUse": [
       {
         "matcher": "Bash",

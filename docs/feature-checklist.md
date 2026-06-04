@@ -53,6 +53,12 @@ Use this checklist before and after backend feature work. It is meant for Codex,
 - Update `docs/domain-roadmap.md` when v1 product scope changes.
 - Update this checklist when completion criteria change.
 
+## Docs Drift Check
+
+Update docs in the same change when backend behavior, architecture, commands, hooks, schema, auth, cache, storage, installed skills, or domain scope changes.
+
+If docs stay unchanged, record why in the final response or PR notes.
+
 ## Verification Commands
 
 Run from `api/`.
@@ -111,3 +117,4 @@ Do not finish a backend feature while any of these are true:
 - Verification was skipped without reporting why.
 - `npm run guardrails` fails.
 - A dev server, build, Docker startup, or production start command was run without explicit user request.
+- Backend source changed and docs were not updated or explicitly marked not needed.

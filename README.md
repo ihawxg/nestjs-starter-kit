@@ -107,5 +107,7 @@ Do not run dev servers, Docker startup, production start, or build commands as r
 - [Cache standards](./docs/cache-standards.md)
 - [Security standards](./docs/security-standards.md)
 - [Codex skill routing](./docs/codex-skill-routing.md)
+- [Hook context policy](./docs/hook-context-policy.md)
+- [Living docs policy](./docs/living-docs-policy.md)
 
 Read the guardrails and checklist before adding new backend features.

@@ -267,12 +267,33 @@ function packageScriptChecks() {
   }
 }
 
+function livingDocsChecks() {
+  const changed = changedFilesSinceHead();
+  const backendChanged = changed.some((file) => (
+    file.startsWith('api/src/') ||
+    file.startsWith('api/test/') ||
+    file === 'api/package.json' ||
+    file.startsWith('.codex/hooks') ||
+    file.startsWith('scripts/guardrails/')
+  ));
+  const docsChanged = changed.some((file) => (
+    file === 'AGENTS.md' ||
+    file === 'README.md' ||
+    file.startsWith('docs/')
+  ));
+
+  if (backendChanged && !docsChanged) {
+    warn.push('Backend/guardrail source changed without docs changes. Update docs or report why docs were not needed.');
+  }
+}
+
 topLevelSourceChecks();
 domainShapeChecks();
 controllerChecks();
 migrationChecks();
 configLooseningChecks();
 packageScriptChecks();
+livingDocsChecks();
 
 for (const message of warn) {
   console.warn(`guardrail warning: ${message}`);
