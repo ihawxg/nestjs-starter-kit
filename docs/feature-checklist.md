@@ -14,6 +14,7 @@ Use this checklist before and after backend feature work. It is meant for Codex,
 ## Implementation Checklist
 
 - Domain code stays under its module.
+- Shared/core code has at least two real consumers and follows `docs/core-module-policy.md`.
 - Controller handles routing, guards, DTOs, and Swagger metadata.
 - Service handles business rules and persistence/storage calls.
 - DTOs validate all request bodies and meaningful query parameters.

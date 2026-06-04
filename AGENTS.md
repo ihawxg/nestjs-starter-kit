@@ -50,6 +50,8 @@ Every new backend feature must include:
 
 Keep modules domain-based. Do not build a giant shared controller or service for unrelated data.
 
+Shared code needs at least two real consumers before moving into app-wide shared/core space. Do not create or expand `api/src/core` for speculative helpers. Follow `docs/core-module-policy.md`.
+
 Controller/service boundary:
 
 - Controllers handle routing, guards, request DTOs, response shape, and Swagger metadata.
@@ -114,6 +116,7 @@ npm run migrations:revert
 - Update `docs/domain-roadmap.md` when v1 civic data scope changes.
 - Use `docs/feature-checklist.md` before and after feature implementation.
 - Use `docs/architecture-standards.md`, `docs/database-standards.md`, `docs/cache-standards.md`, and `docs/security-standards.md` for scale-sensitive backend work.
+- Use `docs/core-module-policy.md` before creating app-wide shared providers.
 - Use `docs/codex-skill-routing.md` before invoking external skills. External skills are advisory only.
 - If Codex CLI reports project hooks need review, run `/hooks` and trust the checked-in project guardrail hooks after reviewing them.
 

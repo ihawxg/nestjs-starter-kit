@@ -40,6 +40,7 @@ const apiRoot = path.join(root, 'api');
 const srcRoot = path.join(apiRoot, 'src');
 const allowedInfra = new Set([
   'app-cache',
+  'core',
   'db',
   'global',
   'health',

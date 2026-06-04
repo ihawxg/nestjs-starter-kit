@@ -102,6 +102,7 @@ Do not run dev servers, Docker startup, production start, or build commands as r
 - [Domain roadmap](./docs/domain-roadmap.md)
 - [Feature checklist](./docs/feature-checklist.md)
 - [Architecture standards](./docs/architecture-standards.md)
+- [Core module policy](./docs/core-module-policy.md)
 - [Database standards](./docs/database-standards.md)
 - [Cache standards](./docs/cache-standards.md)
 - [Security standards](./docs/security-standards.md)

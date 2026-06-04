@@ -11,6 +11,7 @@ Use one module per civic domain. Domain modules own their controller, service, D
 Infrastructure modules are exceptions:
 
 - `app-cache`
+- `core`
 - `db`
 - `global`
 - `health`
@@ -19,6 +20,8 @@ Infrastructure modules are exceptions:
 - `user`
 
 New non-infrastructure folders with TypeScript code must follow the domain module shape.
+
+`core` is reserved for a future `CoreModule`. Do not create it until there is stable application-wide code used by at least two real domain modules. See `docs/core-module-policy.md`.
 
 ## Layer Responsibilities
 
@@ -63,3 +66,5 @@ Future enforcement phase:
 
 - Add `dependency-cruiser` for circular import and module-boundary checks.
 - Add `knip` for unused files, exports, and dependency cleanup.
+
+Add these after 2-3 real domain modules exist, not before.
