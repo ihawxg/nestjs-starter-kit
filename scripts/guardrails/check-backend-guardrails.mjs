@@ -217,11 +217,42 @@ function configLooseningChecks() {
   }
 }
 
+function packageScriptChecks() {
+  const packageJson = path.join(apiRoot, 'package.json');
+  if (!existsSync(packageJson)) {
+    fail.push('Missing api/package.json.');
+    return;
+  }
+
+  let parsed;
+  try {
+    parsed = JSON.parse(read(packageJson));
+  } catch {
+    fail.push('api/package.json must be valid JSON.');
+    return;
+  }
+
+  const scripts = parsed.scripts ?? {};
+  if (!scripts.guardrails?.includes('../scripts/guardrails/check-backend-guardrails.mjs')) {
+    fail.push('api/package.json script "guardrails" must run the backend guardrail checker.');
+  }
+
+  const routineScripts = ['guardrails', 'verify', 'verify:full', 'lint-ci', 'test'];
+  const blockedRoutinePattern = /\b(npm\s+run\s+build|npm\s+run\s+start:dev|npm\s+run\s+dev|npm\s+start|nest\s+build|nest\s+start|docker(?:-compose|\s+compose)\s+up)\b/i;
+  for (const scriptName of routineScripts) {
+    const script = scripts[scriptName] ?? '';
+    if (blockedRoutinePattern.test(script)) {
+      fail.push(`Routine script "${scriptName}" must not run build/dev/start/Docker commands.`);
+    }
+  }
+}
+
 topLevelSourceChecks();
 domainShapeChecks();
 controllerChecks();
 migrationChecks();
 configLooseningChecks();
+packageScriptChecks();
 
 for (const message of warn) {
   console.warn(`guardrail warning: ${message}`);

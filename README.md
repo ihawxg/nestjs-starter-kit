@@ -75,6 +75,7 @@ npm run start:dev
 Run from `api/`.
 
 ```console
+npm run guardrails
 npm run verify
 npm run verify:full
 ```
@@ -85,13 +86,14 @@ Other useful commands:
 npm run lint-ci
 npm test
 npm run test:e2e
-npm run build
 npm run lint
 npm run type-check
 npm run migrations:new -- src/db/migrations/ExampleName
 npm run migrations:up
 npm run migrations:revert
 ```
+
+Do not run dev servers, Docker startup, production start, or build commands as routine completion checks. Run `npm run build`, `npm run start:dev`, `npm start`, or `docker-compose up` only when explicitly requested.
 
 ## Documentation
 

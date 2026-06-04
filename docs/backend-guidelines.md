@@ -11,6 +11,8 @@ The backend must support two clear access paths:
 
 These rules are backed by executable guardrails. Run `npm run guardrails` from `api/` for the structural checks, `npm run verify` for normal backend changes, and `npm run verify:full` for auth, route, database, migration, cache, storage, or integration changes.
 
+Do not run dev servers, Docker environment startup, production start commands, or builds as routine completion checks. Use guardrails, lint, and tests unless the user explicitly asks for a dev/build/start command. Explicitly requested blocked commands must use `TOWNHALL_ALLOW_DEV_BUILD=1`.
+
 ## Architecture
 
 Use NestJS domain modules. Each major civic data area should own its controller, service, DTOs, entity, tests, and migrations.
@@ -192,6 +194,8 @@ npm run verify
 Run `npm run verify:full` for route, auth, database, or integration changes.
 
 Use `npm run lint-ci` when a quick non-mutating lint/type gate is enough. Avoid `npm run lint` as the default verification command because it writes fixes.
+
+Avoid `npm run build`, `npm run start:dev`, `npm run dev`, `npm start`, `nest build`, `nest start`, and `docker-compose up` after normal code completion. These commands can disrupt the user's active environment. If the user explicitly asks for one, run it with `TOWNHALL_ALLOW_DEV_BUILD=1`.
 
 Expected coverage by change type:
 

@@ -78,6 +78,20 @@ Auth, route, database, migration, cache, storage, or integration changes:
 npm run verify:full
 ```
 
+Do not run these commands unless the user explicitly asks for them:
+
+```console
+npm run build
+npm run start:dev
+npm run dev
+npm start
+nest build
+nest start
+docker-compose up
+```
+
+When explicitly requested, prefix the command with `TOWNHALL_ALLOW_DEV_BUILD=1` so Codex project hooks know the command is intentional.
+
 ## Blocked Until Fixed
 
 Do not finish a backend feature while any of these are true:
@@ -93,3 +107,4 @@ Do not finish a backend feature while any of these are true:
 - New shared abstraction hides unrelated domain behavior.
 - Verification was skipped without reporting why.
 - `npm run guardrails` fails.
+- A dev server, build, Docker startup, or production start command was run without explicit user request.

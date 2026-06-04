@@ -16,7 +16,7 @@
     "lint": "npm run type-check && eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "lint-ci": "npm run type-check && eslint \"{src,apps,libs,test}/**/*.ts\"",
     "guardrails": "node ../scripts/guardrails/check-backend-guardrails.mjs",
-    "verify": "npm run guardrails && npm test && npm run build",
+    "verify": "npm run guardrails && npm test",
     "verify:full": "npm run verify && npm run test:e2e",
     "pretest": "npm run lint-ci",
     "test": "jest",

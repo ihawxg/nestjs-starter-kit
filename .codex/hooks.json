@@ -2,6 +2,17 @@
   "hooks": {
     "PreToolUse": [
       {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/block-dev-build-commands.mjs\"",
+            "timeout": 30,
+            "statusMessage": "Blocking dev/build commands unless explicit"
+          }
+        ]
+      },
+      {
         "matcher": "apply_patch|Edit|Write",
         "hooks": [
           {

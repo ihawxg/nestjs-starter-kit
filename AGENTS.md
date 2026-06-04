@@ -86,12 +86,16 @@ npm run verify:full
 
 Use `npm run verify` for backend code changes. Use `npm run verify:full` for auth, route, database, or integration changes. Use `npm run lint-ci` for a non-mutating lint/type check. Avoid `npm run lint` as the default verification command because it applies `--fix`.
 
+Do not run dev servers, production starts, Docker environment starts, or build commands after normal code completion. That means no `npm run start:dev`, `npm run dev`, `npm start`, `npm run build`, `nest start`, `nest build`, or `docker-compose up` unless the user explicitly asks for that exact command. These can kill the user's active dev environment. Use `npm run guardrails`, `npm run lint-ci`, `npm test`, or `npm run verify` instead. When the user explicitly asks for a blocked command, prefix it with `TOWNHALL_ALLOW_DEV_BUILD=1`.
+
 Local dependency startup:
 
 ```console
 cd .docker-node-api
 docker-compose up -d
 ```
+
+Only run local dependency startup when the user explicitly asks.
 
 Migration commands:
 
