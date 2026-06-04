@@ -136,6 +136,16 @@ function domainShapeChecks() {
         fail.push(`Entity files must live under entities/: ${rel(file)}`);
       }
 
+      if (base.endsWith('.entity.ts')) {
+        const entityText = read(file);
+        if (!/(createdAt|created_at)/.test(entityText) || !/(updatedAt|updated_at)/.test(entityText)) {
+          fail.push(`Domain entity must include created/updated timestamp policy: ${rel(file)}`);
+        }
+        if (!/(published|isPublished|status|visibility)/i.test(entityText)) {
+          fail.push(`Domain entity must include publish/visibility state policy: ${rel(file)}`);
+        }
+      }
+
       if (base.endsWith('.controller.ts')) {
         const nested = relativeInsideDomain.includes('/');
         if (!nested && base !== `${domain}.controller.ts`) {
@@ -176,6 +186,15 @@ function controllerChecks() {
     }
 
     const hasWriteRoute = /@(Post|Patch|Put|Delete)\s*\(/.test(text);
+    const publicListRouteMatches = text.match(/(?:@\w+[^\n]*\n\s*)*@Get\s*\(\s*(?:['"`][/'"`]*['"`])?\s*\)[\s\S]{0,500}?\b(?:get|list|findAll|search)[A-Za-z0-9_]*\s*\(/g) ?? [];
+    for (const route of publicListRouteMatches) {
+      const guarded = /@UseGuards\s*\(/.test(route);
+      const hasPagination = /(@Query|Pagination|pagination|page|limit|take|skip|cursor)/i.test(route);
+      if (!guarded && !hasPagination) {
+        fail.push(`Public list endpoint needs explicit pagination/query policy: ${relative}`);
+      }
+    }
+
     if (!hasWriteRoute) continue;
 
     if (!roleGuardExists) {

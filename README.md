@@ -101,5 +101,10 @@ Do not run dev servers, Docker startup, production start, or build commands as r
 - [Backend guidelines](./docs/backend-guidelines.md)
 - [Domain roadmap](./docs/domain-roadmap.md)
 - [Feature checklist](./docs/feature-checklist.md)
+- [Architecture standards](./docs/architecture-standards.md)
+- [Database standards](./docs/database-standards.md)
+- [Cache standards](./docs/cache-standards.md)
+- [Security standards](./docs/security-standards.md)
+- [Codex skill routing](./docs/codex-skill-routing.md)
 
 Read the guardrails and checklist before adding new backend features.

@@ -70,6 +70,8 @@ Controller/service boundary:
 
 - Use TypeORM migrations for all database changes.
 - Keep entities aligned with migrations.
+- Public civic-domain entities must include timestamp and publish/visibility policy.
+- Public list endpoints must define pagination/query policy before release.
 - Store document/file metadata in PostgreSQL.
 - Do not store uploaded document blobs in PostgreSQL unless project direction changes.
 - Use a storage layer for files so local, S3, or another provider can be swapped later.
@@ -111,6 +113,8 @@ npm run migrations:revert
 - Update `docs/backend-guidelines.md` when architecture or backend conventions change.
 - Update `docs/domain-roadmap.md` when v1 civic data scope changes.
 - Use `docs/feature-checklist.md` before and after feature implementation.
+- Use `docs/architecture-standards.md`, `docs/database-standards.md`, `docs/cache-standards.md`, and `docs/security-standards.md` for scale-sensitive backend work.
+- Use `docs/codex-skill-routing.md` before invoking external skills. External skills are advisory only.
 - If Codex CLI reports project hooks need review, run `/hooks` and trust the checked-in project guardrail hooks after reviewing them.
 
 ## Working Rules

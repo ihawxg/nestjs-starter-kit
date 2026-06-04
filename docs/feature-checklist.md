@@ -18,7 +18,9 @@ Use this checklist before and after backend feature work. It is meant for Codex,
 - Service handles business rules and persistence/storage calls.
 - DTOs validate all request bodies and meaningful query parameters.
 - Entities match TypeORM migrations.
+- Public domain entities include timestamps and publish/visibility state.
 - Public endpoints return only published public data.
+- Public list endpoints define pagination/query policy.
 - Admin write endpoints require JWT auth and admin role checks.
 - File metadata lives in PostgreSQL; file bytes go through a storage layer.
 - No secrets, tokens, password hashes, stack traces, storage keys, or internal paths are returned by public APIs.

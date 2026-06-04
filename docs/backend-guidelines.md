@@ -213,3 +213,8 @@ Update docs in the same change when behavior changes:
 - `AGENTS.md` for durable agent instructions.
 - `docs/domain-roadmap.md` for product scope and domain ordering.
 - `docs/feature-checklist.md` for implementation guardrails and completion checks.
+- `docs/architecture-standards.md` for module and boundary rules.
+- `docs/database-standards.md` for migrations, indexing, and query review.
+- `docs/cache-standards.md` for Redis key, TTL, and invalidation rules.
+- `docs/security-standards.md` for auth, role, public data, and file safety.
+- `docs/codex-skill-routing.md` for external skill usage.
