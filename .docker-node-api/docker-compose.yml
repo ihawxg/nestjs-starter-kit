@@ -4,15 +4,15 @@ services:
 
   ### DB ################################################
   db:
-    image: postgres
+    image: postgres:16
     restart: always
     environment:
       POSTGRES_PASSWORD: secret
-      POSTGRES_DB: api
+      POSTGRES_DB: nest
     volumes:
       - ./.data/db:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "55432:5432"
 
   ### Redis ################################################
   redis:

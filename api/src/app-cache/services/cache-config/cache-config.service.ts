@@ -21,7 +21,7 @@ export class CacheConfigService implements CacheOptionsFactory {
             host,
             port,
           },
-          password: password ?? null,
+          password: password || undefined,
         }),
       ],
     };
