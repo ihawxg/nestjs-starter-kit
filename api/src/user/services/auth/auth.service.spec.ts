@@ -4,9 +4,9 @@ import { UserService } from '../user/user.service';
 import { PasswordService } from '../password/password.service';
 import { JwtService } from '../jwt/jwt.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { UserEntity } from '../../entities/user.entity';
 import { ConfigService } from '@nestjs/config';
 import { mockUserEntity } from '../../entities/__fixtures__/user-entity.fixture';
+import { UserEntity } from '../../entities/user.entity';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -33,55 +33,6 @@ describe('AuthService', () => {
 
   it('should be defined', () => {
     expect(authService).toBeDefined();
-  });
-
-  describe('register', () => {
-    it('should check for user existence', async () => {
-      expect.assertions(3);
-
-      const existSpy = jest
-        .spyOn(userService, 'isUserExists')
-        .mockResolvedValue(mockUserEntity);
-      const createSpy = jest.spyOn(userService, 'createUser');
-
-      try {
-        await authService.register({
-          email: 'email',
-          password: 'password',
-          lastName: 'lName',
-          firstName: 'fName',
-        });
-      } catch (e) {
-        expect(e.message).toBe('User already exists');
-      }
-      expect(existSpy).toHaveBeenCalledWith('email');
-      expect(createSpy).toHaveBeenCalledTimes(0);
-    });
-
-    it('should create user', async () => {
-      const existSpy = jest
-        .spyOn(userService, 'isUserExists')
-        .mockResolvedValue(null);
-      const createSpy = jest
-        .spyOn(userService, 'createUser')
-        .mockResolvedValue(new UserEntity());
-
-      const newUser = await authService.register({
-        email: 'email',
-        password: 'password',
-        lastName: 'lName',
-        firstName: 'fName',
-      });
-
-      expect(newUser).toBeInstanceOf(UserEntity);
-      expect(existSpy).toHaveBeenCalledWith('email');
-      expect(createSpy).toHaveBeenCalledWith({
-        email: 'email',
-        password: 'password',
-        lastName: 'lName',
-        firstName: 'fName',
-      });
-    });
   });
 
   describe('login', () => {
@@ -148,10 +99,7 @@ describe('AuthService', () => {
       expect(existSpy).toHaveBeenCalledWith('email');
       expect(checkPassSpy).toHaveBeenCalledWith(mockUserEntity, 'password');
       expect(userTokenSpy).toHaveBeenCalledWith(mockUserEntity);
-      expect(userUpdateSpy).toHaveBeenCalledWith({
-        ...mockUserEntity,
-        token: 'mock-token',
-      });
+      expect(userUpdateSpy).not.toHaveBeenCalled();
     });
   });
 });

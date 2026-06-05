@@ -14,12 +14,16 @@ Current stack:
 
 The codebase still contains starter-kit baseline modules. Treat them as infrastructure, not final product shape.
 
+Current civic content work starts with managed news, documents, scoped categories, and local file uploads. CMS-style pages are deferred until static website content is needed.
+
 ## Roles
 
 - Admin: can create, update, delete, and manage backend data.
 - Public: can read published data and download public files.
 
 No public admin registration is allowed. The first admin account must come from a seed, migration, or CLI script.
+
+Admin management routes use `/admin/...` paths for current civic domains. Public routes only return published content and safe download metadata.
 
 ## Local Setup
 
@@ -86,6 +90,7 @@ Other useful commands:
 npm run lint-ci
 npm test
 npm run test:e2e
+npm run admin:create
 npm run lint
 npm run type-check
 npm run migrations:new -- src/db/migrations/ExampleName
@@ -94,6 +99,12 @@ npm run migrations:revert
 ```
 
 Do not run dev servers, Docker startup, production start, or build commands as routine completion checks. Run `npm run build`, `npm run start:dev`, `npm start`, or `docker-compose up` only when explicitly requested.
+
+Create or promote the first admin account:
+
+```console
+ADMIN_EMAIL=admin@example.com ADMIN_PASSWORD='strong-password' npm run admin:create
+```
 
 ## Documentation
 

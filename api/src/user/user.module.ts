@@ -9,6 +9,7 @@ import { JwtService } from './services/jwt/jwt.service';
 import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from './services/auth/strategies/jwt/jwt.strategy';
 import { AppCacheModule } from '../app-cache/app-cache.module';
+import { RolesGuard } from './guards/roles/roles.guard';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { AppCacheModule } from '../app-cache/app-cache.module';
     PasswordService,
     JwtService,
     JwtStrategy,
+    RolesGuard,
   ],
 })
 export class UserModule {}

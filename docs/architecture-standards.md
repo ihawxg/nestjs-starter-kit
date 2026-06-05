@@ -17,9 +17,12 @@ Infrastructure modules are exceptions:
 - `health`
 - `logger`
 - `services`
+- `storage`
 - `user`
 
 New non-infrastructure folders with TypeScript code must follow the domain module shape.
+
+`storage` is a focused infrastructure boundary for file metadata and local file operations. Domain modules may call storage through providers, but storage must not contain civic business rules.
 
 `core` is reserved for a future `CoreModule`. Do not create it until there is stable application-wide code used by at least two real domain modules. See `docs/core-module-policy.md`.
 

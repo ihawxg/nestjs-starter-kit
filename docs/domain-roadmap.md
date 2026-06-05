@@ -8,6 +8,8 @@ Townhall Manipulicity v1 backend should focus on core civic website data. Build 
 
 Purpose: managed website content pages.
 
+Status: deferred until static CMS-style website content is needed.
+
 Admin capabilities:
 
 - Create pages.
@@ -24,37 +26,65 @@ Public capabilities:
 
 Purpose: official townhall updates for residents.
 
+Status: batch 2 foundation.
+
 Admin capabilities:
 
 - Create announcements.
 - Edit title, body, summary, publication date, and status.
+- Upload and remove related images or files.
+- Assign scoped news categories.
 - Publish or unpublish announcements.
 - Delete or archive announcements.
 
 Public capabilities:
 
 - List published announcements.
+- Filter published announcements by category.
 - View published announcement details.
+- Download public assets attached to published announcements.
 
 ## Documents And Downloads
 
 Purpose: public files such as forms, reports, meeting documents, notices, and downloadable resources.
+
+Status: batch 2 foundation.
 
 Admin capabilities:
 
 - Add document metadata.
 - Attach or replace stored file.
 - Categorize documents.
+- Upload and remove multiple related files or images.
+- Assign scoped document categories.
 - Publish or unpublish documents.
 - Delete or archive documents.
 
 Public capabilities:
 
 - List published documents.
-- Filter or search published documents when supported.
+- Filter published documents by category.
 - Download published files.
 
 Implementation note: store metadata in PostgreSQL and file bytes through a storage layer.
+
+## Categories
+
+Purpose: managed taxonomy for public filtering and admin organization.
+
+Admin capabilities:
+
+- Create categories scoped to news or documents.
+- Edit category name, slug, description, display order, and scope.
+- Deactivate categories instead of hard deleting by default.
+- Assign active scoped categories to news and documents.
+
+Public capabilities:
+
+- List active categories.
+- Filter categories by scope.
+
+Implementation note: category slugs are unique per scope.
 
 ## Events
 
@@ -103,10 +133,10 @@ All domains should support:
 
 ## Initial Build Order
 
-1. Role model and admin guard.
-2. Seeded or scripted first-admin creation.
-3. Pages.
-4. News and announcements.
-5. Documents and downloads.
+1. Role model and admin guard. Implemented in batch 1.
+2. Seeded or scripted first-admin creation. Implemented in batch 1 with `npm run admin:create`.
+3. News and announcements with categories and local assets. Batch 2.
+4. Documents and downloads with categories and local assets. Batch 2.
+5. Pages. Deferred.
 6. Events.
 7. Contacts and departments.

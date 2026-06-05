@@ -27,6 +27,12 @@ export const getConfig = (): AppConfig => {
         },
       },
     },
+    storage: {
+      uploadDir: process.env.UPLOAD_DIR || 'uploads',
+      maxFileSizeBytes:
+        parseInt(process.env.UPLOAD_MAX_FILE_SIZE_BYTES as string, 10) ||
+        10 * 1024 * 1024,
+    },
   };
 };
 
@@ -38,6 +44,7 @@ export interface AppConfig {
   database: DbConfig;
   cache: CacheConfig;
   mail: MailConfig;
+  storage: StorageConfig;
 }
 
 export enum AppEnv {
@@ -70,4 +77,9 @@ export interface MailConfig {
       pass: string;
     };
   };
+}
+
+export interface StorageConfig {
+  uploadDir: string;
+  maxFileSizeBytes: number;
 }

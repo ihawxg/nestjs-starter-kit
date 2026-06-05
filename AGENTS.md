@@ -21,9 +21,11 @@ Use this file as durable guidance for Codex CLI and other coding agents working 
 - Admin users can create, update, delete, and manage backend data.
 - Public users can only read published data and download public files.
 - Do not add public admin registration.
-- First admin account must be created by seed, migration, or CLI script.
-- Treat existing user registration as starter-kit behavior until role work is implemented.
+- First admin account must be created by seed, migration, or CLI script. Current script: `npm run admin:create` with `ADMIN_EMAIL` and `ADMIN_PASSWORD`.
+- Public user registration is disabled. Do not re-enable it unless product scope changes and docs/guards are updated in the same change.
 - Never expose unpublished, private, draft, or admin-only data through public endpoints.
+- News and documents are the first civic content domains after auth. Pages are deferred until CMS-style static website content is needed.
+- News and document categories are managed backend data. Categories are scoped by domain and assigned through admin flows.
 
 ## Backend Feature Rules
 
@@ -88,6 +90,7 @@ Controller/service boundary:
 - Store document/file metadata in PostgreSQL.
 - Do not store uploaded document blobs in PostgreSQL unless project direction changes.
 - Use a storage layer for files so local, S3, or another provider can be swapped later.
+- Current uploads are local files behind `api/src/storage`; public APIs may expose safe file metadata but never storage keys or local paths.
 
 ## Commands
 

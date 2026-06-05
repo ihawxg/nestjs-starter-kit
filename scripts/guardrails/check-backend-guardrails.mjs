@@ -46,6 +46,7 @@ const allowedInfra = new Set([
   'health',
   'logger',
   'services',
+  'storage',
   'user',
 ]);
 
@@ -73,14 +74,28 @@ function read(file) {
   return readFileSync(file, 'utf8');
 }
 
+function normalizeGitPath(file) {
+  if (!file) return file;
+  if (path.isAbsolute(file)) return rel(file);
+  const cwdAbsolute = path.resolve(process.cwd(), file);
+  const absolute = existsSync(cwdAbsolute) ? cwdAbsolute : path.join(root, file);
+  return rel(absolute);
+}
+
 function changedFiles() {
   const staged = runGit(['diff', '--name-only', '--cached']).split('\n').filter(Boolean);
   const unstaged = runGit(['diff', '--name-only']).split('\n').filter(Boolean);
-  return [...new Set([...staged, ...unstaged])];
+  const untracked = runGit(['ls-files', '--others', '--exclude-standard'])
+    .split('\n')
+    .filter(Boolean);
+  return [...new Set([...staged, ...unstaged, ...untracked].map(normalizeGitPath))];
 }
 
 function changedFilesSinceHead() {
-  const changed = runGit(['diff', '--name-only', 'HEAD']).split('\n').filter(Boolean);
+  const changed = runGit(['diff', '--name-only', 'HEAD'])
+    .split('\n')
+    .filter(Boolean)
+    .map(normalizeGitPath);
   return [...new Set([...changed, ...changedFiles()])];
 }
 
@@ -142,7 +157,8 @@ function domainShapeChecks() {
         if (!/(createdAt|created_at)/.test(entityText) || !/(updatedAt|updated_at)/.test(entityText)) {
           fail.push(`Domain entity must include created/updated timestamp policy: ${rel(file)}`);
         }
-        if (!/(published|isPublished|status|visibility)/i.test(entityText)) {
+        const isAssetJoinEntity = base.endsWith('-asset.entity.ts');
+        if (!isAssetJoinEntity && !/(published|isPublished|status|visibility|isActive)/i.test(entityText)) {
           fail.push(`Domain entity must include publish/visibility state policy: ${rel(file)}`);
         }
       }
@@ -187,10 +203,11 @@ function controllerChecks() {
     }
 
     const hasWriteRoute = /@(Post|Patch|Put|Delete)\s*\(/.test(text);
-    const publicListRouteMatches = text.match(/(?:@\w+[^\n]*\n\s*)*@Get\s*\(\s*(?:['"`][/'"`]*['"`])?\s*\)[\s\S]{0,500}?\b(?:get|list|findAll|search)[A-Za-z0-9_]*\s*\(/g) ?? [];
-    for (const route of publicListRouteMatches) {
-      const guarded = /@UseGuards\s*\(/.test(route);
-      const hasPagination = /(@Query|Pagination|pagination|page|limit|take|skip|cursor)/i.test(route);
+    const publicListRouteMatches = [...text.matchAll(/(?:@\w+[^\n]*\n\s*)*@Get\s*\(\s*(?:['"`][/'"`]*['"`])?\s*\)[\s\S]{0,500}?\b(?:get|list|findAll|search)[A-Za-z0-9_]*\s*\(/g)];
+    for (const match of publicListRouteMatches) {
+      const routeContext = text.slice(match.index ?? 0, (match.index ?? 0) + 800);
+      const guarded = /@UseGuards\s*\(/.test(routeContext);
+      const hasPagination = /(@Query|Pagination|pagination|page|limit|take|skip|cursor|query)/i.test(routeContext);
       if (!guarded && !hasPagination) {
         fail.push(`Public list endpoint needs explicit pagination/query policy: ${relative}`);
       }

@@ -92,6 +92,13 @@ When implementing roles:
 - Keep role checks server-side only.
 - Add tests proving public users cannot call admin write endpoints.
 
+Current role implementation:
+
+- Users have `admin` or `public` role.
+- JWT payload carries role.
+- Public registration is disabled.
+- First admin is created or promoted through `npm run admin:create`.
+
 Admin write routes are blocked until all are true:
 
 - Route requires JWT authentication.
@@ -108,6 +115,7 @@ Recommended pattern:
 
 - Public reads: `GET /<domain>` and `GET /<domain>/:id`
 - Admin writes: protected `POST`, `PATCH`, `DELETE` routes
+- Current civic management routes use `/admin/<domain>` for a visible admin boundary.
 
 Use DTOs for all request bodies and query parameters that need validation. Keep response shapes stable and documented in Swagger.
 
@@ -149,7 +157,7 @@ Document records should store metadata in PostgreSQL:
 
 - title
 - description
-- category or domain owner
+- scoped category assignments
 - storage key/path
 - filename
 - mime type
@@ -159,7 +167,25 @@ Document records should store metadata in PostgreSQL:
 
 File bytes should live behind a storage abstraction. Do not store file blobs in PostgreSQL unless this decision is explicitly changed.
 
+Current local upload behavior:
+
+- File bytes are stored under the configured local upload directory.
+- File metadata is stored in PostgreSQL.
+- News and documents may have multiple attached assets.
+- Public APIs may return safe file metadata only.
+- Public APIs must never return storage keys or local filesystem paths.
+
 Public downloads must only serve published public files.
+
+## Categories
+
+Categories are managed backend data, not arbitrary free-text fields.
+
+- Categories are scoped by domain, currently `news` or `documents`.
+- Category slugs are unique per scope.
+- Public category lists return active categories only.
+- Public content filters must ignore inactive categories.
+- Admin delete behavior should deactivate categories unless hard delete is explicitly required.
 
 ## Validation And Errors
 

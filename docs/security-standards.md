@@ -14,6 +14,13 @@ Use security skills for threat modeling and security review when auth, uploads, 
 - First admin must be seeded or scripted.
 - Do not add public admin registration.
 
+Current implementation:
+
+- User JWT payload includes `role`.
+- Admin routes use `JwtAuthGuard`, `RolesGuard`, and `@Roles(UserRole.ADMIN)`.
+- First admin is created or promoted with `npm run admin:create`.
+- Public `/user/register` is disabled.
+
 ## Admin Routes
 
 Admin write routes require:
@@ -36,6 +43,8 @@ Public routes must:
 ## File And Download Safety
 
 Downloads must check publication state before serving files.
+
+Uploads must validate MIME type and size before persisting local files.
 
 Do not expose:
 

@@ -7,6 +7,7 @@ import { JwtService } from '../jwt/jwt.service';
 import { ConfigService } from '@nestjs/config';
 import { Repository } from 'typeorm';
 import { mockUserEntity } from '../../entities/__fixtures__/user-entity.fixture';
+import { UserRole } from '../../entities/user-role.enum';
 
 describe('UserService', () => {
   let service: UserService;
@@ -58,7 +59,6 @@ describe('UserService', () => {
     const passwordSpy = jest
       .spyOn(passwordService, 'generate')
       .mockResolvedValue('password-hash');
-    const jwtSpy = jest.spyOn(jwtService, 'sign').mockReturnValue('jwt');
     const createSpy = jest
       .spyOn(repo, 'create')
       .mockReturnValue(mockUserEntity);
@@ -73,18 +73,26 @@ describe('UserService', () => {
 
     expect(newUser).toStrictEqual(mockUserEntity);
     expect(passwordSpy).toHaveBeenCalledWith('password');
-    expect(saveSpy).toHaveBeenCalledTimes(2);
-    expect(jwtSpy).toHaveBeenCalledWith({
-      id: 0,
-      email: 'email',
-      firstName: 'fName',
-      lastName: 'lName',
-    });
+    expect(saveSpy).toHaveBeenCalledTimes(1);
     expect(createSpy).toHaveBeenCalledWith({
       email: 'email',
       firstName: 'fName',
       lastName: 'lName',
       passwordHash: 'password-hash',
+      role: UserRole.PUBLIC,
+    });
+  });
+
+  it('should sign role into user token', () => {
+    const jwtSpy = jest.spyOn(jwtService, 'sign').mockReturnValue('jwt');
+
+    expect(service.getUserToken(mockUserEntity)).toBe('jwt');
+    expect(jwtSpy).toHaveBeenCalledWith({
+      id: 0,
+      email: 'email',
+      firstName: 'fName',
+      lastName: 'lName',
+      role: UserRole.PUBLIC,
     });
   });
 

@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from '../../dto/create-user.dto';
 import { PasswordService } from '../password/password.service';
 import { JwtService } from '../jwt/jwt.service';
+import { UserRole } from '../../entities/user-role.enum';
 
 @Injectable()
 export class UserService {
@@ -29,12 +30,10 @@ export class UserService {
       firstName: userDto.firstName,
       lastName: userDto.lastName,
       passwordHash: await this.passwordService.generate(userDto.password),
+      role: UserRole.PUBLIC,
     };
 
     let newUser = this.usersRepository.create(userPayload);
-    newUser = await this.updateUser(newUser);
-
-    newUser.token = this.getUserToken(newUser);
     return await this.updateUser(newUser);
   }
 
@@ -55,6 +54,7 @@ export class UserService {
       email: user.email.toLowerCase(),
       firstName: user.firstName,
       lastName: user.lastName,
+      role: user.role,
     });
   }
 

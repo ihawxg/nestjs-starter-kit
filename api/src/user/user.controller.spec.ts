@@ -44,30 +44,10 @@ describe('UserController', () => {
   });
 
   describe('register method', () => {
-    it('should register user', async () => {
-      jest.spyOn(authService, 'register').mockResolvedValue({
-        id: 0,
-        token: 'token',
-        firstName: 'firstName',
-        lastName: 'lastName',
-        email: 'email',
-        passwordHash: 'p',
-      });
-
+    it('should not expose public registration', () => {
       expect(
-        await controller.register({
-          firstName: 'firstName',
-          lastName: 'lastName',
-          email: 'email',
-          password: 'p',
-        }),
-      ).toStrictEqual({
-        message: 'User created',
-        user: {
-          id: 0,
-          token: 'token',
-        },
-      });
+        (controller as unknown as { register?: unknown }).register,
+      ).toBeUndefined();
     });
   });
 

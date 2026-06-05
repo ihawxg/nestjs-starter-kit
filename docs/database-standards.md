@@ -33,6 +33,8 @@ Add indexes when fields support:
 - admin listing/filtering
 - document download lookup
 - foreign-key joins
+- category scope and slug lookup
+- file asset ownership lookup
 
 Indexes speed reads but add write/storage overhead, so use them intentionally.
 
@@ -51,3 +53,10 @@ Review:
 ## Pagination
 
 Public list endpoints must define pagination. Default to explicit `page`/`limit` or cursor policy before exposing large collections.
+
+## Categories And Assets
+
+- Category slugs are unique per scope, not globally.
+- News/document category assignment uses join tables.
+- Stored file rows keep metadata only; file bytes stay outside PostgreSQL.
+- Asset tables link civic records to stored file metadata and should be indexed by owner id.

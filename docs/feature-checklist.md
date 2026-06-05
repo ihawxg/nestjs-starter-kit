@@ -23,7 +23,10 @@ Use this checklist before and after backend feature work. It is meant for Codex,
 - Public endpoints return only published public data.
 - Public list endpoints define pagination/query policy.
 - Admin write endpoints require JWT auth and admin role checks.
+- Admin-only endpoints use `JwtAuthGuard`, `RolesGuard`, and `@Roles(UserRole.ADMIN)`.
 - File metadata lives in PostgreSQL; file bytes go through a storage layer.
+- Categories are managed records, scoped by domain, and assigned through admin flows.
+- Public category filters use active categories only.
 - No secrets, tokens, password hashes, stack traces, storage keys, or internal paths are returned by public APIs.
 
 ## Database Checklist

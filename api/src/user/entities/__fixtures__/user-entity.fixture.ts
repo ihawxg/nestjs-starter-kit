@@ -1,10 +1,13 @@
 import { UserEntity } from '../user.entity';
+import { UserRole } from '../user-role.enum';
 
 export const mockUserEntity: UserEntity = {
   id: 0,
   email: 'email',
   lastName: 'lName',
   firstName: 'fName',
-  token: 'token',
   passwordHash: 'password',
+  role: UserRole.PUBLIC,
+  createdAt: new Date('2026-01-01T00:00:00.000Z'),
+  updatedAt: new Date('2026-01-01T00:00:00.000Z'),
 };

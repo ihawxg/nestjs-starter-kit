@@ -46,6 +46,10 @@ describe('config helper', () => {
           port: 1025,
         },
       },
+      storage: {
+        maxFileSizeBytes: 10485760,
+        uploadDir: 'uploads',
+      },
     });
   });
 });

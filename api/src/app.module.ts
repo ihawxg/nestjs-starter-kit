@@ -8,6 +8,9 @@ import { LoggerModule } from './logger/logger.module';
 import { AsyncStorageMiddleware } from './global/middleware/async-storage/async-storage.middleware';
 import { GlobalModule } from './global/global.module';
 import { HealthModule } from './health/health.module';
+import { NewsModule } from './news/news.module';
+import { DocumentsModule } from './documents/documents.module';
+import { CategoriesModule } from './categories/categories.module';
 
 @Module({
   imports: [
@@ -22,6 +25,9 @@ import { HealthModule } from './health/health.module';
     ConfigModule,
     LoggerModule,
     HealthModule,
+    CategoriesModule,
+    NewsModule,
+    DocumentsModule,
   ],
 })
 export class AppModule {
