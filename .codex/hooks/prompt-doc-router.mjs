@@ -45,6 +45,13 @@ addIf(/docs|documentation|roadmap|domain|scope/, [
   'docs/living-docs-policy.md',
   'docs/domain-roadmap.md',
 ]);
+addIf(/frontend|next|nextjs|react|app router|server component|client component|tanstack|query|openapi|hey api|typescript type|dsfr|design system|accessibility|a11y|seo|route|cookie|browser|playwright/, [
+  'docs/frontend-architecture.md',
+  'docs/frontend-guidelines.md',
+  'docs/frontend-feature-checklist.md',
+  'docs/dsfr-usage-policy.md',
+  'docs/codex-skill-routing.md',
+]);
 
 if (routes.size === 0) {
   process.exit(0);
@@ -54,4 +61,5 @@ console.log([
   'Project doc routing reminder:',
   ...[...routes].sort().map((doc) => `- Read/update ${doc} if this task changes its area.`),
   '- Use docs/feature-checklist.md before finishing backend work.',
+  '- Use docs/frontend-feature-checklist.md before finishing frontend work.',
 ].join('\n'));

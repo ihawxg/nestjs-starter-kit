@@ -44,7 +44,7 @@
             "type": "command",
             "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/project-guardrails.mjs\" --pre",
             "timeout": 30,
-            "statusMessage": "Checking backend guardrails before edit"
+            "statusMessage": "Checking project guardrails before edit"
           }
         ]
       }
@@ -57,7 +57,7 @@
             "type": "command",
             "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/project-guardrails.mjs\" --post",
             "timeout": 30,
-            "statusMessage": "Checking backend guardrails after edit"
+            "statusMessage": "Checking project guardrails after edit"
           }
         ]
       }
@@ -69,7 +69,7 @@
             "type": "command",
             "command": "node \"$(git rev-parse --show-toplevel)/.codex/hooks/project-guardrails.mjs\" --stop",
             "timeout": 30,
-            "statusMessage": "Final backend guardrail check"
+            "statusMessage": "Final project guardrail check"
           }
         ]
       }

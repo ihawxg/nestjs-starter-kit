@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Docs must evolve with the backend. This prevents architecture, auth, data, cache, and workflow drift as the application grows.
+Docs must evolve with the backend and frontend. This prevents architecture, auth, data, cache, UI, routing, and workflow drift as the application grows.
 
 ## Update Docs In The Same Change
 
@@ -17,6 +17,7 @@ Update docs when changing:
 - verification commands, hooks, or guardrails
 - module architecture, shared code, or core policy
 - installed skills or Codex routing
+- frontend route structure, design system usage, API generation, localization, auth strategy, or verification commands
 
 ## Docs Can Stay Unchanged
 
@@ -32,9 +33,12 @@ When docs are not updated, mention why in the final response or PR notes.
 
 - `AGENTS.md`: agent contract and non-negotiable rules.
 - `docs/backend-guidelines.md`: general backend standards.
+- `docs/frontend-architecture.md`: frontend structure and rendering standards.
+- `docs/frontend-guidelines.md`: frontend coding, API, security, and design-system standards.
 - `docs/feature-checklist.md`: completion checklist.
+- `docs/frontend-feature-checklist.md`: frontend completion checklist.
 - Topic docs: architecture, database, cache, security, core, hooks, skills.
 
 ## Enforcement
 
-Guardrails warn when backend source changes without docs changes. This starts as warning-only and can become a failure after the workflow stabilizes.
+Guardrails warn when backend or frontend source changes without docs changes. This starts as warning-only and can become a failure after the workflow stabilizes.

@@ -1,0 +1,14 @@
+{
+  "name": "townhall-manipulicity",
+  "private": true,
+  "workspaces": [
+    "api",
+    "frontend"
+  ],
+  "scripts": {
+    "guardrails": "npm run guardrails -w api && node scripts/guardrails/check-frontend-guardrails.mjs",
+    "verify": "npm run guardrails && npm run verify:backend && npm run verify:frontend",
+    "verify:backend": "npm run verify -w api",
+    "verify:frontend": "node scripts/guardrails/check-frontend-guardrails.mjs"
+  }
+}

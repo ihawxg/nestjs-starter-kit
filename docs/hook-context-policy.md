@@ -15,10 +15,12 @@ Hooks are enforcement and reminder tools. They do not replace `AGENTS.md`, proje
 
 - `SessionStart`: prints a short project context summary.
 - `UserPromptSubmit`: suggests relevant docs based on prompt keywords.
-- `PreToolUse` for Bash: blocks routine build/dev/start/Docker commands.
-- `PreToolUse` for edits: runs backend guardrails before file edits.
-- `PostToolUse` for edits: runs backend guardrails after file edits.
-- `Stop`: runs final backend guardrail check.
+- `PreToolUse` for Bash: blocks routine build/dev/start/Docker/browser-test commands.
+- `PreToolUse` for edits: runs backend and frontend guardrails before file edits.
+- `PostToolUse` for edits: runs backend and frontend guardrails after file edits.
+- `Stop`: runs final backend and frontend guardrail checks.
+
+Hooks only print reminders and run project guardrails. They must not execute external skills automatically.
 
 ## Trust
 

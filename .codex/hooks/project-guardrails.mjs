@@ -16,10 +16,20 @@ function gitRoot() {
 }
 
 const root = gitRoot();
-const checker = path.join(root, 'scripts', 'guardrails', 'check-backend-guardrails.mjs');
-const result = spawnSync(process.execPath, [checker, '--hook'], {
-  cwd: root,
-  stdio: 'inherit',
-});
+const checkers = [
+  path.join(root, 'scripts', 'guardrails', 'check-backend-guardrails.mjs'),
+  path.join(root, 'scripts', 'guardrails', 'check-frontend-guardrails.mjs'),
+];
 
-process.exit(result.status ?? 1);
+for (const checker of checkers) {
+  const result = spawnSync(process.execPath, [checker, '--hook'], {
+    cwd: root,
+    stdio: 'inherit',
+  });
+
+  if ((result.status ?? 1) !== 0) {
+    process.exit(result.status ?? 1);
+  }
+}
+
+process.exit(0);

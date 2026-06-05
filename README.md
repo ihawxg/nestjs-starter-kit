@@ -1,8 +1,8 @@
-# Townhall Manipulicity Backend
+# Townhall Manipulicity
 
-Backend API for the Townhall Manipulicity website. The service exposes public civic data for anonymous visitors and protected management flows for administrators.
+Municipal website project for Townhall Manipulicity. The current implementation is a NestJS backend API for public civic data and protected admin management flows. A strict frontend guardrail layer is in place before the Next.js frontend is scaffolded.
 
-Current stack:
+Current backend stack:
 
 - NestJS REST API
 - TypeORM
@@ -11,6 +11,14 @@ Current stack:
 - JWT authentication
 - Swagger API docs
 - Pino request logging with trace IDs
+
+Planned frontend stack:
+
+- Next.js App Router
+- TypeScript
+- Generated OpenAPI client/types
+- Locale routes for English and Bulgarian
+- DSFR-based design system wrappers when production authorization is confirmed
 
 The codebase still contains starter-kit baseline modules. Treat them as infrastructure, not final product shape.
 
@@ -92,7 +100,14 @@ npm run start:dev
 
 ## Core Commands
 
-Run from `api/`.
+Run project-wide guardrails from the repo root:
+
+```console
+npm run guardrails
+npm run verify
+```
+
+Run backend commands from `api/`.
 
 ```console
 npm run guardrails
@@ -114,7 +129,7 @@ npm run migrations:up
 npm run migrations:revert
 ```
 
-Do not run dev servers, Docker startup, production start, or build commands as routine completion checks. Run `npm run build`, `npm run start:dev`, `npm start`, or `docker-compose up` only when explicitly requested.
+Do not run dev servers, Docker startup, production start, build commands, or browser tests as routine completion checks. Run `npm run build`, `npm run start:dev`, `npm run dev`, `npm start`, `next dev`, `next build`, `next start`, `docker-compose up`, or Playwright/browser commands only when explicitly requested.
 
 Create or promote the first admin account:
 
@@ -126,6 +141,10 @@ ADMIN_EMAIL=admin@example.com ADMIN_PASSWORD='strong-password' npm run admin:cre
 
 - [Agent instructions](./AGENTS.md)
 - [Backend guidelines](./docs/backend-guidelines.md)
+- [Frontend architecture](./docs/frontend-architecture.md)
+- [Frontend guidelines](./docs/frontend-guidelines.md)
+- [Frontend feature checklist](./docs/frontend-feature-checklist.md)
+- [DSFR usage policy](./docs/dsfr-usage-policy.md)
 - [Domain roadmap](./docs/domain-roadmap.md)
 - [Feature checklist](./docs/feature-checklist.md)
 - [Architecture standards](./docs/architecture-standards.md)
@@ -138,4 +157,4 @@ ADMIN_EMAIL=admin@example.com ADMIN_PASSWORD='strong-password' npm run admin:cre
 - [Living docs policy](./docs/living-docs-policy.md)
 - [Localization standards](./docs/localization-standards.md)
 
-Read the guardrails and checklist before adding new backend features.
+Read the relevant guardrails and checklist before adding backend or frontend features.

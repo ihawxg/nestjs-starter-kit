@@ -2,19 +2,23 @@
 
 ## Project
 
-Townhall Manipulicity backend is a NestJS REST API for public municipal website data and protected admin management flows.
+Townhall Manipulicity is a municipal website project with a NestJS backend API and a planned Next.js public frontend.
 
 Use this file as durable guidance for Codex CLI and other coding agents working in this repository.
 
 ## Current Stack
 
 - API lives in `api/`.
-- Framework: NestJS.
+- Backend framework: NestJS.
 - Database: PostgreSQL through TypeORM.
 - Cache: Redis through Nest cache manager.
 - Auth: JWT/passport baseline exists.
 - API docs: Swagger at `/api`.
 - Local dependencies live in `.docker-node-api/docker-compose.yml`.
+- Frontend will live in `frontend/` beside `api/`.
+- Frontend framework decision: Next.js App Router with TypeScript.
+- Frontend public routes will use `en` and `bg` locale prefixes.
+- Frontend backend types must be generated from backend OpenAPI.
 
 ## Product Rules
 
@@ -34,13 +38,13 @@ Use this file as durable guidance for Codex CLI and other coding agents working 
 
 ## Backend Feature Rules
 
-Executable guardrails are part of the project contract. Run `npm run guardrails` from `api/`, or `npm run verify` for normal backend changes. Codex project hooks also run guardrails around edits when `.codex/hooks.json` is trusted.
+Executable guardrails are part of the project contract. Run `npm run guardrails` from `api/`, or root `npm run guardrails` for project-wide guardrails. Use `npm run verify` for normal backend changes. Codex project hooks also run guardrails around edits when `.codex/hooks.json` is trusted.
 
 Context loading contract:
 
 - `AGENTS.md` is the always-loaded project contract.
 - Hooks remind and enforce, but they do not replace reading relevant docs.
-- Before implementation, read topic docs for changed areas: architecture, core, database, cache, security, skills, and living docs.
+- Before implementation, read topic docs for changed areas: backend architecture, frontend architecture, core, database, cache, security, skills, hooks, and living docs.
 
 Living docs contract:
 
@@ -78,6 +82,26 @@ Controller/service boundary:
 - DTOs define API input, not database state.
 - Tests should cover behavior, not private implementation details.
 
+## Frontend Feature Rules
+
+Do not scaffold or expand the frontend without following `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/frontend-feature-checklist.md`, and `docs/dsfr-usage-policy.md`.
+
+Non-negotiable frontend rules:
+
+- Use Next.js App Router only. Do not add the Pages Router.
+- Keep frontend source under `frontend/src`.
+- Public locale routing must live under `frontend/src/app/[locale]` and support only `en` and `bg` until scope changes.
+- Public frontend code must not call `/admin/...`.
+- Backend API types and SDK code must be generated from backend OpenAPI. Do not handwrite backend DTO, entity, response, or payload types in frontend code.
+- Backend calls must go through generated API code or approved wrappers under `frontend/src/lib/api`.
+- Do not store JWTs or auth state in `localStorage` or `sessionStorage`.
+- Future admin frontend auth must use HttpOnly cookies only.
+- DSFR imports must go through local design-system wrappers/providers. Do not scatter direct DSFR imports through routes or feature components.
+- Do not hardcode municipality pages, navigation, categories, departments, staff, officials, or public content.
+- Public frontend must not render storage keys, local paths, tokens, password hashes, stack traces, draft data, or admin metadata.
+
+Frontend shared code needs at least two real consumers before moving into shared UI or lib folders. Keep feature code domain-scoped under the route or feature it serves.
+
 ## Auth And Authorization
 
 - Use JWT authentication for protected routes.
@@ -110,6 +134,13 @@ Controller/service boundary:
 
 ## Commands
 
+Run project-wide commands from the repo root.
+
+```console
+npm run guardrails
+npm run verify
+```
+
 Run API commands from `api/`.
 
 ```console
@@ -120,7 +151,7 @@ npm run verify:full
 
 Use `npm run verify` for backend code changes. Use `npm run verify:full` for auth, route, database, or integration changes. Use `npm run lint-ci` for a non-mutating lint/type check. Avoid `npm run lint` as the default verification command because it applies `--fix`.
 
-Do not run dev servers, production starts, Docker environment starts, or build commands after normal code completion. That means no `npm run start:dev`, `npm run dev`, `npm start`, `npm run build`, `nest start`, `nest build`, or `docker-compose up` unless the user explicitly asks for that exact command. These can kill the user's active dev environment. Use `npm run guardrails`, `npm run lint-ci`, `npm test`, or `npm run verify` instead. When the user explicitly asks for a blocked command, prefix it with `TOWNHALL_ALLOW_DEV_BUILD=1`.
+Do not run dev servers, production starts, Docker environment starts, build commands, or browser tests after normal code completion. That means no `npm run start:dev`, `npm run dev`, `npm run devs`, `npm start`, `npm run build`, `next dev`, `next build`, `next start`, `pnpm dev`, `pnpm build`, `pnpm start`, `yarn dev`, `yarn build`, `yarn start`, `bun dev`, `bun run build`, `turbo dev`, `turbo build`, `nest start`, `nest build`, `docker-compose up`, `docker compose up`, or Playwright/Cypress/browser-test commands unless the user explicitly asks for that exact command. These can kill the user's active dev environment. Use `npm run guardrails`, `npm run lint-ci`, `npm test`, `npm run type-check`, or `npm run verify` instead. When the user explicitly asks for a blocked dev/build/start command, prefix it with `TOWNHALL_ALLOW_DEV_BUILD=1`. When the user explicitly asks for browser tests, use `TOWNHALL_ALLOW_BROWSER_TEST=1` and `FRONTEND_TEST_BASE_URL=...`; do not start the dev server.
 
 Local dependency startup:
 
@@ -150,6 +181,7 @@ npm run migrations:revert
 - Use `docs/hook-context-policy.md` for hook behavior and `docs/living-docs-policy.md` for docs drift rules.
 - Use `docs/codex-skill-routing.md` before invoking external skills. External skills are advisory only.
 - Use `docs/localization-standards.md` before changing public text fields, localized routes, translation tables, or locale fallback behavior.
+- Use `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/frontend-feature-checklist.md`, and `docs/dsfr-usage-policy.md` before adding frontend code.
 - If Codex CLI reports project hooks need review, run `/hooks` and trust the checked-in project guardrail hooks after reviewing them.
 
 ## Working Rules
