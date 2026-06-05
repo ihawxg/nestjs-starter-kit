@@ -14,6 +14,9 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { Audit } from '../../audit-log/decorators/audit.decorator';
+import { RateLimit } from '../../rate-limit/decorators/rate-limit.decorator';
+import { RateLimitBucket } from '../../rate-limit/rate-limit-bucket.enum';
 import {
   DEFAULT_MAX_FILE_SIZE_BYTES,
   MAX_FILES_PER_UPLOAD,
@@ -56,6 +59,11 @@ export class DocumentsAdminController {
   }
 
   @Post()
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'document.create',
+    targetType: 'document',
+  })
   async create(@Body() dto: CreateDocumentDto) {
     const document = await this.documentsService.create(dto);
 
@@ -65,6 +73,12 @@ export class DocumentsAdminController {
   }
 
   @Patch(':id')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'document.update',
+    targetType: 'document',
+    targetIdParam: 'id',
+  })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateDocumentDto,
@@ -77,6 +91,12 @@ export class DocumentsAdminController {
   }
 
   @Patch(':id/categories')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'document.categories.assign',
+    targetType: 'document',
+    targetIdParam: 'id',
+  })
   async assignCategories(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: AssignDocumentCategoriesDto,
@@ -89,6 +109,12 @@ export class DocumentsAdminController {
   }
 
   @Post(':id/assets')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'document.asset.upload',
+    targetType: 'document',
+    targetIdParam: 'id',
+  })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
     FilesInterceptor('files', MAX_FILES_PER_UPLOAD, {
@@ -109,6 +135,12 @@ export class DocumentsAdminController {
   }
 
   @Delete(':id/assets/:assetId')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'document.asset.remove',
+    targetType: 'document_asset',
+    targetIdParam: 'assetId',
+  })
   async removeAsset(
     @Param('id', ParseIntPipe) id: number,
     @Param('assetId', ParseIntPipe) assetId: number,
@@ -121,6 +153,12 @@ export class DocumentsAdminController {
   }
 
   @Delete(':id')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'document.archive',
+    targetType: 'document',
+    targetIdParam: 'id',
+  })
   async archive(@Param('id', ParseIntPipe) id: number) {
     const document = await this.documentsService.archive(id);
 

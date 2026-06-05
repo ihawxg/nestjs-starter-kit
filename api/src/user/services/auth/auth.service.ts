@@ -1,6 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { LoginDto } from '../../dto/login.dto';
+import { UserRole } from '../../entities/user-role.enum';
 
 @Injectable()
 export class AuthService {
@@ -10,7 +11,7 @@ export class AuthService {
     const { email, password } = loginRequest;
     const user = await this.userService.isUserExists(email);
 
-    if (!user) {
+    if (!user || user.role !== UserRole.ADMIN || !user.isActive) {
       return this.failLogin();
     }
 

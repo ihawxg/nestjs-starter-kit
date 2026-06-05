@@ -149,4 +149,27 @@ All domains should support:
 5. Pages. Deferred.
 6. Events. Batch 3.
 7. Contacts and departments. Batch 4.
-8. Platform hardening: audit logs, rate limiting, admin user management, and search.
+8. Platform hardening: audit logs, rate limiting, admin account lifecycle, and search. Batch 5.
+
+## Platform Hardening
+
+Purpose: keep the growing backend accountable, harder to abuse, and easier to operate.
+
+Status: batch 5 foundation.
+
+Admin capabilities:
+
+- List audit logs by actor, target type, and action.
+- Create and update admin accounts through `/admin/accounts`.
+- Disable admin accounts with `isActive` instead of deleting history.
+
+Public capabilities:
+
+- Search published news, documents, events, and departments through `/search`.
+
+Implementation notes:
+
+- Authenticated accounts are admin-only. Public visitors remain anonymous.
+- Keep the existing physical `users` table until a deliberate rename migration is planned.
+- Rate limits are configured for login, public reads/downloads/search, and admin writes.
+- Audit logs must never store passwords, tokens, storage keys, local paths, or raw uploaded file paths.

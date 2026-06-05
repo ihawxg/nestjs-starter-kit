@@ -27,6 +27,7 @@ describe('createOrPromoteAdmin', () => {
       ...mockUserEntity,
       email: 'admin@example.com',
       role: UserRole.ADMIN,
+      isActive: true,
     };
     repository.findOne.mockResolvedValue(null);
     repository.create.mockReturnValue(admin);
@@ -54,6 +55,7 @@ describe('createOrPromoteAdmin', () => {
       lastName: 'Admin',
       passwordHash: 'password-hash',
       role: UserRole.ADMIN,
+      isActive: true,
     });
     expect(repository.save).toHaveBeenCalledWith(admin);
   });
@@ -62,10 +64,12 @@ describe('createOrPromoteAdmin', () => {
     const existingUser = {
       ...mockUserEntity,
       role: UserRole.PUBLIC,
+      isActive: false,
     };
     const promotedUser = {
       ...existingUser,
       role: UserRole.ADMIN,
+      isActive: true,
     };
     repository.findOne.mockResolvedValue(existingUser);
     repository.save.mockResolvedValue(promotedUser);

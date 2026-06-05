@@ -10,6 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { JwtStrategy } from './services/auth/strategies/jwt/jwt.strategy';
 import { AppCacheModule } from '../app-cache/app-cache.module';
 import { RolesGuard } from './guards/roles/roles.guard';
+import { AdminAccountsController } from './controllers/admin-accounts.controller';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { RolesGuard } from './guards/roles/roles.guard';
     ConfigModule,
     AppCacheModule,
   ],
-  controllers: [UserController],
+  controllers: [UserController, AdminAccountsController],
   providers: [
     AuthService,
     UserService,

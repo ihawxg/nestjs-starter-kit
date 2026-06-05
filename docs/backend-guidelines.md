@@ -9,6 +9,8 @@ The backend must support two clear access paths:
 - Admin management for trusted operators.
 - Public browsing and downloads for website visitors.
 
+Authenticated accounts are admin-only. Public website visitors are anonymous; do not add public profiles, public login, or public registration without a deliberate product change.
+
 These rules are backed by executable guardrails. Run `npm run guardrails` from `api/` for the structural checks, `npm run verify` for normal backend changes, and `npm run verify:full` for auth, route, database, migration, cache, storage, or integration changes.
 
 Do not run dev servers, Docker environment startup, production start commands, or builds as routine completion checks. Use guardrails, lint, and tests unless the user explicitly asks for a dev/build/start command. Explicitly requested blocked commands must use `TOWNHALL_ALLOW_DEV_BUILD=1`.
@@ -64,15 +66,16 @@ Entity responsibilities:
 
 ## Access Model
 
-Admin role:
+Admin accounts:
 
 - Create records.
 - Update records.
 - Delete or archive records.
 - Manage publishing state.
 - Manage document metadata and file lifecycle.
+- Manage other admin accounts.
 
-Public role:
+Anonymous public visitors:
 
 - Read public/published records.
 - Download public documents.
@@ -82,29 +85,21 @@ Anonymous users should be treated as public visitors. Admin routes must require 
 
 ## Authentication
 
-JWT auth already exists in starter form. Role support still needs implementation.
-
-When implementing roles:
-
-- Add explicit role field or role relation to users.
-- Default new non-seeded users to non-admin if registration remains available.
-- Prefer seeded or scripted first-admin creation.
-- Keep role checks server-side only.
-- Add tests proving public users cannot call admin write endpoints.
-
 Current role implementation:
 
 - Users have `admin` or `public` role.
 - JWT payload carries role.
 - Public registration is disabled.
 - First admin is created or promoted through `npm run admin:create`.
+- Login is admin-only: disabled accounts and legacy non-admin rows are rejected.
+- The physical table remains `users` for now; public API language should use admin accounts, not public users.
 
 Admin write routes are blocked until all are true:
 
 - Route requires JWT authentication.
 - Route checks admin role.
 - Tests cover anonymous denial.
-- Tests cover public/non-admin denial.
+- Tests cover legacy public/non-admin denial.
 - Tests cover admin success path or controller/service equivalent.
 
 ## API Design
@@ -138,6 +133,35 @@ Current admin read pattern:
 
 - `GET /admin/<domain>?page&limit&status`
 - `GET /admin/<domain>/:id`
+
+Current admin account routes:
+
+- `GET /admin/accounts?page&limit&status`
+- `GET /admin/accounts/:id`
+- `POST /admin/accounts`
+- `PATCH /admin/accounts/:id`
+
+Admin-created accounts are always admin accounts. Use `isActive` to disable login without deleting history.
+
+## Audit Logs And Rate Limits
+
+Admin write routes should be audit logged with explicit `@Audit(...)` metadata. Audit metadata must be safe:
+
+- actor account id/email
+- action
+- target type/id
+- request id
+- route/method-level metadata only
+
+Never log passwords, tokens, storage keys, local filesystem paths, or raw uploaded file paths.
+
+Use `@RateLimit(...)` metadata for throttled routes:
+
+- login: `RateLimitBucket.LOGIN`
+- public reads/downloads/search: `RateLimitBucket.PUBLIC`
+- admin writes: `RateLimitBucket.ADMIN_WRITE`
+
+Defaults come from `.env` and `api/src/services/app-config/configuration.ts`.
 
 ## Database
 
@@ -210,6 +234,15 @@ Department records should support public contact discovery and admin management 
 - Contacts belong to exactly one department.
 - Contact delete behavior should deactivate contacts unless hard delete is explicitly required.
 - Department delete behavior should archive the department.
+
+## Public Search
+
+Public search is a safe summary endpoint across published news, documents, events, and departments.
+
+- Route: `GET /search?q&page&limit&type`.
+- Search only published records.
+- Return compact summaries only.
+- Do not return draft/archived records, disabled contacts, storage metadata, or admin/account data.
 
 ## Validation And Errors
 

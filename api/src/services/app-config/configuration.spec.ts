@@ -50,6 +50,20 @@ describe('config helper', () => {
         maxFileSizeBytes: 10485760,
         uploadDir: 'uploads',
       },
+      rateLimit: {
+        login: {
+          limit: 10,
+          windowMs: 60000,
+        },
+        public: {
+          limit: 120,
+          windowMs: 60000,
+        },
+        adminWrite: {
+          limit: 60,
+          windowMs: 60000,
+        },
+      },
     });
   });
 });

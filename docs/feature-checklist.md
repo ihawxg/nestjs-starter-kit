@@ -24,12 +24,18 @@ Use this checklist before and after backend feature work. It is meant for Codex,
 - Public list endpoints define pagination/query policy.
 - Admin write endpoints require JWT auth and admin role checks.
 - Admin-only endpoints use `JwtAuthGuard`, `RolesGuard`, and `@Roles(UserRole.ADMIN)`.
+- Admin write endpoints include `@RateLimit(RateLimitBucket.ADMIN_WRITE)` and audit metadata where they mutate backend data.
 - Admin-managed draft/archive domains expose protected list/detail read paths for admin UIs.
+- Authenticated account flows are admin-only; do not add public user registration, public profiles, or public login.
+- Disabled admin accounts and legacy non-admin rows cannot log in.
 - File metadata lives in PostgreSQL; file bytes go through a storage layer.
 - Categories are managed records, scoped by domain, and assigned through admin flows.
 - Public category filters use active categories only.
 - Public department responses include active contacts only.
+- Public search returns published civic summaries only and no storage/admin metadata.
+- Public read/download/search endpoints include public rate-limit metadata.
 - No secrets, tokens, password hashes, stack traces, storage keys, or internal paths are returned by public APIs.
+- No secrets, tokens, password hashes, storage keys, local paths, or raw upload paths are written to audit logs.
 
 ## Database Checklist
 
@@ -46,8 +52,12 @@ Use this checklist before and after backend feature work. It is meant for Codex,
 - Public endpoints test published data visibility.
 - Public endpoints test unpublished/private data exclusion.
 - Admin endpoints test anonymous denial.
-- Admin endpoints test public/non-admin denial.
+- Admin endpoints test legacy public/non-admin denial.
 - Admin endpoints test admin success path.
+- Admin account tests cover create, update, list, disabled login denial, and non-admin login denial.
+- Audit log tests cover representative writes and metadata sanitization.
+- Search tests cover published-only results.
+- Rate-limit tests cover configured buckets where practical.
 - Auth, route, database, migration, cache, or storage changes run full verification.
 
 ## Documentation Checklist

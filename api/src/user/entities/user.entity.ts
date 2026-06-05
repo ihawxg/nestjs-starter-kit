@@ -40,6 +40,12 @@ export class UserEntity {
   role: UserRole;
 
   @Column({
+    name: 'is_active',
+    default: true,
+  })
+  isActive: boolean;
+
+  @Column({
     type: 'varchar',
     nullable: true,
     select: false,

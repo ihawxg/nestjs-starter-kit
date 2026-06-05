@@ -1,13 +1,13 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
-export class CreateUserDto {
+export class CreateAdminAccountDto {
   @IsString()
   @IsOptional()
-  firstName: string;
+  firstName?: string;
 
   @IsString()
   @IsOptional()
-  lastName: string;
+  lastName?: string;
 
   @IsEmail()
   email: string;

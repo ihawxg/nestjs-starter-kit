@@ -14,6 +14,9 @@ import {
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import { Audit } from '../../audit-log/decorators/audit.decorator';
+import { RateLimit } from '../../rate-limit/decorators/rate-limit.decorator';
+import { RateLimitBucket } from '../../rate-limit/rate-limit-bucket.enum';
 import { Roles } from '../../user/decorators/roles.decorator';
 import { UserRole } from '../../user/entities/user-role.enum';
 import { JwtAuthGuard } from '../../user/guards/jwt-auth/jwt-auth.guard';
@@ -56,6 +59,11 @@ export class NewsAdminController {
   }
 
   @Post()
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'news.create',
+    targetType: 'news',
+  })
   async create(@Body() dto: CreateNewsDto) {
     const news = await this.newsService.create(dto);
 
@@ -65,6 +73,12 @@ export class NewsAdminController {
   }
 
   @Patch(':id')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'news.update',
+    targetType: 'news',
+    targetIdParam: 'id',
+  })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateNewsDto,
@@ -77,6 +91,12 @@ export class NewsAdminController {
   }
 
   @Patch(':id/categories')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'news.categories.assign',
+    targetType: 'news',
+    targetIdParam: 'id',
+  })
   async assignCategories(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: AssignNewsCategoriesDto,
@@ -89,6 +109,12 @@ export class NewsAdminController {
   }
 
   @Post(':id/assets')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'news.asset.upload',
+    targetType: 'news',
+    targetIdParam: 'id',
+  })
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(
     FilesInterceptor('files', MAX_FILES_PER_UPLOAD, {
@@ -109,6 +135,12 @@ export class NewsAdminController {
   }
 
   @Delete(':id/assets/:assetId')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'news.asset.remove',
+    targetType: 'news_asset',
+    targetIdParam: 'assetId',
+  })
   async removeAsset(
     @Param('id', ParseIntPipe) id: number,
     @Param('assetId', ParseIntPipe) assetId: number,
@@ -121,6 +153,12 @@ export class NewsAdminController {
   }
 
   @Delete(':id')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'news.archive',
+    targetType: 'news',
+    targetIdParam: 'id',
+  })
   async archive(@Param('id', ParseIntPipe) id: number) {
     const news = await this.newsService.archive(id);
 

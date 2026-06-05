@@ -7,6 +7,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { mockUserEntity } from '../../entities/__fixtures__/user-entity.fixture';
 import { UserEntity } from '../../entities/user.entity';
+import { UserRole } from '../../entities/user-role.enum';
 
 describe('AuthService', () => {
   let authService: AuthService;
@@ -56,10 +57,15 @@ describe('AuthService', () => {
 
     it('should check for password correct', async () => {
       expect.assertions(3);
+      const adminUser = {
+        ...mockUserEntity,
+        role: UserRole.ADMIN,
+        isActive: true,
+      };
 
       const existSpy = jest
         .spyOn(userService, 'isUserExists')
-        .mockResolvedValue(mockUserEntity);
+        .mockResolvedValue(adminUser);
       const checkPassSpy = jest
         .spyOn(userService, 'checkUserPassword')
         .mockResolvedValue(false);
@@ -73,13 +79,18 @@ describe('AuthService', () => {
         expect(e.message).toBe('Incorrect password');
       }
       expect(existSpy).toHaveBeenCalledWith('email');
-      expect(checkPassSpy).toHaveBeenCalledWith(mockUserEntity, 'password');
+      expect(checkPassSpy).toHaveBeenCalledWith(adminUser, 'password');
     });
 
     it('should return session token', async () => {
+      const adminUser = {
+        ...mockUserEntity,
+        role: UserRole.ADMIN,
+        isActive: true,
+      };
       const existSpy = jest
         .spyOn(userService, 'isUserExists')
-        .mockResolvedValue(mockUserEntity);
+        .mockResolvedValue(adminUser);
       const checkPassSpy = jest
         .spyOn(userService, 'checkUserPassword')
         .mockResolvedValue(true);
@@ -88,7 +99,7 @@ describe('AuthService', () => {
         .mockReturnValue('mock-token');
       const userUpdateSpy = jest
         .spyOn(userService, 'updateUser')
-        .mockResolvedValue(mockUserEntity);
+        .mockResolvedValue(adminUser);
 
       const token = await authService.login({
         email: 'email',
@@ -97,9 +108,43 @@ describe('AuthService', () => {
 
       expect(token).toBe('mock-token');
       expect(existSpy).toHaveBeenCalledWith('email');
-      expect(checkPassSpy).toHaveBeenCalledWith(mockUserEntity, 'password');
-      expect(userTokenSpy).toHaveBeenCalledWith(mockUserEntity);
+      expect(checkPassSpy).toHaveBeenCalledWith(adminUser, 'password');
+      expect(userTokenSpy).toHaveBeenCalledWith(adminUser);
       expect(userUpdateSpy).not.toHaveBeenCalled();
+    });
+
+    it('should deny legacy public accounts', async () => {
+      const checkPassSpy = jest.spyOn(userService, 'checkUserPassword');
+      jest.spyOn(userService, 'isUserExists').mockResolvedValue({
+        ...mockUserEntity,
+        role: UserRole.PUBLIC,
+        isActive: true,
+      });
+
+      await expect(
+        authService.login({
+          email: 'email',
+          password: 'password',
+        }),
+      ).rejects.toThrow('Login failed');
+      expect(checkPassSpy).not.toHaveBeenCalled();
+    });
+
+    it('should deny disabled admin accounts', async () => {
+      const checkPassSpy = jest.spyOn(userService, 'checkUserPassword');
+      jest.spyOn(userService, 'isUserExists').mockResolvedValue({
+        ...mockUserEntity,
+        role: UserRole.ADMIN,
+        isActive: false,
+      });
+
+      await expect(
+        authService.login({
+          email: 'email',
+          password: 'password',
+        }),
+      ).rejects.toThrow('Login failed');
+      expect(checkPassSpy).not.toHaveBeenCalled();
     });
   });
 });

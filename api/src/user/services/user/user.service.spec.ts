@@ -26,6 +26,7 @@ describe('UserService', () => {
           provide: getRepositoryToken(UserEntity),
           useValue: {
             find: jest.fn(),
+            findAndCount: jest.fn(),
             findOne: jest.fn(),
             create: jest.fn(),
             save: jest.fn(),
@@ -55,23 +56,35 @@ describe('UserService', () => {
     });
   });
 
-  it('should be able to create user', async () => {
+  it('should be able to create admin account', async () => {
+    const adminUser = {
+      ...mockUserEntity,
+      role: UserRole.ADMIN,
+      isActive: true,
+    };
     const passwordSpy = jest
       .spyOn(passwordService, 'generate')
       .mockResolvedValue('password-hash');
-    const createSpy = jest
-      .spyOn(repo, 'create')
-      .mockReturnValue(mockUserEntity);
-    const saveSpy = jest.spyOn(repo, 'save').mockResolvedValue(mockUserEntity);
+    const createSpy = jest.spyOn(repo, 'create').mockReturnValue(adminUser);
+    const saveSpy = jest.spyOn(repo, 'save').mockResolvedValue(adminUser);
 
-    const newUser = await service.createUser({
+    const newUser = await service.createAdminAccount({
       email: 'EMAIL',
       firstName: 'fName',
       lastName: 'lName',
       password: 'password',
     });
 
-    expect(newUser).toStrictEqual(mockUserEntity);
+    expect(newUser).toStrictEqual({
+      id: adminUser.id,
+      email: adminUser.email,
+      firstName: adminUser.firstName,
+      lastName: adminUser.lastName,
+      role: UserRole.ADMIN,
+      isActive: true,
+      createdAt: adminUser.createdAt,
+      updatedAt: adminUser.updatedAt,
+    });
     expect(passwordSpy).toHaveBeenCalledWith('password');
     expect(saveSpy).toHaveBeenCalledTimes(1);
     expect(createSpy).toHaveBeenCalledWith({
@@ -79,7 +92,8 @@ describe('UserService', () => {
       firstName: 'fName',
       lastName: 'lName',
       passwordHash: 'password-hash',
-      role: UserRole.PUBLIC,
+      role: UserRole.ADMIN,
+      isActive: true,
     });
   });
 
@@ -110,14 +124,44 @@ describe('UserService', () => {
     );
   });
 
-  it('should get all users', async () => {
+  it('should list admin accounts', async () => {
+    const adminUser = {
+      ...mockUserEntity,
+      role: UserRole.ADMIN,
+      isActive: true,
+    };
     const repoSpy = jest
-      .spyOn(repo, 'find')
-      .mockResolvedValue([mockUserEntity]);
+      .spyOn(repo, 'findAndCount')
+      .mockResolvedValue([[adminUser], 1]);
 
-    expect(await service.getAll()).toStrictEqual([mockUserEntity]);
+    expect(
+      await service.listAdminAccounts({ page: 2, limit: 10 }),
+    ).toStrictEqual({
+      items: [
+        {
+          id: adminUser.id,
+          email: adminUser.email,
+          firstName: adminUser.firstName,
+          lastName: adminUser.lastName,
+          role: UserRole.ADMIN,
+          isActive: true,
+          createdAt: adminUser.createdAt,
+          updatedAt: adminUser.updatedAt,
+        },
+      ],
+      page: 2,
+      limit: 10,
+      total: 1,
+    });
     expect(repoSpy).toHaveBeenCalledWith({
-      select: ['id', 'email', 'lastName', 'firstName'],
+      where: {
+        role: UserRole.ADMIN,
+      },
+      order: {
+        updatedAt: 'DESC',
+      },
+      skip: 10,
+      take: 10,
     });
   });
 });

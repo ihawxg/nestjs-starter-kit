@@ -11,6 +11,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Audit } from '../../audit-log/decorators/audit.decorator';
+import { RateLimit } from '../../rate-limit/decorators/rate-limit.decorator';
+import { RateLimitBucket } from '../../rate-limit/rate-limit-bucket.enum';
 import { Roles } from '../../user/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../user/guards/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from '../../user/guards/roles/roles.guard';
@@ -38,6 +41,11 @@ export class CategoriesAdminController {
   }
 
   @Post()
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'category.create',
+    targetType: 'category',
+  })
   async create(@Body() dto: CreateCategoryDto) {
     const category = await this.categoriesService.create(dto);
 
@@ -47,6 +55,12 @@ export class CategoriesAdminController {
   }
 
   @Patch(':id')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'category.update',
+    targetType: 'category',
+    targetIdParam: 'id',
+  })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateCategoryDto,
@@ -59,6 +73,12 @@ export class CategoriesAdminController {
   }
 
   @Delete(':id')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'category.deactivate',
+    targetType: 'category',
+    targetIdParam: 'id',
+  })
   async deactivate(@Param('id', ParseIntPipe) id: number) {
     const category = await this.categoriesService.deactivate(id);
 

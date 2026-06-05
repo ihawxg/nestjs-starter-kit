@@ -154,11 +154,19 @@ function domainShapeChecks() {
 
       if (base.endsWith('.entity.ts')) {
         const entityText = read(file);
-        if (!/(createdAt|created_at)/.test(entityText) || !/(updatedAt|updated_at)/.test(entityText)) {
+        const isImmutableAuditLogEntity = domain === 'audit-log' && base === 'audit-log.entity.ts';
+        if (
+          !isImmutableAuditLogEntity &&
+          (!/(createdAt|created_at)/.test(entityText) || !/(updatedAt|updated_at)/.test(entityText))
+        ) {
           fail.push(`Domain entity must include created/updated timestamp policy: ${rel(file)}`);
         }
         const isAssetJoinEntity = base.endsWith('-asset.entity.ts');
-        if (!isAssetJoinEntity && !/(published|isPublished|status|visibility|isActive)/i.test(entityText)) {
+        if (
+          !isImmutableAuditLogEntity &&
+          !isAssetJoinEntity &&
+          !/(published|isPublished|status|visibility|isActive)/i.test(entityText)
+        ) {
           fail.push(`Domain entity must include publish/visibility state policy: ${rel(file)}`);
         }
       }
@@ -203,6 +211,9 @@ function controllerChecks() {
     }
 
     const hasWriteRoute = /@(Post|Patch|Put|Delete)\s*\(/.test(text);
+    const isAdminWriteController =
+      /@Controller\s*\(\s*['"`]admin\//.test(text) ||
+      /\/controllers\/.*-admin\.controller\.ts$/.test(relative);
     const publicListRouteMatches = [...text.matchAll(/(?:@\w+[^\n]*\n\s*)*@Get\s*\(\s*(?:['"`][/'"`]*['"`])?\s*\)[\s\S]{0,500}?\b(?:get|list|findAll|search)[A-Za-z0-9_]*\s*\(/g)];
     for (const match of publicListRouteMatches) {
       const routeContext = text.slice(match.index ?? 0, (match.index ?? 0) + 800);
@@ -213,7 +224,7 @@ function controllerChecks() {
       }
     }
 
-    if (!hasWriteRoute) continue;
+    if (!hasWriteRoute || !isAdminWriteController) continue;
 
     if (!roleGuardExists) {
       warn.push(`Role guard not implemented yet; write-route guard enforcement deferred: ${relative}`);

@@ -18,14 +18,16 @@ Use this file as durable guidance for Codex CLI and other coding agents working 
 
 ## Product Rules
 
-- Admin users can create, update, delete, and manage backend data.
-- Public users can only read published data and download public files.
+- Admin accounts can create, update, delete, and manage backend data.
+- Anonymous public visitors can only read published data, search public data, and download public files.
 - Do not add public admin registration.
 - First admin account must be created by seed, migration, or CLI script. Current script: `npm run admin:create` with `ADMIN_EMAIL` and `ADMIN_PASSWORD`.
-- Public user registration is disabled. Do not re-enable it unless product scope changes and docs/guards are updated in the same change.
+- Public user registration is disabled. Do not add public accounts unless product scope changes and docs/guards are updated in the same change.
+- Authenticated accounts are admin-only. Legacy non-admin rows in the `users` table must not be able to log in or call admin routes.
 - Never expose unpublished, private, draft, or admin-only data through public endpoints.
 - News, documents, events, departments, and contacts are the first civic content domains after auth. Pages are deferred until CMS-style static website content is needed.
 - News and document categories are managed backend data. Categories are scoped by domain and assigned through admin flows.
+- Platform hardening includes audit logs, rate limits, admin account lifecycle, and public search.
 
 ## Backend Feature Rules
 
@@ -77,7 +79,8 @@ Controller/service boundary:
 
 - Use JWT authentication for protected routes.
 - Add role-based guards before exposing admin write routes.
-- Admin-only routes must fail for public/anonymous users.
+- Admin-only routes must fail for anonymous visitors and legacy non-admin accounts.
+- Login must deny disabled admin accounts and any non-admin account row.
 - Public read routes must be explicit and must return only published public data.
 - Do not trust role, user id, or ownership values from request bodies.
 
@@ -89,6 +92,9 @@ Controller/service boundary:
 - Public list endpoints must define pagination/query policy before release.
 - Admin management APIs need read paths for listing and inspecting draft, published, and archived records.
 - Public department reads must return published departments and active contacts only.
+- Public search must return safe summaries for published news, documents, events, and departments only.
+- Admin writes must be audit logged with safe metadata only; never log passwords, tokens, storage keys, local paths, or raw uploaded file paths.
+- Rate limits are metadata-driven and configured through environment variables for login, public reads/downloads, and admin writes.
 - Store document/file metadata in PostgreSQL.
 - Do not store uploaded document blobs in PostgreSQL unless project direction changes.
 - Use a storage layer for files so local, S3, or another provider can be swapped later.

@@ -8,10 +8,13 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { RateLimit } from '../../rate-limit/decorators/rate-limit.decorator';
+import { RateLimitBucket } from '../../rate-limit/rate-limit-bucket.enum';
 import { ListDocumentsQueryDto } from '../dto/list-documents-query.dto';
 import { DocumentsService } from '../documents.service';
 
 @ApiTags('documents')
+@RateLimit(RateLimitBucket.PUBLIC)
 @Controller('documents')
 export class DocumentsController {
   constructor(private readonly documentsService: DocumentsService) {}

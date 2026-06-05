@@ -33,7 +33,7 @@ describe('RolesGuard', () => {
     expect(guard.canActivate(createContext(UserRole.ADMIN))).toBe(true);
   });
 
-  it('should deny public users for admin route', () => {
+  it('should deny legacy public accounts for admin route', () => {
     const reflector = {
       getAllAndOverride: jest.fn().mockReturnValue([UserRole.ADMIN]),
     } as unknown as Reflector;

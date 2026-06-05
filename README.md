@@ -1,6 +1,6 @@
 # Townhall Manipulicity Backend
 
-Backend API for the Townhall Manipulicity website. The service exposes public civic data for visitors and protected management flows for administrators.
+Backend API for the Townhall Manipulicity website. The service exposes public civic data for anonymous visitors and protected management flows for administrators.
 
 Current stack:
 
@@ -14,16 +14,16 @@ Current stack:
 
 The codebase still contains starter-kit baseline modules. Treat them as infrastructure, not final product shape.
 
-Current civic content work starts with managed news, documents, events, departments, contacts, scoped categories, and local file uploads. CMS-style pages are deferred until static website content is needed.
+Current civic content work includes managed news, documents, events, departments, contacts, scoped categories, local file uploads, audit logs, rate limits, admin account lifecycle, and public search. CMS-style pages are deferred until static website content is needed.
 
 ## Roles
 
-- Admin: can create, update, delete, and manage backend data.
-- Public: can read published data and download public files.
+- Admin accounts: can create, update, delete, and manage backend data.
+- Anonymous public visitors: can read/search published data and download public files.
 
-No public admin registration is allowed. The first admin account must come from a seed, migration, or CLI script.
+No public account registration is allowed. The first admin account must come from a seed, migration, or CLI script.
 
-Admin management routes use `/admin/...` paths for current civic domains. Public routes only return published content and safe download metadata.
+Admin management routes use `/admin/...` paths for current civic domains and `/admin/accounts` for admin account lifecycle. Public routes only return published content, safe search summaries, and safe download metadata.
 
 ## Local Setup
 

@@ -11,6 +11,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Audit } from '../../audit-log/decorators/audit.decorator';
+import { RateLimit } from '../../rate-limit/decorators/rate-limit.decorator';
+import { RateLimitBucket } from '../../rate-limit/rate-limit-bucket.enum';
 import { Roles } from '../../user/decorators/roles.decorator';
 import { UserRole } from '../../user/entities/user-role.enum';
 import { JwtAuthGuard } from '../../user/guards/jwt-auth/jwt-auth.guard';
@@ -47,6 +50,11 @@ export class EventsAdminController {
   }
 
   @Post()
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'event.create',
+    targetType: 'event',
+  })
   async create(@Body() dto: CreateEventDto) {
     const event = await this.eventsService.create(dto);
 
@@ -56,6 +64,12 @@ export class EventsAdminController {
   }
 
   @Patch(':id')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'event.update',
+    targetType: 'event',
+    targetIdParam: 'id',
+  })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateEventDto,
@@ -68,6 +82,12 @@ export class EventsAdminController {
   }
 
   @Delete(':id')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'event.archive',
+    targetType: 'event',
+    targetIdParam: 'id',
+  })
   async archive(@Param('id', ParseIntPipe) id: number) {
     const event = await this.eventsService.archive(id);
 

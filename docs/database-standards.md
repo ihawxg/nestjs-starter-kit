@@ -24,6 +24,8 @@ Public civic-domain entities should include:
 
 Use explicit uniqueness for natural identifiers such as slugs and emails.
 
+Audit log entities are the narrow exception: they are immutable operational records with `createdAt` only and no publish status. Do not apply public civic visibility rules to audit logs.
+
 ## Index Policy
 
 Add indexes when fields support:
@@ -38,6 +40,8 @@ Add indexes when fields support:
 - event status/date filtering and upcoming event lists
 - department status/display-order filtering
 - department contact ownership/display-order filtering
+- admin account role/active-state filtering
+- audit log actor/action/target/timestamp filtering
 
 Indexes speed reads but add write/storage overhead, so use them intentionally.
 
@@ -76,3 +80,10 @@ Public list endpoints must define pagination. Default to explicit `page`/`limit`
 - Department public/admin lists should index status and display order.
 - Department contacts should index department ownership and display order.
 - Contacts use `is_active` for visibility instead of a full status enum.
+
+## Admin Accounts And Audit Logs
+
+- Keep the existing `users` table name until a deliberate account-table rename is planned.
+- Admin account disabling uses `is_active` so historical audit rows remain meaningful.
+- Audit logs should index actor/action, target type/id, and creation time.
+- Audit log metadata uses `jsonb` for safe structured context only; never store secrets, tokens, storage keys, or local file paths.

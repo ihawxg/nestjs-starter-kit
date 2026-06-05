@@ -11,6 +11,9 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { Audit } from '../../audit-log/decorators/audit.decorator';
+import { RateLimit } from '../../rate-limit/decorators/rate-limit.decorator';
+import { RateLimitBucket } from '../../rate-limit/rate-limit-bucket.enum';
 import { Roles } from '../../user/decorators/roles.decorator';
 import { UserRole } from '../../user/entities/user-role.enum';
 import { JwtAuthGuard } from '../../user/guards/jwt-auth/jwt-auth.guard';
@@ -49,6 +52,11 @@ export class DepartmentsAdminController {
   }
 
   @Post()
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'department.create',
+    targetType: 'department',
+  })
   async create(@Body() dto: CreateDepartmentDto) {
     const department = await this.departmentsService.create(dto);
 
@@ -58,6 +66,12 @@ export class DepartmentsAdminController {
   }
 
   @Patch(':id')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'department.update',
+    targetType: 'department',
+    targetIdParam: 'id',
+  })
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() dto: UpdateDepartmentDto,
@@ -70,6 +84,12 @@ export class DepartmentsAdminController {
   }
 
   @Delete(':id')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'department.archive',
+    targetType: 'department',
+    targetIdParam: 'id',
+  })
   async archive(@Param('id', ParseIntPipe) id: number) {
     const department = await this.departmentsService.archive(id);
 
@@ -79,6 +99,11 @@ export class DepartmentsAdminController {
   }
 
   @Post(':departmentId/contacts')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'department.contact.create',
+    targetType: 'department_contact',
+  })
   async createContact(
     @Param('departmentId', ParseIntPipe) departmentId: number,
     @Body() dto: CreateDepartmentContactDto,
@@ -94,6 +119,12 @@ export class DepartmentsAdminController {
   }
 
   @Patch(':departmentId/contacts/:contactId')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'department.contact.update',
+    targetType: 'department_contact',
+    targetIdParam: 'contactId',
+  })
   async updateContact(
     @Param('departmentId', ParseIntPipe) departmentId: number,
     @Param('contactId', ParseIntPipe) contactId: number,
@@ -111,6 +142,12 @@ export class DepartmentsAdminController {
   }
 
   @Delete(':departmentId/contacts/:contactId')
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'department.contact.deactivate',
+    targetType: 'department_contact',
+    targetIdParam: 'contactId',
+  })
   async deactivateContact(
     @Param('departmentId', ParseIntPipe) departmentId: number,
     @Param('contactId', ParseIntPipe) contactId: number,

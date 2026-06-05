@@ -8,10 +8,13 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { RateLimit } from '../../rate-limit/decorators/rate-limit.decorator';
+import { RateLimitBucket } from '../../rate-limit/rate-limit-bucket.enum';
 import { ListNewsQueryDto } from '../dto/list-news-query.dto';
 import { NewsService } from '../news.service';
 
 @ApiTags('news')
+@RateLimit(RateLimitBucket.PUBLIC)
 @Controller('news')
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}

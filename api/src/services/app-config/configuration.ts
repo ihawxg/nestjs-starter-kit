@@ -33,6 +33,29 @@ export const getConfig = (): AppConfig => {
         parseInt(process.env.UPLOAD_MAX_FILE_SIZE_BYTES as string, 10) ||
         10 * 1024 * 1024,
     },
+    rateLimit: {
+      login: {
+        windowMs:
+          parseInt(process.env.RATE_LIMIT_LOGIN_WINDOW_MS as string, 10) ||
+          60_000,
+        limit: parseInt(process.env.RATE_LIMIT_LOGIN_MAX as string, 10) || 10,
+      },
+      public: {
+        windowMs:
+          parseInt(process.env.RATE_LIMIT_PUBLIC_WINDOW_MS as string, 10) ||
+          60_000,
+        limit: parseInt(process.env.RATE_LIMIT_PUBLIC_MAX as string, 10) || 120,
+      },
+      adminWrite: {
+        windowMs:
+          parseInt(
+            process.env.RATE_LIMIT_ADMIN_WRITE_WINDOW_MS as string,
+            10,
+          ) || 60_000,
+        limit:
+          parseInt(process.env.RATE_LIMIT_ADMIN_WRITE_MAX as string, 10) || 60,
+      },
+    },
   };
 };
 
@@ -45,6 +68,7 @@ export interface AppConfig {
   cache: CacheConfig;
   mail: MailConfig;
   storage: StorageConfig;
+  rateLimit: RateLimitConfig;
 }
 
 export enum AppEnv {
@@ -82,4 +106,15 @@ export interface MailConfig {
 export interface StorageConfig {
   uploadDir: string;
   maxFileSizeBytes: number;
+}
+
+export interface RateLimitConfig {
+  login: RateLimitBucketConfig;
+  public: RateLimitBucketConfig;
+  adminWrite: RateLimitBucketConfig;
+}
+
+export interface RateLimitBucketConfig {
+  windowMs: number;
+  limit: number;
 }

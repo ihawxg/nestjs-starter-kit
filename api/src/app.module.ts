@@ -13,6 +13,9 @@ import { DocumentsModule } from './documents/documents.module';
 import { CategoriesModule } from './categories/categories.module';
 import { EventsModule } from './events/events.module';
 import { DepartmentsModule } from './departments/departments.module';
+import { AuditLogModule } from './audit-log/audit-log.module';
+import { RateLimitModule } from './rate-limit/rate-limit.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [
@@ -27,11 +30,14 @@ import { DepartmentsModule } from './departments/departments.module';
     ConfigModule,
     LoggerModule,
     HealthModule,
+    RateLimitModule,
+    AuditLogModule,
     CategoriesModule,
     NewsModule,
     DocumentsModule,
     EventsModule,
     DepartmentsModule,
+    SearchModule,
   ],
 })
 export class AppModule {

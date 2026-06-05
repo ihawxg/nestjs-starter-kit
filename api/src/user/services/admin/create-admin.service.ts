@@ -22,6 +22,7 @@ export async function createOrPromoteAdmin(
 
   if (existingUser) {
     existingUser.role = UserRole.ADMIN;
+    existingUser.isActive = true;
     return usersRepository.save(existingUser);
   }
 
@@ -31,6 +32,7 @@ export async function createOrPromoteAdmin(
     lastName: input.lastName ?? 'Admin',
     passwordHash: await passwordService.generate(input.password),
     role: UserRole.ADMIN,
+    isActive: true,
   });
 
   return usersRepository.save(admin);

@@ -26,6 +26,12 @@ New non-infrastructure folders with TypeScript code must follow the domain modul
 
 `core` is reserved for a future `CoreModule`. Do not create it until there is stable application-wide code used by at least two real domain modules. See `docs/core-module-policy.md`.
 
+Platform modules such as `audit-log`, `rate-limit`, and `search` are allowed when they have a clear cross-cutting product purpose and a matching module file. Keep them narrow:
+
+- `audit-log` records admin write accountability only.
+- `rate-limit` owns route throttling metadata and enforcement.
+- `search` returns public published summaries only.
+
 ## Layer Responsibilities
 
 Controllers:
