@@ -6,6 +6,23 @@ Repo docs, `AGENTS.md`, and executable guardrails are the source of truth. Exter
 
 ## Installed Skills
 
+Committed source of truth:
+
+- Manifest: `.codex/project-skills.json`
+- Restore script: `scripts/skills/install-project-skills.mjs`
+
+Restore shared project skills:
+
+```console
+npm run skills:dry-run
+npm run skills:install
+npm run skills:verify
+```
+
+Restart Codex after skill installation so new skills are picked up.
+
+Current non-system skills:
+
 - `postgres` from `planetscale/database-skills@postgres`
 - `redis-core` from `redis/agent-skills@redis-core`
 - `nextjs` from `vercel-labs/vercel-plugin@nextjs`
@@ -17,12 +34,18 @@ Repo docs, `AGENTS.md`, and executable guardrails are the source of truth. Exter
 - `tanstack-query` from `secondsky/claude-skills@tanstack-query`
 - `auth` from `vercel/vercel-plugin@auth`
 - `security-best-practices` from `openai/skills`
+- `fallow` from `fallow-rs/fallow-skills@fallow`
+- `find-skills` from `vercel-labs/skills@find-skills`
+- `react-senior-code-review` from `the-senior-dev/senior-dev-skills@react-senior-code-review`
+- `react-senior-interview` from `the-senior-dev/senior-dev-skills@react-senior-interview`
 
 Note: `redis/agent-skills@redis-best-practices` was requested, but the current Redis skill repo did not contain that skill. `redis-core` was installed as the closest available Redis/cache modeling replacement.
 
 Note: `bobmatnyc/claude-mpm-skills@tanstack-query` was requested, but the skill installer could not resolve that skill path. `secondsky/claude-skills@tanstack-query` was installed as the available TanStack Query replacement.
 
-Restart Codex after skill installation so new skills are picked up.
+System skills under `$HOME/.codex/skills/.system` are Codex built-ins and are not vendored in this repo.
+
+Third-party skill folders are not vendored. A new member restores skills from upstream with `npm run skills:install`, verifies local installation with `npm run skills:verify`, then restarts Codex.
 
 ## When To Use Skills
 
@@ -116,3 +139,13 @@ Do not use external skills to justify:
 - running build/dev/start/Docker commands without explicit user request
 - running browser/Playwright tests without explicit user request and `FRONTEND_TEST_BASE_URL`
 - bypassing frontend generated API types or project guardrails
+
+## Skill Registry Guardrails
+
+Skill guardrails fail when:
+
+- a routed installed skill is missing from `.codex/project-skills.json`
+- a manifest entry has no upstream install command
+- docs and the manifest drift
+- root guardrails or Codex hooks stop running skill guardrails
+- `tools/codex-skills` exists, because this repo uses manifest-only skill sharing

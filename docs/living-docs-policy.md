@@ -18,6 +18,7 @@ Update docs when changing:
 - module architecture, shared code, or core policy
 - installed skills or Codex routing
 - frontend route structure, design system usage, API generation, localization, auth strategy, or verification commands
+- project skill registry, skill install/verify workflow, or routed skills
 
 ## Docs Can Stay Unchanged
 

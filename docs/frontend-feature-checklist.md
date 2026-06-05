@@ -29,12 +29,16 @@ Use this checklist before and after frontend feature work.
 
 ## Test Checklist
 
+- New frontend source under `components`, `features`, `lib`, or public locale routes has a colocated `*.spec.ts` or `*.spec.tsx`, unless it is generated, a style file, an index barrel, or pure type-only file.
 - Locale helpers accept only `en` and `bg`.
 - Route/page tests cover empty results where practical.
 - API wrapper tests cover query params and safe public endpoints.
 - Search uses public localized `/search` routes only.
 - Document/media links use safe backend public URLs.
 - Accessibility checks cover header, navigation, language switcher, forms, document lists, and alert banners when these exist.
+- Use Vitest, React Testing Library, jest-dom, user-event, jsdom, MSW, and V8 coverage once `frontend/` exists.
+- Generated API code is not tested directly; project API wrappers are tested.
+- Snapshot tests are not the primary proof of behavior.
 - Browser checks run only when explicitly requested and only against `FRONTEND_TEST_BASE_URL`.
 
 ## Docs Checklist
@@ -115,3 +119,4 @@ Do not finish frontend work while any of these are true:
 - Sensitive backend fields can render publicly.
 - Routine verification starts dev servers, runs builds, starts Docker, or runs browser tests.
 - `npm run guardrails` fails.
+- New frontend source lacks required colocated spec coverage.

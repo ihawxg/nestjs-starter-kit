@@ -19,6 +19,7 @@ const root = gitRoot();
 const checkers = [
   path.join(root, 'scripts', 'guardrails', 'check-backend-guardrails.mjs'),
   path.join(root, 'scripts', 'guardrails', 'check-frontend-guardrails.mjs'),
+  path.join(root, 'scripts', 'guardrails', 'check-skill-guardrails.mjs'),
 ];
 
 for (const checker of checkers) {

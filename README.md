@@ -105,6 +105,8 @@ Run project-wide guardrails from the repo root:
 ```console
 npm run guardrails
 npm run verify
+npm run skills:dry-run
+npm run skills:verify
 ```
 
 Run backend commands from `api/`.
@@ -156,5 +158,19 @@ ADMIN_EMAIL=admin@example.com ADMIN_PASSWORD='strong-password' npm run admin:cre
 - [Hook context policy](./docs/hook-context-policy.md)
 - [Living docs policy](./docs/living-docs-policy.md)
 - [Localization standards](./docs/localization-standards.md)
+
+## Codex Skills
+
+Project skill sources are committed in [.codex/project-skills.json](./.codex/project-skills.json). Skills install from upstream sources; third-party skill folders are not vendored in this repo.
+
+Restore or verify shared skills from the repo root:
+
+```console
+npm run skills:dry-run
+npm run skills:install
+npm run skills:verify
+```
+
+Restart Codex after installing skills.
 
 Read the relevant guardrails and checklist before adding backend or frontend features.

@@ -97,3 +97,16 @@ npm run verify
 ```
 
 Browser checks are opt-in only through `verify:browser`, require `FRONTEND_TEST_BASE_URL`, and must target an already running app.
+
+## Testing Architecture
+
+- Test runner: Vitest.
+- Component testing: React Testing Library.
+- DOM environment: jsdom.
+- API mocking: MSW for frontend wrapper tests.
+- Coverage provider: V8.
+- Test files are colocated beside source files:
+  - `*.spec.ts` for helpers and API wrappers
+  - `*.spec.tsx` for components, features, and routes
+- Generated API code is not tested directly; project wrappers around generated code are tested.
+- Snapshot tests are not the primary proof of behavior.

@@ -19,6 +19,8 @@ Use this file as durable guidance for Codex CLI and other coding agents working 
 - Frontend framework decision: Next.js App Router with TypeScript.
 - Frontend public routes will use `en` and `bg` locale prefixes.
 - Frontend backend types must be generated from backend OpenAPI.
+- Project skill registry: `.codex/project-skills.json`.
+- Project skills are manifest-only; do not vendor third-party skill folders in git.
 
 ## Product Rules
 
@@ -99,6 +101,8 @@ Non-negotiable frontend rules:
 - DSFR imports must go through local design-system wrappers/providers. Do not scatter direct DSFR imports through routes or feature components.
 - Do not hardcode municipality pages, navigation, categories, departments, staff, officials, or public content.
 - Public frontend must not render storage keys, local paths, tokens, password hashes, stack traces, draft data, or admin metadata.
+- Frontend tests use Vitest and React Testing Library with colocated `*.spec.ts` or `*.spec.tsx` files for helpers, API wrappers, components, features, and public routes.
+- Browser/Playwright-style tests are explicit only and never part of routine frontend `verify`.
 
 Frontend shared code needs at least two real consumers before moving into shared UI or lib folders. Keep feature code domain-scoped under the route or feature it serves.
 
@@ -182,6 +186,7 @@ npm run migrations:revert
 - Use `docs/codex-skill-routing.md` before invoking external skills. External skills are advisory only.
 - Use `docs/localization-standards.md` before changing public text fields, localized routes, translation tables, or locale fallback behavior.
 - Use `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/frontend-feature-checklist.md`, and `docs/dsfr-usage-policy.md` before adding frontend code.
+- Restore shared project skills from upstream with `npm run skills:dry-run`, `npm run skills:install`, and `npm run skills:verify` from the repo root. Restart Codex after installing skills.
 - If Codex CLI reports project hooks need review, run `/hooks` and trust the checked-in project guardrail hooks after reviewing them.
 
 ## Working Rules

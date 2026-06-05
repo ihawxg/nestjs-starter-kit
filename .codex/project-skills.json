@@ -1,0 +1,148 @@
+{
+  "schemaVersion": 2,
+  "description": "Committed Townhall Manipulicity agent skill registry. Skills install from upstream sources; no third-party skill snapshots are vendored in this repo. External skills are advisory and cannot override AGENTS.md, docs, or executable guardrails.",
+  "systemSkillsNotVendored": [
+    "imagegen",
+    "openai-docs",
+    "plugin-creator",
+    "skill-creator",
+    "skill-installer"
+  ],
+  "skills": [
+    {
+      "name": "auth",
+      "source": "vercel/vercel-plugin@auth",
+      "installCommand": "npx skills add vercel/vercel-plugin@auth -g -y",
+      "installTargets": ["$HOME/.agents/skills/auth"],
+      "agents": ["Codex", "Cursor", "Warp"],
+      "reason": "Frontend/admin auth and HttpOnly cookie review.",
+      "fallbackNotes": null
+    },
+    {
+      "name": "design-system-starter",
+      "source": "softaworks/agent-toolkit@design-system-starter",
+      "installCommand": "npx skills add softaworks/agent-toolkit@design-system-starter -g -y",
+      "installTargets": ["$HOME/.agents/skills/design-system-starter"],
+      "agents": ["Codex", "Cursor", "Warp"],
+      "reason": "Frontend design-system wrapper and DSFR boundary guidance.",
+      "fallbackNotes": null
+    },
+    {
+      "name": "fallow",
+      "source": "fallow-rs/fallow-skills@fallow",
+      "installCommand": "npx skills add fallow-rs/fallow-skills@fallow -g -y",
+      "installTargets": ["$HOME/.agents/skills/fallow"],
+      "agents": ["Claude Code", "Codex", "Cursor", "Warp"],
+      "reason": "Code health, dependency, circular import, and frontend/backend scale review.",
+      "fallbackNotes": "Resolved through Skills CLI search after initial local-only install."
+    },
+    {
+      "name": "find-skills",
+      "source": "vercel-labs/skills@find-skills",
+      "installCommand": "npx skills add vercel-labs/skills@find-skills -g -y",
+      "installTargets": ["$HOME/.agents/skills/find-skills"],
+      "agents": ["Claude Code", "Codex", "Cursor", "Warp"],
+      "reason": "Skill discovery workflow for future agent capability review.",
+      "fallbackNotes": "Using highest-install Skills CLI search result."
+    },
+    {
+      "name": "frontend-accessibility",
+      "source": "aj-geddes/useful-ai-prompts@frontend-accessibility",
+      "installCommand": "npx skills add aj-geddes/useful-ai-prompts@frontend-accessibility -g -y",
+      "installTargets": ["$HOME/.agents/skills/frontend-accessibility"],
+      "agents": ["Codex", "Cursor", "Warp"],
+      "reason": "Public government accessibility review.",
+      "fallbackNotes": null
+    },
+    {
+      "name": "nextjs",
+      "source": "vercel-labs/vercel-plugin@nextjs",
+      "installCommand": "npx skills add vercel-labs/vercel-plugin@nextjs -g -y",
+      "installTargets": ["$HOME/.agents/skills/nextjs"],
+      "agents": ["Codex", "Cursor", "Warp"],
+      "reason": "Next.js App Router, Server Components, route, and caching guidance.",
+      "fallbackNotes": null
+    },
+    {
+      "name": "openapi-to-typescript",
+      "source": "softaworks/agent-toolkit@openapi-to-typescript",
+      "installCommand": "npx skills add softaworks/agent-toolkit@openapi-to-typescript -g -y",
+      "installTargets": ["$HOME/.agents/skills/openapi-to-typescript"],
+      "agents": ["Codex", "Cursor", "Warp"],
+      "reason": "Generated frontend API type/client review.",
+      "fallbackNotes": null
+    },
+    {
+      "name": "postgres",
+      "source": "planetscale/database-skills@postgres",
+      "installCommand": "npx skills add planetscale/database-skills@postgres -g -y",
+      "installTargets": ["$HOME/.agents/skills/postgres"],
+      "agents": ["Codex", "Cursor", "Warp"],
+      "reason": "Postgres schema, indexing, migration, and query reviews.",
+      "fallbackNotes": null
+    },
+    {
+      "name": "react-component-performance",
+      "source": "dimillian/skills@react-component-performance",
+      "installCommand": "npx skills add dimillian/skills@react-component-performance -g -y",
+      "installTargets": ["$HOME/.agents/skills/react-component-performance"],
+      "agents": ["Codex", "Cursor", "Warp"],
+      "reason": "React rendering and component performance review.",
+      "fallbackNotes": null
+    },
+    {
+      "name": "react-nextjs-development",
+      "source": "sickn33/antigravity-awesome-skills@react-nextjs-development",
+      "installCommand": "npx skills add sickn33/antigravity-awesome-skills@react-nextjs-development -g -y",
+      "installTargets": ["$HOME/.agents/skills/react-nextjs-development"],
+      "agents": ["Codex", "Cursor", "Warp"],
+      "reason": "React/Next.js implementation review.",
+      "fallbackNotes": null
+    },
+    {
+      "name": "react-senior-code-review",
+      "source": "the-senior-dev/senior-dev-skills@react-senior-code-review",
+      "installCommand": "npx skills add the-senior-dev/senior-dev-skills -g -y --skill react-senior-code-review",
+      "installTargets": ["$HOME/.agents/skills/react-senior-code-review"],
+      "agents": ["Claude Code", "Codex", "Cursor", "Warp"],
+      "reason": "Senior React feature architecture review.",
+      "fallbackNotes": "Source discovered from installed skill README."
+    },
+    {
+      "name": "react-senior-interview",
+      "source": "the-senior-dev/senior-dev-skills@react-senior-interview",
+      "installCommand": "npx skills add the-senior-dev/senior-dev-skills -g -y --skill react-senior-interview",
+      "installTargets": ["$HOME/.agents/skills/react-senior-interview"],
+      "agents": ["Claude Code", "Codex", "Cursor", "Warp"],
+      "reason": "React knowledge assessment skill retained for team learning.",
+      "fallbackNotes": "Source discovered from installed skill README."
+    },
+    {
+      "name": "redis-core",
+      "source": "redis/agent-skills@redis-core",
+      "installCommand": "npx skills add redis/agent-skills@redis-core -g -y",
+      "installTargets": ["$HOME/.agents/skills/redis-core"],
+      "agents": ["Codex", "Cursor", "Warp"],
+      "reason": "Redis/cache key and data-structure review.",
+      "fallbackNotes": "Used because redis/agent-skills@redis-best-practices was not available."
+    },
+    {
+      "name": "security-best-practices",
+      "source": "openai/skills:skills/.curated/security-best-practices",
+      "installCommand": "python3 \"$HOME/.codex/skills/.system/skill-installer/scripts/install-skill-from-github.py\" --repo openai/skills --path skills/.curated/security-best-practices",
+      "installTargets": ["$HOME/.codex/skills/security-best-practices"],
+      "agents": ["Codex"],
+      "reason": "Frontend/backend security review.",
+      "fallbackNotes": null
+    },
+    {
+      "name": "tanstack-query",
+      "source": "secondsky/claude-skills@tanstack-query",
+      "installCommand": "npx skills add secondsky/claude-skills@tanstack-query -g -y",
+      "installTargets": ["$HOME/.agents/skills/tanstack-query"],
+      "agents": ["Codex", "Cursor", "Warp"],
+      "reason": "TanStack Query client-cache review for interactive frontend flows.",
+      "fallbackNotes": "Used because bobmatnyc/claude-mpm-skills@tanstack-query could not be resolved."
+    }
+  ]
+}

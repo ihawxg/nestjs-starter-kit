@@ -74,7 +74,9 @@ const allowedRootSourceFiles = new Set([
   "frontend/tailwind.config.js",
   "frontend/tailwind.config.ts",
   "frontend/vitest.config.ts",
+  "frontend/vitest.config.mts",
   "frontend/vitest.setup.ts",
+  "frontend/vitest.setup.tsx",
 ]);
 
 function rel(file) {
@@ -166,6 +168,12 @@ function scriptContainsBrowserTest(script) {
   );
 }
 
+function hasDependency(parsed, dependency) {
+  return Boolean(
+    parsed.dependencies?.[dependency] || parsed.devDependencies?.[dependency],
+  );
+}
+
 function rootWorkspaceChecks() {
   const packageJson = path.join(root, "package.json");
   if (!existsSync(packageJson)) {
@@ -242,11 +250,61 @@ function frontendPackageChecks() {
   if (!parsed) return;
 
   const scripts = parsed.scripts ?? {};
-  const requiredScripts = ["guardrails", "verify", "lint-ci", "type-check", "test"];
+  const requiredScripts = [
+    "guardrails",
+    "verify",
+    "lint-ci",
+    "type-check",
+    "test",
+    "test:watch",
+    "test:coverage",
+  ];
   for (const scriptName of requiredScripts) {
     if (!scripts[scriptName]) {
       fail.push(`frontend/package.json missing script "${scriptName}".`);
     }
+  }
+
+  const requiredTestDeps = [
+    "vitest",
+    "@testing-library/react",
+    "@testing-library/jest-dom",
+    "@testing-library/user-event",
+    "jsdom",
+    "msw",
+    "@vitest/coverage-v8",
+  ];
+  for (const dependency of requiredTestDeps) {
+    if (!hasDependency(parsed, dependency)) {
+      fail.push(`frontend/package.json missing frontend test dependency: ${dependency}`);
+    }
+  }
+
+  if (scripts.test && !/\bvitest\s+run\b/.test(scripts.test)) {
+    fail.push('frontend script "test" must run "vitest run".');
+  }
+
+  if (scripts["test:watch"] && !/\bvitest\b/.test(scripts["test:watch"])) {
+    fail.push('frontend script "test:watch" must run Vitest watch mode.');
+  }
+
+  if (
+    scripts["test:coverage"] &&
+    (!/\bvitest\s+run\b/.test(scripts["test:coverage"]) ||
+      !/--coverage/.test(scripts["test:coverage"]))
+  ) {
+    fail.push('frontend script "test:coverage" must run Vitest with coverage.');
+  }
+
+  if (
+    scripts.verify &&
+    (!/npm\s+run\s+guardrails/.test(scripts.verify) ||
+      !/npm\s+run\s+lint-ci/.test(scripts.verify) ||
+      !/npm\s+test/.test(scripts.verify))
+  ) {
+    fail.push(
+      'frontend script "verify" must include guardrails, lint-ci, and npm test.',
+    );
   }
 
   for (const [scriptName, script] of Object.entries(scripts)) {
@@ -477,6 +535,83 @@ function contentHardcodingChecks() {
   }
 }
 
+function isGenerated(relative) {
+  return generatedRoots.some((prefix) => relative.startsWith(prefix));
+}
+
+function isSpecFile(relative) {
+  return /\.(spec|test)\.(ts|tsx|js|jsx)$/.test(relative);
+}
+
+function isIndexBarrel(file, text) {
+  if (!/^index\.(ts|tsx|js|jsx)$/.test(path.basename(file))) return false;
+  const stripped = text
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\/\/.*$/gm, "")
+    .trim();
+  return stripped
+    .split("\n")
+    .filter(Boolean)
+    .every((line) => /^export\s/.test(line.trim()));
+}
+
+function isPureTypeFile(relative, text) {
+  if (/\.d\.ts$/.test(relative)) return true;
+  if (!/\.(types|type)\.ts$/.test(relative)) return false;
+
+  const stripped = text
+    .replace(/\/\*[\s\S]*?\*\//g, "")
+    .replace(/\/\/.*$/gm, "")
+    .trim();
+  return !/\b(const|let|var|function|class|enum|return|=>)\b/.test(stripped);
+}
+
+function hasColocatedSpec(file) {
+  const dir = path.dirname(file);
+  const ext = path.extname(file);
+  const base = path.basename(file, ext);
+  const candidates = [
+    `${base}.spec.ts`,
+    `${base}.spec.tsx`,
+    `${base}.test.ts`,
+    `${base}.test.tsx`,
+  ].map((candidate) => path.join(dir, candidate));
+
+  return candidates.some((candidate) => existsSync(candidate));
+}
+
+function testCoverageChecks() {
+  if (!existsSync(frontendRoot)) return;
+
+  const sourceRoots = [
+    "frontend/src/features/",
+    "frontend/src/components/",
+    "frontend/src/lib/",
+    "frontend/src/app/[locale]/",
+  ];
+  const files = walk(srcRoot).filter((file) => /\.(ts|tsx)$/.test(file));
+
+  for (const file of files) {
+    const relative = rel(file);
+    const text = read(file);
+
+    if (!sourceRoots.some((prefix) => relative.startsWith(prefix))) continue;
+    if (isGenerated(relative)) continue;
+    if (isSpecFile(relative)) continue;
+    if (/\.d\.ts$/.test(relative)) continue;
+    if (/\/(__tests__|test|tests)\//.test(relative)) continue;
+    if (/\.(css|scss)$/.test(relative)) continue;
+    if (isIndexBarrel(file, text)) continue;
+    if (isPureTypeFile(relative, text)) continue;
+
+    if (!hasColocatedSpec(file)) {
+      fail.push(
+        `Frontend source needs colocated Vitest coverage: ${relative}`,
+      );
+    }
+  }
+}
+
 function configStrictnessChecks() {
   const changed = changedFilesSinceHead();
   const configFiles = [
@@ -542,6 +677,7 @@ generatedApiChecks();
 clientSecurityChecks();
 dsfrChecks();
 contentHardcodingChecks();
+testCoverageChecks();
 configStrictnessChecks();
 livingDocsChecks();
 

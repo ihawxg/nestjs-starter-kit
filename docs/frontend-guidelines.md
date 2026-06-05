@@ -62,7 +62,12 @@
 
 ## Testing
 
+- Use Vitest and React Testing Library.
+- Keep specs colocated with source files as `*.spec.ts` or `*.spec.tsx`.
 - Unit-test API wrappers, locale helpers, and feature formatting.
-- Component-test important accessible states where practical.
+- Component-test DSFR wrappers, public feature components, search/forms, and safety rendering rules.
+- Use MSW for frontend API wrapper tests.
+- Do not test generated API code directly; test the project wrapper around it.
+- Avoid snapshot tests as the main proof of behavior.
 - Browser tests are opt-in and must not start a dev server.
 - Frontend feature work should run `npm run guardrails`, `npm run lint-ci`, `npm run type-check`, and `npm test` from `frontend/` once the app exists.
