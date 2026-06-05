@@ -1,3 +1,4 @@
+import { LocalizationResponseMeta } from '../localization/localization-response';
 import { SiteSettingsEntity } from './entities/site-settings.entity';
 
 export interface SiteSettingsLogoResponse {
@@ -23,6 +24,7 @@ export interface SiteSettingsResponse {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export function toSiteSettingsResponse(

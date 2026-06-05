@@ -1,4 +1,5 @@
 import { SearchResultType } from './dto/search-result-type.enum';
+import { LocalizationResponseMeta } from '../localization/localization-response';
 
 export interface SearchResultResponse {
   type: SearchResultType;
@@ -8,6 +9,7 @@ export interface SearchResultResponse {
   summary: string;
   publishedAt?: Date | null;
   startsAt?: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface PaginatedSearchResponse {

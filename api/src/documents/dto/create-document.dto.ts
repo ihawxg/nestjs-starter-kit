@@ -10,9 +10,10 @@ import {
   IsString,
   Length,
 } from 'class-validator';
+import { LocalizedSourceDto } from '../../localization/dto/localized-source.dto';
 import { DocumentStatus } from '../entities/document-status.enum';
 
-export class CreateDocumentDto {
+export class CreateDocumentDto extends LocalizedSourceDto {
   @ApiProperty()
   @IsString()
   @Length(2, 180)

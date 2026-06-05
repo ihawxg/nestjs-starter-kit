@@ -11,6 +11,8 @@ The backend must support two clear access paths:
 
 Authenticated accounts are admin-only. Public website visitors are anonymous; do not add public profiles, public login, or public registration without a deliberate product change.
 
+Public civic content is bilingual. English (`en`) is the default locale and Bulgarian (`bg`) is the secondary locale. Use `docs/localization-standards.md` for route, schema, fallback, and admin translation rules.
+
 These rules are backed by executable guardrails. Run `npm run guardrails` from `api/` for the structural checks, `npm run verify` for normal backend changes, and `npm run verify:full` for auth, route, database, migration, cache, storage, or integration changes.
 
 Do not run dev servers, Docker environment startup, production start commands, or builds as routine completion checks. Use guardrails, lint, and tests unless the user explicitly asks for a dev/build/start command. Explicitly requested blocked commands must use `TOWNHALL_ALLOW_DEV_BUILD=1`.
@@ -117,6 +119,7 @@ Use DTOs for all request bodies and query parameters that need validation. Keep 
 Public route rules:
 
 - Return only published public data.
+- Support localized path prefixes for user-facing text, with unprefixed English aliases where routes already exist.
 - Filter unpublished/private/draft records at service or repository level.
 - Do not accept role, owner, published status, or admin-only filters from public request bodies.
 - Do not leak storage keys, password hashes, tokens, stack traces, or internal paths.
@@ -172,6 +175,19 @@ CMS foundation modules provide editable website structure without seeded content
 - Navigation items are active/inactive and may link to a URL or page.
 - Alerts are active publicly only when published and the current time is within their start/end window.
 - Do not add hardcoded municipality labels, menu items, sections, or starter pages without an explicit content-seeding request.
+
+## Localization
+
+Localized content uses normalized translation tables and shared slugs.
+
+- Public routes support `/en/...` and `/bg/...` aliases.
+- Missing Bulgarian text falls back to English.
+- Responses include localization metadata so clients can detect fallback.
+- Admins manage translations through protected admin translation endpoints.
+- Auto-translation is allowed only through the localization module and configured provider settings. Current provider target is DeepL.
+- Generated translations are auto-published but admin-overridable. Machine translation metadata must remain admin-only.
+- Bulgarian source content must be translated to English before saving canonical base-table fields.
+- No seeded localized content is allowed unless explicitly requested.
 
 ## Database
 
@@ -333,3 +349,4 @@ Update docs in the same change when behavior changes:
 - `docs/cache-standards.md` for Redis key, TTL, and invalidation rules.
 - `docs/security-standards.md` for auth, role, public data, and file safety.
 - `docs/codex-skill-routing.md` for external skill usage.
+- `docs/localization-standards.md` for bilingual content rules.

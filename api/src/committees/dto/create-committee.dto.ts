@@ -9,9 +9,10 @@ import {
   Length,
   Min,
 } from 'class-validator';
+import { LocalizedSourceDto } from '../../localization/dto/localized-source.dto';
 import { CommitteeStatus } from '../entities/committee-status.enum';
 
-export class CreateCommitteeDto {
+export class CreateCommitteeDto extends LocalizedSourceDto {
   @ApiProperty()
   @IsString()
   @Length(2, 180)

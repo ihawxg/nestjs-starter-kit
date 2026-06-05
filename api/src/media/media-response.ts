@@ -1,3 +1,4 @@
+import { LocalizationResponseMeta } from '../localization/localization-response';
 import { AssetKind } from '../storage/entities/asset-kind.enum';
 import { StoredFileEntity } from '../storage/entities/stored-file.entity';
 
@@ -7,8 +8,12 @@ export interface MediaResponse {
   mimeType: string;
   size: number;
   kind: AssetKind;
+  displayName?: string | null;
+  altText?: string | null;
+  caption?: string | null;
   createdAt: Date;
   updatedAt: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface PaginatedMediaResponse {

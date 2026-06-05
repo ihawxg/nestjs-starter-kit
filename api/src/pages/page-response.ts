@@ -1,3 +1,4 @@
+import { LocalizationResponseMeta } from '../localization/localization-response';
 import { PageEntity } from './entities/page.entity';
 import { PageStatus } from './entities/page-status.enum';
 
@@ -13,6 +14,7 @@ export interface PageResponse {
   seoDescription?: string | null;
   createdAt: Date;
   updatedAt: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface PaginatedPagesResponse {

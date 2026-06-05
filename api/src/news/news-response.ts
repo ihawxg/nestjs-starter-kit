@@ -2,6 +2,7 @@ import {
   CategoryResponse,
   toCategoryResponse,
 } from '../categories/category-response';
+import { LocalizationResponseMeta } from '../localization/localization-response';
 import { AssetKind } from '../storage/entities/asset-kind.enum';
 import { NewsAssetEntity } from './entities/news-asset.entity';
 import { NewsEntity } from './entities/news.entity';
@@ -28,6 +29,7 @@ export interface NewsResponse {
   assets: NewsAssetResponse[];
   createdAt: Date;
   updatedAt: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface PaginatedNewsResponse {

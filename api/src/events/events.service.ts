@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -12,6 +13,12 @@ import { ListEventsQueryDto } from './dto/list-events-query.dto';
 import { UpdateEventDto } from './dto/update-event.dto';
 import { EventEntity } from './entities/event.entity';
 import { EventStatus } from './entities/event-status.enum';
+import { LocalizationService } from '../localization/localization.service';
+import { LOCALIZATION_SPECS } from '../localization/localization-specs';
+import {
+  DEFAULT_LOCALE,
+  SupportedLocale,
+} from '../localization/supported-locale.enum';
 import {
   EventResponse,
   PaginatedEventsResponse,
@@ -23,10 +30,13 @@ export class EventsService {
   constructor(
     @InjectRepository(EventEntity)
     private readonly eventsRepository: Repository<EventEntity>,
+    @Optional()
+    private readonly localizationService?: LocalizationService,
   ) {}
 
   async listPublished(
     query: ListEventsQueryDto,
+    locale: SupportedLocale = DEFAULT_LOCALE,
   ): Promise<PaginatedEventsResponse> {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
@@ -41,14 +51,20 @@ export class EventsService {
     const [items, total] = await builder.getManyAndCount();
 
     return {
-      items: items.map(toEventResponse),
+      items: await this.localizeEventResponses(
+        items.map(toEventResponse),
+        locale,
+      ),
       page,
       limit,
       total,
     };
   }
 
-  async getPublishedBySlug(slug: string): Promise<EventResponse> {
+  async getPublishedBySlug(
+    slug: string,
+    locale: SupportedLocale = DEFAULT_LOCALE,
+  ): Promise<EventResponse> {
     const event = await this.eventsRepository.findOne({
       where: {
         slug: slug.toLowerCase(),
@@ -60,7 +76,9 @@ export class EventsService {
       throw new NotFoundException('Event not found');
     }
 
-    return toEventResponse(event);
+    return (
+      await this.localizeEventResponses([toEventResponse(event)], locale)
+    )[0];
   }
 
   async listAdmin(
@@ -95,21 +113,34 @@ export class EventsService {
   }
 
   async create(dto: CreateEventDto): Promise<EventResponse> {
-    this.validateEventWindow(dto.startsAt, dto.endsAt);
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.events,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
+    this.validateEventWindow(payload.startsAt, payload.endsAt);
 
     const event = this.eventsRepository.create({
-      title: dto.title,
-      slug: this.normalizeSlug(dto.slug),
-      description: dto.description,
-      location: dto.location,
-      startsAt: dto.startsAt,
-      endsAt: dto.endsAt,
-      status: dto.status ?? EventStatus.DRAFT,
-      publishedAt: dto.publishedAt,
+      title: payload.title,
+      slug: this.normalizeSlug(payload.slug),
+      description: payload.description,
+      location: payload.location,
+      startsAt: payload.startsAt,
+      endsAt: payload.endsAt,
+      status: payload.status ?? EventStatus.DRAFT,
+      publishedAt: payload.publishedAt,
     });
 
     try {
-      return toEventResponse(await this.eventsRepository.save(event));
+      const saved = await this.eventsRepository.save(event);
+      if (localized) {
+        await this.localizationService?.syncSourceTranslations?.(
+          LOCALIZATION_SPECS.events,
+          saved.id,
+          localized,
+        );
+      }
+      return toEventResponse(saved);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new ConflictException('Event slug already exists');
@@ -119,24 +150,37 @@ export class EventsService {
   }
 
   async update(id: number, dto: UpdateEventDto): Promise<EventResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.events,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const event = await this.getAdminEntity(id);
-    const startsAt = dto.startsAt ?? event.startsAt;
-    const endsAt = dto.endsAt ?? event.endsAt;
+    const startsAt = payload.startsAt ?? event.startsAt;
+    const endsAt = payload.endsAt ?? event.endsAt;
     this.validateEventWindow(startsAt, endsAt);
 
     Object.assign(event, {
-      title: dto.title ?? event.title,
-      slug: dto.slug ? this.normalizeSlug(dto.slug) : event.slug,
-      description: dto.description ?? event.description,
-      location: dto.location ?? event.location,
+      title: payload.title ?? event.title,
+      slug: payload.slug ? this.normalizeSlug(payload.slug) : event.slug,
+      description: payload.description ?? event.description,
+      location: payload.location ?? event.location,
       startsAt,
       endsAt,
-      status: dto.status ?? event.status,
-      publishedAt: dto.publishedAt ?? event.publishedAt,
+      status: payload.status ?? event.status,
+      publishedAt: payload.publishedAt ?? event.publishedAt,
     });
 
     try {
-      return toEventResponse(await this.eventsRepository.save(event));
+      const saved = await this.eventsRepository.save(event);
+      if (localized) {
+        await this.localizationService?.syncSourceTranslations?.(
+          LOCALIZATION_SPECS.events,
+          saved.id,
+          localized,
+        );
+      }
+      return toEventResponse(saved);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new ConflictException('Event slug already exists');
@@ -180,5 +224,18 @@ export class EventsService {
       'code' in error &&
       error.code === '23505'
     );
+  }
+
+  private async localizeEventResponses(
+    items: EventResponse[],
+    locale: SupportedLocale,
+  ): Promise<EventResponse[]> {
+    if (!this.localizationService) return items;
+
+    return this.localizationService.localizeMany(
+      LOCALIZATION_SPECS.events,
+      items,
+      locale,
+    ) as Promise<EventResponse[]>;
   }
 }

@@ -2,11 +2,18 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PageEntity } from '../pages/entities/page.entity';
 import { PageStatus } from '../pages/entities/page-status.enum';
+import { LocalizationService } from '../localization/localization.service';
+import { LOCALIZATION_SPECS } from '../localization/localization-specs';
+import {
+  DEFAULT_LOCALE,
+  SupportedLocale,
+} from '../localization/supported-locale.enum';
 import { CreateNavigationItemDto } from './dto/create-navigation-item.dto';
 import { ListAdminNavigationQueryDto } from './dto/list-admin-navigation-query.dto';
 import { UpdateNavigationItemDto } from './dto/update-navigation-item.dto';
@@ -24,10 +31,13 @@ export class NavigationService {
     private readonly navigationRepository: Repository<NavigationItemEntity>,
     @InjectRepository(PageEntity)
     private readonly pagesRepository: Repository<PageEntity>,
+    @Optional()
+    private readonly localizationService?: LocalizationService,
   ) {}
 
   async listPublicByLocation(
     location: string,
+    locale: SupportedLocale = DEFAULT_LOCALE,
   ): Promise<NavigationItemResponse[]> {
     const items = await this.navigationRepository
       .createQueryBuilder('item')
@@ -44,7 +54,10 @@ export class NavigationService {
       .addOrderBy('item.label', 'ASC')
       .getMany();
 
-    return items.map((item) => toNavigationItemResponse(item, true));
+    return this.localizeNavigationResponses(
+      items.map((item) => toNavigationItemResponse(item, true)),
+      locale,
+    );
   }
 
   async listAdmin(
@@ -82,31 +95,50 @@ export class NavigationService {
   }
 
   async create(dto: CreateNavigationItemDto): Promise<NavigationItemResponse> {
-    await this.validateReferences(dto.pageId, dto.parentId);
-    this.validateDestination(dto.url, dto.pageId);
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.navigation,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
+    await this.validateReferences(payload.pageId, payload.parentId);
+    this.validateDestination(payload.url, payload.pageId);
 
     const item = this.navigationRepository.create({
-      label: dto.label,
-      location: this.normalizeKey(dto.location),
-      url: dto.url,
-      pageId: dto.pageId,
-      parentId: dto.parentId,
-      displayOrder: dto.displayOrder ?? 0,
-      isActive: dto.isActive ?? true,
+      label: payload.label,
+      location: this.normalizeKey(payload.location),
+      url: payload.url,
+      pageId: payload.pageId,
+      parentId: payload.parentId,
+      displayOrder: payload.displayOrder ?? 0,
+      isActive: payload.isActive ?? true,
     });
 
-    return toNavigationItemResponse(await this.navigationRepository.save(item));
+    const saved = await this.navigationRepository.save(item);
+    if (localized) {
+      await this.localizationService?.syncSourceTranslations?.(
+        LOCALIZATION_SPECS.navigation,
+        saved.id,
+        localized,
+      );
+    }
+    return toNavigationItemResponse(saved);
   }
 
   async update(
     id: number,
     dto: UpdateNavigationItemDto,
   ): Promise<NavigationItemResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.navigation,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const item = await this.getAdminEntity(id);
-    const nextPageId = dto.pageId === undefined ? item.pageId : dto.pageId;
+    const nextPageId =
+      payload.pageId === undefined ? item.pageId : payload.pageId;
     const nextParentId =
-      dto.parentId === undefined ? item.parentId : dto.parentId;
-    const nextUrl = dto.url === undefined ? item.url : dto.url;
+      payload.parentId === undefined ? item.parentId : payload.parentId;
+    const nextUrl = payload.url === undefined ? item.url : payload.url;
 
     if (nextParentId === id) {
       throw new BadRequestException('Navigation item cannot be its own parent');
@@ -116,16 +148,26 @@ export class NavigationService {
     this.validateDestination(nextUrl, nextPageId);
 
     Object.assign(item, {
-      label: dto.label ?? item.label,
-      location: dto.location ? this.normalizeKey(dto.location) : item.location,
+      label: payload.label ?? item.label,
+      location: payload.location
+        ? this.normalizeKey(payload.location)
+        : item.location,
       url: nextUrl,
       pageId: nextPageId,
       parentId: nextParentId,
-      displayOrder: dto.displayOrder ?? item.displayOrder,
-      isActive: dto.isActive ?? item.isActive,
+      displayOrder: payload.displayOrder ?? item.displayOrder,
+      isActive: payload.isActive ?? item.isActive,
     });
 
-    return toNavigationItemResponse(await this.navigationRepository.save(item));
+    const saved = await this.navigationRepository.save(item);
+    if (localized) {
+      await this.localizationService?.syncSourceTranslations?.(
+        LOCALIZATION_SPECS.navigation,
+        saved.id,
+        localized,
+      );
+    }
+    return toNavigationItemResponse(saved);
   }
 
   async deactivate(id: number): Promise<NavigationItemResponse> {
@@ -185,5 +227,40 @@ export class NavigationService {
 
   private normalizeKey(value: string): string {
     return value.trim().toLowerCase();
+  }
+
+  private async localizeNavigationResponses(
+    items: NavigationItemResponse[],
+    locale: SupportedLocale,
+  ): Promise<NavigationItemResponse[]> {
+    if (!this.localizationService) return items;
+
+    const localized = (await this.localizationService.localizeMany(
+      LOCALIZATION_SPECS.navigation,
+      items,
+      locale,
+    )) as NavigationItemResponse[];
+
+    const pages = localized
+      .map((item) => item.page)
+      .filter((page): page is NonNullable<NavigationItemResponse['page']> =>
+        Boolean(page),
+      );
+    const localizedPages = (await this.localizationService.localizeMany(
+      LOCALIZATION_SPECS.pages,
+      pages,
+      locale,
+    )) as NonNullable<NavigationItemResponse['page']>[];
+    const localizedById = new Map(
+      localizedPages.map((page) => [page.id, page]),
+    );
+
+    for (const item of localized) {
+      if (item.page) {
+        item.page = localizedById.get(item.page.id) ?? item.page;
+      }
+    }
+
+    return localized;
   }
 }

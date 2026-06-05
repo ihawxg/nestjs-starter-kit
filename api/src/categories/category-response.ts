@@ -1,4 +1,5 @@
 import { CategoryEntity } from './entities/category.entity';
+import { LocalizationResponseMeta } from '../localization/localization-response';
 
 export interface CategoryResponse {
   id: number;
@@ -8,6 +9,7 @@ export interface CategoryResponse {
   description?: string | null;
   displayOrder: number;
   isActive: boolean;
+  localization?: LocalizationResponseMeta;
 }
 
 export function toCategoryResponse(category: CategoryEntity): CategoryResponse {

@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -21,6 +22,12 @@ import { UpdateDepartmentDto } from './dto/update-department.dto';
 import { DepartmentContactEntity } from './entities/department-contact.entity';
 import { DepartmentStatus } from './entities/department-status.enum';
 import { DepartmentEntity } from './entities/department.entity';
+import { LocalizationService } from '../localization/localization.service';
+import { LOCALIZATION_SPECS } from '../localization/localization-specs';
+import {
+  DEFAULT_LOCALE,
+  SupportedLocale,
+} from '../localization/supported-locale.enum';
 
 @Injectable()
 export class DepartmentsService {
@@ -29,10 +36,13 @@ export class DepartmentsService {
     private readonly departmentsRepository: Repository<DepartmentEntity>,
     @InjectRepository(DepartmentContactEntity)
     private readonly contactsRepository: Repository<DepartmentContactEntity>,
+    @Optional()
+    private readonly localizationService?: LocalizationService,
   ) {}
 
   async listPublished(
     query: ListDepartmentsQueryDto,
+    locale: SupportedLocale = DEFAULT_LOCALE,
   ): Promise<PaginatedDepartmentsResponse> {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
@@ -55,14 +65,20 @@ export class DepartmentsService {
     const [items, total] = await builder.getManyAndCount();
 
     return {
-      items: items.map(toDepartmentResponse),
+      items: await this.localizeDepartmentResponses(
+        items.map(toDepartmentResponse),
+        locale,
+      ),
       page,
       limit,
       total,
     };
   }
 
-  async getPublishedBySlug(slug: string): Promise<DepartmentResponse> {
+  async getPublishedBySlug(
+    slug: string,
+    locale: SupportedLocale = DEFAULT_LOCALE,
+  ): Promise<DepartmentResponse> {
     const department = await this.departmentsRepository.findOne({
       where: {
         slug: slug.toLowerCase(),
@@ -86,7 +102,12 @@ export class DepartmentsService {
       (contact) => contact.isActive,
     );
 
-    return toDepartmentResponse(department);
+    return (
+      await this.localizeDepartmentResponses(
+        [toDepartmentResponse(department)],
+        locale,
+      )
+    )[0];
   }
 
   async listAdmin(
@@ -124,23 +145,34 @@ export class DepartmentsService {
   }
 
   async create(dto: CreateDepartmentDto): Promise<DepartmentResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.departments,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const department = this.departmentsRepository.create({
-      name: dto.name,
-      slug: this.normalizeSlug(dto.slug),
-      description: dto.description,
-      phone: dto.phone,
-      email: dto.email?.toLowerCase(),
-      address: dto.address,
-      officeHours: dto.officeHours,
-      displayOrder: dto.displayOrder ?? 0,
-      status: dto.status ?? DepartmentStatus.DRAFT,
+      name: payload.name,
+      slug: this.normalizeSlug(payload.slug),
+      description: payload.description,
+      phone: payload.phone,
+      email: payload.email?.toLowerCase(),
+      address: payload.address,
+      officeHours: payload.officeHours,
+      displayOrder: payload.displayOrder ?? 0,
+      status: payload.status ?? DepartmentStatus.DRAFT,
       contacts: [],
     });
 
     try {
-      return toDepartmentResponse(
-        await this.departmentsRepository.save(department),
-      );
+      const saved = await this.departmentsRepository.save(department);
+      if (localized) {
+        await this.localizationService?.syncSourceTranslations?.(
+          LOCALIZATION_SPECS.departments,
+          saved.id,
+          localized,
+        );
+      }
+      return toDepartmentResponse(saved);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new ConflictException('Department slug already exists');
@@ -153,24 +185,35 @@ export class DepartmentsService {
     id: number,
     dto: UpdateDepartmentDto,
   ): Promise<DepartmentResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.departments,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const department = await this.getAdminEntity(id);
 
     Object.assign(department, {
-      name: dto.name ?? department.name,
-      slug: dto.slug ? this.normalizeSlug(dto.slug) : department.slug,
-      description: dto.description ?? department.description,
-      phone: dto.phone ?? department.phone,
-      email: dto.email ? dto.email.toLowerCase() : department.email,
-      address: dto.address ?? department.address,
-      officeHours: dto.officeHours ?? department.officeHours,
-      displayOrder: dto.displayOrder ?? department.displayOrder,
-      status: dto.status ?? department.status,
+      name: payload.name ?? department.name,
+      slug: payload.slug ? this.normalizeSlug(payload.slug) : department.slug,
+      description: payload.description ?? department.description,
+      phone: payload.phone ?? department.phone,
+      email: payload.email ? payload.email.toLowerCase() : department.email,
+      address: payload.address ?? department.address,
+      officeHours: payload.officeHours ?? department.officeHours,
+      displayOrder: payload.displayOrder ?? department.displayOrder,
+      status: payload.status ?? department.status,
     });
 
     try {
-      return toDepartmentResponse(
-        await this.departmentsRepository.save(department),
-      );
+      const saved = await this.departmentsRepository.save(department);
+      if (localized) {
+        await this.localizationService?.syncSourceTranslations?.(
+          LOCALIZATION_SPECS.departments,
+          saved.id,
+          localized,
+        );
+      }
+      return toDepartmentResponse(saved);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new ConflictException('Department slug already exists');
@@ -189,21 +232,32 @@ export class DepartmentsService {
     departmentId: number,
     dto: CreateDepartmentContactDto,
   ): Promise<DepartmentContactResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.departmentContacts,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const department = await this.getAdminEntity(departmentId);
     const contact = this.contactsRepository.create({
       department,
       departmentId,
-      name: dto.name,
-      title: dto.title,
-      phone: dto.phone,
-      email: dto.email?.toLowerCase(),
-      displayOrder: dto.displayOrder ?? 0,
+      name: payload.name,
+      title: payload.title,
+      phone: payload.phone,
+      email: payload.email?.toLowerCase(),
+      displayOrder: payload.displayOrder ?? 0,
       isActive: true,
     });
 
-    return toDepartmentContactResponse(
-      await this.contactsRepository.save(contact),
-    );
+    const saved = await this.contactsRepository.save(contact);
+    if (localized) {
+      await this.localizationService?.syncSourceTranslations?.(
+        LOCALIZATION_SPECS.departmentContacts,
+        saved.id,
+        localized,
+      );
+    }
+    return toDepartmentContactResponse(saved);
   }
 
   async updateContact(
@@ -211,19 +265,30 @@ export class DepartmentsService {
     contactId: number,
     dto: UpdateDepartmentContactDto,
   ): Promise<DepartmentContactResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.departmentContacts,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const contact = await this.getContactEntity(departmentId, contactId);
 
     Object.assign(contact, {
-      name: dto.name ?? contact.name,
-      title: dto.title ?? contact.title,
-      phone: dto.phone ?? contact.phone,
-      email: dto.email ? dto.email.toLowerCase() : contact.email,
-      displayOrder: dto.displayOrder ?? contact.displayOrder,
+      name: payload.name ?? contact.name,
+      title: payload.title ?? contact.title,
+      phone: payload.phone ?? contact.phone,
+      email: payload.email ? payload.email.toLowerCase() : contact.email,
+      displayOrder: payload.displayOrder ?? contact.displayOrder,
     });
 
-    return toDepartmentContactResponse(
-      await this.contactsRepository.save(contact),
-    );
+    const saved = await this.contactsRepository.save(contact);
+    if (localized) {
+      await this.localizationService?.syncSourceTranslations?.(
+        LOCALIZATION_SPECS.departmentContacts,
+        saved.id,
+        localized,
+      );
+    }
+    return toDepartmentContactResponse(saved);
   }
 
   async deactivateContact(
@@ -287,5 +352,51 @@ export class DepartmentsService {
       'code' in error &&
       error.code === '23505'
     );
+  }
+
+  private async localizeDepartmentResponses(
+    items: DepartmentResponse[],
+    locale: SupportedLocale,
+  ): Promise<DepartmentResponse[]> {
+    if (!this.localizationService) return items;
+
+    const localized = (await this.localizationService.localizeMany(
+      LOCALIZATION_SPECS.departments,
+      items,
+      locale,
+    )) as DepartmentResponse[];
+
+    await this.localizeContacts(localized, locale);
+
+    return localized;
+  }
+
+  private async localizeContacts(
+    departments: DepartmentResponse[],
+    locale: SupportedLocale,
+  ): Promise<void> {
+    if (!this.localizationService) return;
+
+    const contacts = new Map<number, DepartmentContactResponse>();
+    for (const department of departments) {
+      for (const contact of department.contacts) {
+        contacts.set(contact.id, contact);
+      }
+    }
+
+    const localizedContacts = (await this.localizationService.localizeMany(
+      LOCALIZATION_SPECS.departmentContacts,
+      [...contacts.values()],
+      locale,
+    )) as DepartmentContactResponse[];
+    const localizedById = new Map(
+      localizedContacts.map((contact) => [contact.id, contact]),
+    );
+
+    for (const department of departments) {
+      department.contacts = department.contacts.map(
+        (contact) => localizedById.get(contact.id) ?? contact,
+      );
+    }
   }
 }

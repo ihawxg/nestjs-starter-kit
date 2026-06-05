@@ -14,7 +14,7 @@ Current stack:
 
 The codebase still contains starter-kit baseline modules. Treat them as infrastructure, not final product shape.
 
-Current civic content work includes managed news, documents, events, departments, contacts, pages, site settings, navigation, alerts, media library files, staff, officials, committees, scoped categories, local file uploads, audit logs, rate limits, admin account lifecycle, and public search.
+Current civic content work includes managed bilingual news, documents, events, departments, contacts, pages, site settings, navigation, alerts, media library files, staff, officials, committees, scoped categories, local file uploads, audit logs, rate limits, admin account lifecycle, and public search.
 
 ## Roles
 
@@ -24,6 +24,10 @@ Current civic content work includes managed news, documents, events, departments
 No public account registration is allowed. The first admin account must come from a seed, migration, or CLI script.
 
 Admin management routes use `/admin/...` paths for current civic domains and `/admin/accounts` for admin account lifecycle. Public routes only return published content, safe media metadata, safe search summaries, and safe download metadata.
+
+Public content supports English and Bulgarian. Use `/en/...` or `/bg/...` API prefixes for localized reads; existing unprefixed public routes are English aliases.
+
+Admins can optionally auto-translate English/Bulgarian content through DeepL. Auto-translation is disabled by default and requires environment configuration; generated translations are auto-published and can be manually overridden.
 
 CMS content is created through admin APIs only. There is no seed script or starter municipality content.
 
@@ -53,6 +57,16 @@ Copy environment settings if needed:
 
 ```console
 cp .env.example .env
+```
+
+Optional auto-translation settings:
+
+```console
+AUTO_TRANSLATION_ENABLED=false
+AUTO_TRANSLATION_PROVIDER=deepl
+DEEPL_AUTH_KEY=
+DEEPL_TARGET_EN_VARIANT=en-US
+AUTO_TRANSLATION_MAX_FIELD_BYTES=100000
 ```
 
 Run migrations:
@@ -122,5 +136,6 @@ ADMIN_EMAIL=admin@example.com ADMIN_PASSWORD='strong-password' npm run admin:cre
 - [Codex skill routing](./docs/codex-skill-routing.md)
 - [Hook context policy](./docs/hook-context-policy.md)
 - [Living docs policy](./docs/living-docs-policy.md)
+- [Localization standards](./docs/localization-standards.md)
 
 Read the guardrails and checklist before adding new backend features.

@@ -24,6 +24,7 @@ import { MediaModule } from './media/media.module';
 import { StaffModule } from './staff/staff.module';
 import { OfficialsModule } from './officials/officials.module';
 import { CommitteesModule } from './committees/committees.module';
+import { LocalizationModule } from './localization/localization.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { CommitteesModule } from './committees/committees.module';
     HealthModule,
     RateLimitModule,
     AuditLogModule,
+    LocalizationModule,
     CategoriesModule,
     NewsModule,
     DocumentsModule,

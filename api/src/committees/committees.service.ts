@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,16 +17,25 @@ import { ListCommitteesQueryDto } from './dto/list-committees-query.dto';
 import { UpdateCommitteeDto } from './dto/update-committee.dto';
 import { CommitteeEntity } from './entities/committee.entity';
 import { CommitteeStatus } from './entities/committee-status.enum';
+import { LocalizationService } from '../localization/localization.service';
+import { LOCALIZATION_SPECS } from '../localization/localization-specs';
+import {
+  DEFAULT_LOCALE,
+  SupportedLocale,
+} from '../localization/supported-locale.enum';
 
 @Injectable()
 export class CommitteesService {
   constructor(
     @InjectRepository(CommitteeEntity)
     private readonly committeesRepository: Repository<CommitteeEntity>,
+    @Optional()
+    private readonly localizationService?: LocalizationService,
   ) {}
 
   async listPublished(
     query: ListCommitteesQueryDto,
+    locale: SupportedLocale = DEFAULT_LOCALE,
   ): Promise<PaginatedCommitteesResponse> {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
@@ -42,14 +52,20 @@ export class CommitteesService {
     const [items, total] = await builder.getManyAndCount();
 
     return {
-      items: items.map(toCommitteeResponse),
+      items: await this.localizeCommitteeResponses(
+        items.map(toCommitteeResponse),
+        locale,
+      ),
       page,
       limit,
       total,
     };
   }
 
-  async getPublishedBySlug(slug: string): Promise<CommitteeResponse> {
+  async getPublishedBySlug(
+    slug: string,
+    locale: SupportedLocale = DEFAULT_LOCALE,
+  ): Promise<CommitteeResponse> {
     const committee = await this.committeesRepository.findOne({
       where: {
         slug: slug.toLowerCase(),
@@ -61,7 +77,12 @@ export class CommitteesService {
       throw new NotFoundException('Committee not found');
     }
 
-    return toCommitteeResponse(committee);
+    return (
+      await this.localizeCommitteeResponses(
+        [toCommitteeResponse(committee)],
+        locale,
+      )
+    )[0];
   }
 
   async listAdmin(
@@ -97,19 +118,30 @@ export class CommitteesService {
   }
 
   async create(dto: CreateCommitteeDto): Promise<CommitteeResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.committees,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const committee = this.committeesRepository.create({
-      name: dto.name,
-      slug: this.normalizeSlug(dto.slug),
-      description: dto.description,
-      displayOrder: dto.displayOrder ?? 0,
-      status: dto.status ?? CommitteeStatus.DRAFT,
-      publishedAt: dto.publishedAt,
+      name: payload.name,
+      slug: this.normalizeSlug(payload.slug),
+      description: payload.description,
+      displayOrder: payload.displayOrder ?? 0,
+      status: payload.status ?? CommitteeStatus.DRAFT,
+      publishedAt: payload.publishedAt,
     });
 
     try {
-      return toCommitteeResponse(
-        await this.committeesRepository.save(committee),
-      );
+      const saved = await this.committeesRepository.save(committee);
+      if (localized) {
+        await this.localizationService?.syncSourceTranslations?.(
+          LOCALIZATION_SPECS.committees,
+          saved.id,
+          localized,
+        );
+      }
+      return toCommitteeResponse(saved);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new ConflictException('Committee slug already exists');
@@ -122,21 +154,32 @@ export class CommitteesService {
     id: number,
     dto: UpdateCommitteeDto,
   ): Promise<CommitteeResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.committees,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const committee = await this.getAdminEntity(id);
 
     Object.assign(committee, {
-      name: dto.name ?? committee.name,
-      slug: dto.slug ? this.normalizeSlug(dto.slug) : committee.slug,
-      description: dto.description ?? committee.description,
-      displayOrder: dto.displayOrder ?? committee.displayOrder,
-      status: dto.status ?? committee.status,
-      publishedAt: dto.publishedAt ?? committee.publishedAt,
+      name: payload.name ?? committee.name,
+      slug: payload.slug ? this.normalizeSlug(payload.slug) : committee.slug,
+      description: payload.description ?? committee.description,
+      displayOrder: payload.displayOrder ?? committee.displayOrder,
+      status: payload.status ?? committee.status,
+      publishedAt: payload.publishedAt ?? committee.publishedAt,
     });
 
     try {
-      return toCommitteeResponse(
-        await this.committeesRepository.save(committee),
-      );
+      const saved = await this.committeesRepository.save(committee);
+      if (localized) {
+        await this.localizationService?.syncSourceTranslations?.(
+          LOCALIZATION_SPECS.committees,
+          saved.id,
+          localized,
+        );
+      }
+      return toCommitteeResponse(saved);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new ConflictException('Committee slug already exists');
@@ -174,5 +217,18 @@ export class CommitteesService {
       'code' in error &&
       error.code === '23505'
     );
+  }
+
+  private async localizeCommitteeResponses(
+    items: CommitteeResponse[],
+    locale: SupportedLocale,
+  ): Promise<CommitteeResponse[]> {
+    if (!this.localizationService) return items;
+
+    return this.localizationService.localizeMany(
+      LOCALIZATION_SPECS.committees,
+      items,
+      locale,
+    ) as Promise<CommitteeResponse[]>;
   }
 }

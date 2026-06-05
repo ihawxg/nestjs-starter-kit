@@ -2,12 +2,20 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Response } from 'express';
 import { Repository } from 'typeorm';
 import { CategoriesService } from '../categories/categories.service';
+import { CategoryResponse } from '../categories/category-response';
 import { CategoryScope } from '../categories/entities/category-scope.enum';
+import { LocalizationService } from '../localization/localization.service';
+import { LOCALIZATION_SPECS } from '../localization/localization-specs';
+import {
+  DEFAULT_LOCALE,
+  SupportedLocale,
+} from '../localization/supported-locale.enum';
 import {
   DownloadableStoredFile,
   LocalUploadFile,
@@ -38,10 +46,13 @@ export class DocumentsService {
     private readonly documentAssetsRepository: Repository<DocumentAssetEntity>,
     private readonly categoriesService: CategoriesService,
     private readonly storageService: StorageService,
+    @Optional()
+    private readonly localizationService?: LocalizationService,
   ) {}
 
   async listPublished(
     query: ListDocumentsQueryDto,
+    locale: SupportedLocale = DEFAULT_LOCALE,
   ): Promise<PaginatedDocumentsResponse> {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
@@ -71,14 +82,20 @@ export class DocumentsService {
     const [items, total] = await builder.getManyAndCount();
 
     return {
-      items: items.map(toDocumentResponse),
+      items: await this.localizeDocumentResponses(
+        items.map(toDocumentResponse),
+        locale,
+      ),
       page,
       limit,
       total,
     };
   }
 
-  async getPublishedBySlug(slug: string): Promise<DocumentResponse> {
+  async getPublishedBySlug(
+    slug: string,
+    locale: SupportedLocale = DEFAULT_LOCALE,
+  ): Promise<DocumentResponse> {
     const document = await this.documentsRepository.findOne({
       where: {
         slug: slug.toLowerCase(),
@@ -96,7 +113,12 @@ export class DocumentsService {
       throw new NotFoundException('Document not found');
     }
 
-    return toDocumentResponse(document);
+    return (
+      await this.localizeDocumentResponses(
+        [toDocumentResponse(document)],
+        locale,
+      )
+    )[0];
   }
 
   async listAdmin(
@@ -140,21 +162,34 @@ export class DocumentsService {
   }
 
   async create(dto: CreateDocumentDto): Promise<DocumentResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.documents,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const categories = await this.categoriesService.findActiveByIds(
       CategoryScope.DOCUMENTS,
-      dto.categoryIds,
+      payload.categoryIds,
     );
     const document = this.documentsRepository.create({
-      title: dto.title,
-      slug: this.normalizeSlug(dto.slug),
-      description: dto.description,
-      status: dto.status ?? DocumentStatus.DRAFT,
-      publishedAt: dto.publishedAt,
+      title: payload.title,
+      slug: this.normalizeSlug(payload.slug),
+      description: payload.description,
+      status: payload.status ?? DocumentStatus.DRAFT,
+      publishedAt: payload.publishedAt,
       categories,
     });
 
     try {
-      return toDocumentResponse(await this.documentsRepository.save(document));
+      const saved = await this.documentsRepository.save(document);
+      if (localized) {
+        await this.localizationService?.syncSourceTranslations?.(
+          LOCALIZATION_SPECS.documents,
+          saved.id,
+          localized,
+        );
+      }
+      return toDocumentResponse(saved);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new ConflictException('Document slug already exists');
@@ -164,26 +199,39 @@ export class DocumentsService {
   }
 
   async update(id: number, dto: UpdateDocumentDto): Promise<DocumentResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.documents,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const document = await this.getAdminEntity(id);
     const categories =
-      dto.categoryIds === undefined
+      payload.categoryIds === undefined
         ? document.categories
         : await this.categoriesService.findActiveByIds(
             CategoryScope.DOCUMENTS,
-            dto.categoryIds,
+            payload.categoryIds,
           );
 
     Object.assign(document, {
-      title: dto.title ?? document.title,
-      slug: dto.slug ? this.normalizeSlug(dto.slug) : document.slug,
-      description: dto.description ?? document.description,
-      status: dto.status ?? document.status,
-      publishedAt: dto.publishedAt ?? document.publishedAt,
+      title: payload.title ?? document.title,
+      slug: payload.slug ? this.normalizeSlug(payload.slug) : document.slug,
+      description: payload.description ?? document.description,
+      status: payload.status ?? document.status,
+      publishedAt: payload.publishedAt ?? document.publishedAt,
       categories,
     });
 
     try {
-      return toDocumentResponse(await this.documentsRepository.save(document));
+      const saved = await this.documentsRepository.save(document);
+      if (localized) {
+        await this.localizationService?.syncSourceTranslations?.(
+          LOCALIZATION_SPECS.documents,
+          saved.id,
+          localized,
+        );
+      }
+      return toDocumentResponse(saved);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new ConflictException('Document slug already exists');
@@ -311,5 +359,51 @@ export class DocumentsService {
       'code' in error &&
       error.code === '23505'
     );
+  }
+
+  private async localizeDocumentResponses(
+    items: DocumentResponse[],
+    locale: SupportedLocale,
+  ): Promise<DocumentResponse[]> {
+    if (!this.localizationService) return items;
+
+    const localized = (await this.localizationService.localizeMany(
+      LOCALIZATION_SPECS.documents,
+      items,
+      locale,
+    )) as DocumentResponse[];
+
+    await this.localizeCategoryResponses(localized, locale);
+
+    return localized;
+  }
+
+  private async localizeCategoryResponses(
+    documents: DocumentResponse[],
+    locale: SupportedLocale,
+  ): Promise<void> {
+    if (!this.localizationService) return;
+
+    const categories = new Map<number, CategoryResponse>();
+    for (const item of documents) {
+      for (const category of item.categories) {
+        categories.set(category.id, category);
+      }
+    }
+
+    const localizedCategories = (await this.localizationService.localizeMany(
+      LOCALIZATION_SPECS.categories,
+      [...categories.values()],
+      locale,
+    )) as CategoryResponse[];
+    const localizedById = new Map(
+      localizedCategories.map((category) => [category.id, category]),
+    );
+
+    for (const item of documents) {
+      item.categories = item.categories.map(
+        (category) => localizedById.get(category.id) ?? category,
+      );
+    }
   }
 }

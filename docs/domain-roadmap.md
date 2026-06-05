@@ -4,6 +4,8 @@
 
 Townhall Manipulicity v1 backend should focus on core civic website data. Build public read paths and admin management paths for each domain.
 
+All public civic text is localized for English and Bulgarian. English is the default, Bulgarian falls back to English when missing, shared slugs are used across languages, and configured auto-translation may generate the opposite locale for admin-entered content.
+
 ## Pages
 
 Purpose: managed website content pages.
@@ -256,6 +258,8 @@ All domains should support:
 - Admin-only write operations.
 - Admin management read operations for unpublished and archived records.
 - Public-only read/download operations.
+- Localized public read routes under `/en` and `/bg` for user-facing text.
+- English fallback metadata on localized responses.
 - Published/unpublished state.
 - Created and updated timestamps.
 - DTO validation.

@@ -1,3 +1,4 @@
+import { LocalizationResponseMeta } from '../localization/localization-response';
 import { StoredFileEntity } from '../storage/entities/stored-file.entity';
 import { OfficialEntity } from './entities/official.entity';
 import { OfficialStatus } from './entities/official-status.enum';
@@ -28,6 +29,7 @@ export interface OfficialResponse {
   publishedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface PaginatedOfficialsResponse {

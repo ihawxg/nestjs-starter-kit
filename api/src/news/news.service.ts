@@ -2,12 +2,20 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Response } from 'express';
 import { Repository } from 'typeorm';
 import { CategoriesService } from '../categories/categories.service';
 import { CategoryScope } from '../categories/entities/category-scope.enum';
+import { CategoryResponse } from '../categories/category-response';
+import { LocalizationService } from '../localization/localization.service';
+import { LOCALIZATION_SPECS } from '../localization/localization-specs';
+import {
+  DEFAULT_LOCALE,
+  SupportedLocale,
+} from '../localization/supported-locale.enum';
 import {
   DownloadableStoredFile,
   LocalUploadFile,
@@ -38,9 +46,14 @@ export class NewsService {
     private readonly newsAssetsRepository: Repository<NewsAssetEntity>,
     private readonly categoriesService: CategoriesService,
     private readonly storageService: StorageService,
+    @Optional()
+    private readonly localizationService?: LocalizationService,
   ) {}
 
-  async listPublished(query: ListNewsQueryDto): Promise<PaginatedNewsResponse> {
+  async listPublished(
+    query: ListNewsQueryDto,
+    locale: SupportedLocale = DEFAULT_LOCALE,
+  ): Promise<PaginatedNewsResponse> {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
     const builder = this.newsRepository
@@ -67,14 +80,20 @@ export class NewsService {
     const [items, total] = await builder.getManyAndCount();
 
     return {
-      items: items.map(toNewsResponse),
+      items: await this.localizeNewsResponses(
+        items.map(toNewsResponse),
+        locale,
+      ),
       page,
       limit,
       total,
     };
   }
 
-  async getPublishedBySlug(slug: string): Promise<NewsResponse> {
+  async getPublishedBySlug(
+    slug: string,
+    locale: SupportedLocale = DEFAULT_LOCALE,
+  ): Promise<NewsResponse> {
     const news = await this.newsRepository.findOne({
       where: {
         slug: slug.toLowerCase(),
@@ -92,7 +111,9 @@ export class NewsService {
       throw new NotFoundException('News item not found');
     }
 
-    return toNewsResponse(news);
+    return (
+      await this.localizeNewsResponses([toNewsResponse(news)], locale)
+    )[0];
   }
 
   async listAdmin(
@@ -136,22 +157,35 @@ export class NewsService {
   }
 
   async create(dto: CreateNewsDto): Promise<NewsResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.news,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const categories = await this.categoriesService.findActiveByIds(
       CategoryScope.NEWS,
-      dto.categoryIds,
+      payload.categoryIds,
     );
     const news = this.newsRepository.create({
-      title: dto.title,
-      slug: this.normalizeSlug(dto.slug),
-      summary: dto.summary,
-      body: dto.body,
-      status: dto.status ?? NewsStatus.DRAFT,
-      publishedAt: dto.publishedAt,
+      title: payload.title,
+      slug: this.normalizeSlug(payload.slug),
+      summary: payload.summary,
+      body: payload.body,
+      status: payload.status ?? NewsStatus.DRAFT,
+      publishedAt: payload.publishedAt,
       categories,
     });
 
     try {
-      return toNewsResponse(await this.newsRepository.save(news));
+      const saved = await this.newsRepository.save(news);
+      if (localized) {
+        await this.localizationService?.syncSourceTranslations?.(
+          LOCALIZATION_SPECS.news,
+          saved.id,
+          localized,
+        );
+      }
+      return toNewsResponse(saved);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new ConflictException('News slug already exists');
@@ -161,27 +195,40 @@ export class NewsService {
   }
 
   async update(id: number, dto: UpdateNewsDto): Promise<NewsResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.news,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const news = await this.getAdminEntity(id);
     const categories =
-      dto.categoryIds === undefined
+      payload.categoryIds === undefined
         ? news.categories
         : await this.categoriesService.findActiveByIds(
             CategoryScope.NEWS,
-            dto.categoryIds,
+            payload.categoryIds,
           );
 
     Object.assign(news, {
-      title: dto.title ?? news.title,
-      slug: dto.slug ? this.normalizeSlug(dto.slug) : news.slug,
-      summary: dto.summary ?? news.summary,
-      body: dto.body ?? news.body,
-      status: dto.status ?? news.status,
-      publishedAt: dto.publishedAt ?? news.publishedAt,
+      title: payload.title ?? news.title,
+      slug: payload.slug ? this.normalizeSlug(payload.slug) : news.slug,
+      summary: payload.summary ?? news.summary,
+      body: payload.body ?? news.body,
+      status: payload.status ?? news.status,
+      publishedAt: payload.publishedAt ?? news.publishedAt,
       categories,
     });
 
     try {
-      return toNewsResponse(await this.newsRepository.save(news));
+      const saved = await this.newsRepository.save(news);
+      if (localized) {
+        await this.localizationService?.syncSourceTranslations?.(
+          LOCALIZATION_SPECS.news,
+          saved.id,
+          localized,
+        );
+      }
+      return toNewsResponse(saved);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new ConflictException('News slug already exists');
@@ -309,5 +356,51 @@ export class NewsService {
       'code' in error &&
       error.code === '23505'
     );
+  }
+
+  private async localizeNewsResponses(
+    items: NewsResponse[],
+    locale: SupportedLocale,
+  ): Promise<NewsResponse[]> {
+    if (!this.localizationService) return items;
+
+    const localized = (await this.localizationService.localizeMany(
+      LOCALIZATION_SPECS.news,
+      items,
+      locale,
+    )) as NewsResponse[];
+
+    await this.localizeCategoryResponses(localized, locale);
+
+    return localized;
+  }
+
+  private async localizeCategoryResponses(
+    newsItems: NewsResponse[],
+    locale: SupportedLocale,
+  ): Promise<void> {
+    if (!this.localizationService) return;
+
+    const categories = new Map<number, CategoryResponse>();
+    for (const item of newsItems) {
+      for (const category of item.categories) {
+        categories.set(category.id, category);
+      }
+    }
+
+    const localizedCategories = (await this.localizationService.localizeMany(
+      LOCALIZATION_SPECS.categories,
+      [...categories.values()],
+      locale,
+    )) as CategoryResponse[];
+    const localizedById = new Map(
+      localizedCategories.map((category) => [category.id, category]),
+    );
+
+    for (const item of newsItems) {
+      item.categories = item.categories.map(
+        (category) => localizedById.get(category.id) ?? category,
+      );
+    }
   }
 }

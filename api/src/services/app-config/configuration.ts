@@ -33,6 +33,15 @@ export const getConfig = (): AppConfig => {
         parseInt(process.env.UPLOAD_MAX_FILE_SIZE_BYTES as string, 10) ||
         10 * 1024 * 1024,
     },
+    translation: {
+      autoEnabled: process.env.AUTO_TRANSLATION_ENABLED === 'true',
+      provider: process.env.AUTO_TRANSLATION_PROVIDER || 'deepl',
+      deeplAuthKey: process.env.DEEPL_AUTH_KEY as string,
+      deeplTargetEnglishVariant: process.env.DEEPL_TARGET_EN_VARIANT || 'en-US',
+      maxFieldBytes:
+        parseInt(process.env.AUTO_TRANSLATION_MAX_FIELD_BYTES as string, 10) ||
+        100_000,
+    },
     rateLimit: {
       login: {
         windowMs:
@@ -68,6 +77,7 @@ export interface AppConfig {
   cache: CacheConfig;
   mail: MailConfig;
   storage: StorageConfig;
+  translation: TranslationConfig;
   rateLimit: RateLimitConfig;
 }
 
@@ -106,6 +116,14 @@ export interface MailConfig {
 export interface StorageConfig {
   uploadDir: string;
   maxFileSizeBytes: number;
+}
+
+export interface TranslationConfig {
+  autoEnabled: boolean;
+  provider: string;
+  deeplAuthKey: string;
+  deeplTargetEnglishVariant: string;
+  maxFieldBytes: number;
 }
 
 export interface RateLimitConfig {

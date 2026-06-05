@@ -1,3 +1,4 @@
+import { LocalizationResponseMeta } from '../localization/localization-response';
 import { CommitteeEntity } from './entities/committee.entity';
 import { CommitteeStatus } from './entities/committee-status.enum';
 
@@ -11,6 +12,7 @@ export interface CommitteeResponse {
   publishedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface PaginatedCommitteesResponse {

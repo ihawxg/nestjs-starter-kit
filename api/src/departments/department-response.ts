@@ -1,3 +1,4 @@
+import { LocalizationResponseMeta } from '../localization/localization-response';
 import { DepartmentContactEntity } from './entities/department-contact.entity';
 import { DepartmentStatus } from './entities/department-status.enum';
 import { DepartmentEntity } from './entities/department.entity';
@@ -12,6 +13,7 @@ export interface DepartmentContactResponse {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface DepartmentResponse {
@@ -28,6 +30,7 @@ export interface DepartmentResponse {
   contacts: DepartmentContactResponse[];
   createdAt: Date;
   updatedAt: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface PaginatedDepartmentsResponse {

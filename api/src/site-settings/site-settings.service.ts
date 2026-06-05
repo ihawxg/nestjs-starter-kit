@@ -1,7 +1,13 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, Optional } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { StoredFileEntity } from '../storage/entities/stored-file.entity';
+import { LocalizationService } from '../localization/localization.service';
+import { LOCALIZATION_SPECS } from '../localization/localization-specs';
+import {
+  DEFAULT_LOCALE,
+  SupportedLocale,
+} from '../localization/supported-locale.enum';
 import { UpdateSiteSettingsDto } from './dto/update-site-settings.dto';
 import { SiteSettingsEntity } from './entities/site-settings.entity';
 import {
@@ -16,9 +22,13 @@ export class SiteSettingsService {
     private readonly siteSettingsRepository: Repository<SiteSettingsEntity>,
     @InjectRepository(StoredFileEntity)
     private readonly storedFilesRepository: Repository<StoredFileEntity>,
+    @Optional()
+    private readonly localizationService?: LocalizationService,
   ) {}
 
-  async getPublic(): Promise<SiteSettingsResponse | null> {
+  async getPublic(
+    locale: SupportedLocale = DEFAULT_LOCALE,
+  ): Promise<SiteSettingsResponse | null> {
     const settings = await this.siteSettingsRepository.findOne({
       where: {
         isActive: true,
@@ -31,7 +41,9 @@ export class SiteSettingsService {
       },
     });
 
-    return settings ? toSiteSettingsResponse(settings) : null;
+    return settings
+      ? this.localizeSettingsResponse(toSiteSettingsResponse(settings), locale)
+      : null;
   }
 
   async getAdmin(): Promise<SiteSettingsResponse | null> {
@@ -40,34 +52,46 @@ export class SiteSettingsService {
   }
 
   async update(dto: UpdateSiteSettingsDto): Promise<SiteSettingsResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.siteSettings,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const settings =
       (await this.getAdminEntity()) ??
       this.siteSettingsRepository.create({
         isActive: true,
       });
 
-    if (dto.logoFileId !== undefined) {
-      settings.logoFileId = dto.logoFileId
-        ? (await this.getStoredFile(dto.logoFileId)).id
+    if (payload.logoFileId !== undefined) {
+      settings.logoFileId = payload.logoFileId
+        ? (await this.getStoredFile(payload.logoFileId)).id
         : null;
     }
 
     Object.assign(settings, {
-      municipalityName: dto.municipalityName ?? settings.municipalityName,
-      tagline: dto.tagline ?? settings.tagline,
-      address: dto.address ?? settings.address,
-      phone: dto.phone ?? settings.phone,
-      email: dto.email ? dto.email.toLowerCase() : settings.email,
-      officeHours: dto.officeHours ?? settings.officeHours,
-      socialLinks: dto.socialLinks ?? settings.socialLinks,
-      seoTitle: dto.seoTitle ?? settings.seoTitle,
-      seoDescription: dto.seoDescription ?? settings.seoDescription,
-      isActive: dto.isActive ?? settings.isActive,
+      municipalityName: payload.municipalityName ?? settings.municipalityName,
+      tagline: payload.tagline ?? settings.tagline,
+      address: payload.address ?? settings.address,
+      phone: payload.phone ?? settings.phone,
+      email: payload.email ? payload.email.toLowerCase() : settings.email,
+      officeHours: payload.officeHours ?? settings.officeHours,
+      socialLinks: payload.socialLinks ?? settings.socialLinks,
+      seoTitle: payload.seoTitle ?? settings.seoTitle,
+      seoDescription: payload.seoDescription ?? settings.seoDescription,
+      isActive: payload.isActive ?? settings.isActive,
     });
 
-    return toSiteSettingsResponse(
-      await this.siteSettingsRepository.save(settings),
-    );
+    const saved = await this.siteSettingsRepository.save(settings);
+    if (localized) {
+      await this.localizationService?.syncSourceTranslations?.(
+        LOCALIZATION_SPECS.siteSettings,
+        saved.id,
+        localized,
+      );
+    }
+
+    return toSiteSettingsResponse(saved);
   }
 
   private getAdminEntity(): Promise<SiteSettingsEntity | null> {
@@ -92,5 +116,18 @@ export class SiteSettingsService {
     }
 
     return storedFile;
+  }
+
+  private async localizeSettingsResponse(
+    settings: SiteSettingsResponse,
+    locale: SupportedLocale,
+  ): Promise<SiteSettingsResponse> {
+    if (!this.localizationService) return settings;
+
+    return this.localizationService.localizeOne(
+      LOCALIZATION_SPECS.siteSettings,
+      settings,
+      locale,
+    ) as Promise<SiteSettingsResponse>;
   }
 }

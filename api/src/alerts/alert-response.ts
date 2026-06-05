@@ -1,3 +1,4 @@
+import { LocalizationResponseMeta } from '../localization/localization-response';
 import { AlertEntity } from './entities/alert.entity';
 import { AlertSeverity } from './entities/alert-severity.enum';
 import { AlertStatus } from './entities/alert-status.enum';
@@ -12,6 +13,7 @@ export interface AlertResponse {
   endsAt: Date;
   createdAt: Date;
   updatedAt: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface PaginatedAlertsResponse {

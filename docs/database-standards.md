@@ -97,3 +97,10 @@ Public list endpoints must define pagination. Default to explicit `page`/`limit`
 - Site settings are a singleton-style table, but no row is seeded by default.
 - Navigation items index location/isActive and parent/display order.
 - Alerts index status, startsAt, and endsAt for active banner lookup.
+
+## Localization
+
+- Translation tables use parent id, `locale`, localized text fields, and timestamps.
+- Translation tables must have a unique `(parent_id, locale)` index and a `locale` index.
+- Parent foreign keys should cascade delete translation rows.
+- Existing public text is backfilled into English translation rows when localization is introduced.

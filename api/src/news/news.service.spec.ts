@@ -3,6 +3,9 @@ import { Repository } from 'typeorm';
 import { CategoriesService } from '../categories/categories.service';
 import { CategoryEntity } from '../categories/entities/category.entity';
 import { CategoryScope } from '../categories/entities/category-scope.enum';
+import { LocalizationService } from '../localization/localization.service';
+import { LOCALIZATION_SPECS } from '../localization/localization-specs';
+import { SupportedLocale } from '../localization/supported-locale.enum';
 import { AssetKind } from '../storage/entities/asset-kind.enum';
 import { StoredFileEntity } from '../storage/entities/stored-file.entity';
 import { StorageService } from '../storage/storage.service';
@@ -33,6 +36,11 @@ describe('NewsService', () => {
     getAssetKind: jest.Mock;
     resolveDownload: jest.Mock;
     remove: jest.Mock;
+  };
+  let localizationService: {
+    localizeMany: jest.Mock;
+    prepareSourcePayload: jest.Mock;
+    syncSourceTranslations: jest.Mock;
   };
   let category: CategoryEntity;
   let news: NewsEntity;
@@ -113,12 +121,46 @@ describe('NewsService', () => {
       })),
       remove: jest.fn(),
     };
+    localizationService = {
+      prepareSourcePayload: jest.fn(async (_spec, payload) => ({
+        payload,
+        sourceLocale: payload.sourceLocale ?? SupportedLocale.EN,
+        sourceValues: {
+          ...(payload.title !== undefined ? { title: payload.title } : {}),
+          ...(payload.summary !== undefined
+            ? { summary: payload.summary }
+            : {}),
+          ...(payload.body !== undefined ? { body: payload.body } : {}),
+        },
+        canonicalValues: {
+          ...(payload.title !== undefined ? { title: payload.title } : {}),
+          ...(payload.summary !== undefined
+            ? { summary: payload.summary }
+            : {}),
+          ...(payload.body !== undefined ? { body: payload.body } : {}),
+        },
+      })),
+      syncSourceTranslations: jest.fn(),
+      localizeMany: jest.fn(async (_spec, items) =>
+        items.map((item: { id: number; title?: string; name?: string }) => ({
+          ...item,
+          title: item.id === 1 ? 'Общинска новина' : item.title,
+          name: item.id === 10 ? 'Обяви' : item.name,
+          localization: {
+            requestedLocale: SupportedLocale.BG,
+            locale: SupportedLocale.BG,
+            fallbackUsed: false,
+          },
+        })),
+      ),
+    };
 
     service = new NewsService(
       newsRepository as unknown as Repository<NewsEntity>,
       newsAssetsRepository as unknown as Repository<NewsAssetEntity>,
       categoriesService as unknown as CategoriesService,
       storageService as unknown as StorageService,
+      localizationService as unknown as LocalizationService,
     );
   });
 
@@ -135,6 +177,60 @@ describe('NewsService', () => {
     expect(categoriesService.findActiveByIds).toHaveBeenCalledWith(
       CategoryScope.NEWS,
       [10],
+    );
+    expect(localizationService.syncSourceTranslations).toHaveBeenCalledWith(
+      LOCALIZATION_SPECS.news,
+      1,
+      expect.objectContaining({
+        sourceLocale: SupportedLocale.EN,
+      }),
+    );
+  });
+
+  it('creates news from Bulgarian source through localization preparation', async () => {
+    localizationService.prepareSourcePayload.mockResolvedValueOnce({
+      payload: {
+        title: 'Town Update',
+        slug: 'Town-Update',
+        summary: 'Summary',
+        body: 'Body',
+        categoryIds: [10],
+      },
+      sourceLocale: SupportedLocale.BG,
+      sourceValues: {
+        title: 'Общинска новина',
+        summary: 'Резюме',
+        body: 'Текст',
+      },
+      canonicalValues: {
+        title: 'Town Update',
+        summary: 'Summary',
+        body: 'Body',
+      },
+    });
+
+    await service.create({
+      sourceLocale: SupportedLocale.BG,
+      title: 'Общинска новина',
+      slug: 'Town-Update',
+      summary: 'Резюме',
+      body: 'Текст',
+      categoryIds: [10],
+    });
+
+    expect(newsRepository.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        title: 'Town Update',
+        summary: 'Summary',
+        body: 'Body',
+      }),
+    );
+    expect(localizationService.syncSourceTranslations).toHaveBeenCalledWith(
+      LOCALIZATION_SPECS.news,
+      1,
+      expect.objectContaining({
+        sourceLocale: SupportedLocale.BG,
+      }),
     );
   });
 
@@ -156,6 +252,32 @@ describe('NewsService', () => {
     });
     expect(builder.skip).toHaveBeenCalledWith(5);
     expect(result.total).toBe(1);
+  });
+
+  it('localizes public news and categories for Bulgarian requests', async () => {
+    const builder = createQueryBuilderMock([[news], 1]);
+    newsRepository.createQueryBuilder.mockReturnValue(builder);
+
+    const result = await service.listPublished(
+      {
+        page: 1,
+        limit: 20,
+      },
+      SupportedLocale.BG,
+    );
+
+    expect(localizationService.localizeMany).toHaveBeenCalledWith(
+      LOCALIZATION_SPECS.news,
+      expect.any(Array),
+      SupportedLocale.BG,
+    );
+    expect(localizationService.localizeMany).toHaveBeenCalledWith(
+      LOCALIZATION_SPECS.categories,
+      expect.any(Array),
+      SupportedLocale.BG,
+    );
+    expect(result.items[0].title).toBe('Общинска новина');
+    expect(result.items[0].categories[0].name).toBe('Обяви');
   });
 
   it('lists admin news with status and category filters', async () => {

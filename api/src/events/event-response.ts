@@ -1,3 +1,4 @@
+import { LocalizationResponseMeta } from '../localization/localization-response';
 import { EventEntity } from './entities/event.entity';
 import { EventStatus } from './entities/event-status.enum';
 
@@ -11,6 +12,7 @@ export interface EventResponse {
   endsAt: Date;
   status: EventStatus;
   publishedAt?: Date | null;
+  localization?: LocalizationResponseMeta;
   createdAt: Date;
   updatedAt: Date;
 }

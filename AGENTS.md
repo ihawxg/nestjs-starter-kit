@@ -26,6 +26,8 @@ Use this file as durable guidance for Codex CLI and other coding agents working 
 - Authenticated accounts are admin-only. Legacy non-admin rows in the `users` table must not be able to log in or call admin routes.
 - Never expose unpublished, private, draft, or admin-only data through public endpoints.
 - News, documents, events, departments, contacts, pages, site settings, navigation, alerts, media, staff, officials, and committees are core civic website domains after auth.
+- Public civic content is bilingual: English default (`en`) and Bulgarian (`bg`). Public localized routes use path prefixes such as `/bg/news` and `/en/news`; unprefixed routes remain English aliases.
+- Auto-translation is supported through the localization module when explicitly configured. Current provider target: DeepL for English/Bulgarian. Generated translations are auto-published but remain admin-overridable.
 - News and document categories are managed backend data. Categories are scoped by domain and assigned through admin flows.
 - Do not seed or hardcode municipality pages, labels, navigation items, or category content unless the user explicitly requests content seeding.
 - Platform hardening includes audit logs, rate limits, admin account lifecycle, and public search.
@@ -97,6 +99,8 @@ Controller/service boundary:
 - Public CMS routes must return only published pages, active settings, active navigation, and active alert windows.
 - Public media routes must return safe file metadata only and never expose storage keys or local paths.
 - Public people/governance routes must return only published staff, officials, and committees.
+- Public localized responses must fall back to English when Bulgarian text is missing and include localization metadata.
+- Admin translation writes may auto-generate the opposite locale when auto-translation is configured. Never commit provider keys. Machine translation metadata stays admin-only.
 - Admin writes must be audit logged with safe metadata only; never log passwords, tokens, storage keys, local paths, or raw uploaded file paths.
 - Rate limits are metadata-driven and configured through environment variables for login, public reads/downloads, and admin writes.
 - Store document/file metadata in PostgreSQL.
@@ -145,6 +149,7 @@ npm run migrations:revert
 - Use `docs/core-module-policy.md` before creating app-wide shared providers.
 - Use `docs/hook-context-policy.md` for hook behavior and `docs/living-docs-policy.md` for docs drift rules.
 - Use `docs/codex-skill-routing.md` before invoking external skills. External skills are advisory only.
+- Use `docs/localization-standards.md` before changing public text fields, localized routes, translation tables, or locale fallback behavior.
 - If Codex CLI reports project hooks need review, run `/hooks` and trust the checked-in project guardrail hooks after reviewing them.
 
 ## Working Rules

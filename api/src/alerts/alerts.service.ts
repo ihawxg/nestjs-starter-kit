@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -16,15 +17,25 @@ import { UpdateAlertDto } from './dto/update-alert.dto';
 import { AlertEntity } from './entities/alert.entity';
 import { AlertSeverity } from './entities/alert-severity.enum';
 import { AlertStatus } from './entities/alert-status.enum';
+import { LocalizationService } from '../localization/localization.service';
+import { LOCALIZATION_SPECS } from '../localization/localization-specs';
+import {
+  DEFAULT_LOCALE,
+  SupportedLocale,
+} from '../localization/supported-locale.enum';
 
 @Injectable()
 export class AlertsService {
   constructor(
     @InjectRepository(AlertEntity)
     private readonly alertsRepository: Repository<AlertEntity>,
+    @Optional()
+    private readonly localizationService?: LocalizationService,
   ) {}
 
-  async listActive(): Promise<AlertResponse[]> {
+  async listActive(
+    locale: SupportedLocale = DEFAULT_LOCALE,
+  ): Promise<AlertResponse[]> {
     const now = new Date();
     const alerts = await this.alertsRepository
       .createQueryBuilder('alert')
@@ -34,7 +45,7 @@ export class AlertsService {
       .orderBy('alert.startsAt', 'DESC')
       .getMany();
 
-    return alerts.map(toAlertResponse);
+    return this.localizeAlertResponses(alerts.map(toAlertResponse), locale);
   }
 
   async listAdmin(
@@ -69,36 +80,62 @@ export class AlertsService {
   }
 
   async create(dto: CreateAlertDto): Promise<AlertResponse> {
-    this.validateWindow(dto.startsAt, dto.endsAt);
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.alerts,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
+    this.validateWindow(payload.startsAt, payload.endsAt);
 
     const alert = this.alertsRepository.create({
-      title: dto.title,
-      message: dto.message,
-      severity: dto.severity ?? AlertSeverity.INFO,
-      status: dto.status ?? AlertStatus.DRAFT,
-      startsAt: dto.startsAt,
-      endsAt: dto.endsAt,
+      title: payload.title,
+      message: payload.message,
+      severity: payload.severity ?? AlertSeverity.INFO,
+      status: payload.status ?? AlertStatus.DRAFT,
+      startsAt: payload.startsAt,
+      endsAt: payload.endsAt,
     });
 
-    return toAlertResponse(await this.alertsRepository.save(alert));
+    const saved = await this.alertsRepository.save(alert);
+    if (localized) {
+      await this.localizationService?.syncSourceTranslations?.(
+        LOCALIZATION_SPECS.alerts,
+        saved.id,
+        localized,
+      );
+    }
+    return toAlertResponse(saved);
   }
 
   async update(id: number, dto: UpdateAlertDto): Promise<AlertResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.alerts,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const alert = await this.getAdminEntity(id);
-    const startsAt = dto.startsAt ?? alert.startsAt;
-    const endsAt = dto.endsAt ?? alert.endsAt;
+    const startsAt = payload.startsAt ?? alert.startsAt;
+    const endsAt = payload.endsAt ?? alert.endsAt;
     this.validateWindow(startsAt, endsAt);
 
     Object.assign(alert, {
-      title: dto.title ?? alert.title,
-      message: dto.message ?? alert.message,
-      severity: dto.severity ?? alert.severity,
-      status: dto.status ?? alert.status,
+      title: payload.title ?? alert.title,
+      message: payload.message ?? alert.message,
+      severity: payload.severity ?? alert.severity,
+      status: payload.status ?? alert.status,
       startsAt,
       endsAt,
     });
 
-    return toAlertResponse(await this.alertsRepository.save(alert));
+    const saved = await this.alertsRepository.save(alert);
+    if (localized) {
+      await this.localizationService?.syncSourceTranslations?.(
+        LOCALIZATION_SPECS.alerts,
+        saved.id,
+        localized,
+      );
+    }
+    return toAlertResponse(saved);
   }
 
   async archive(id: number): Promise<AlertResponse> {
@@ -123,5 +160,18 @@ export class AlertsService {
     if (endsAt < startsAt) {
       throw new BadRequestException('Alert end time must be after start time');
     }
+  }
+
+  private async localizeAlertResponses(
+    items: AlertResponse[],
+    locale: SupportedLocale,
+  ): Promise<AlertResponse[]> {
+    if (!this.localizationService) return items;
+
+    return this.localizationService.localizeMany(
+      LOCALIZATION_SPECS.alerts,
+      items,
+      locale,
+    ) as Promise<AlertResponse[]>;
   }
 }

@@ -10,9 +10,10 @@ import {
   IsString,
   Length,
 } from 'class-validator';
+import { LocalizedSourceDto } from '../../localization/dto/localized-source.dto';
 import { NewsStatus } from '../entities/news-status.enum';
 
-export class CreateNewsDto {
+export class CreateNewsDto extends LocalizedSourceDto {
   @ApiProperty()
   @IsString()
   @Length(2, 180)

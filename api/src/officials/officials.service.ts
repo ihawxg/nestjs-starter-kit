@@ -2,10 +2,17 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { StoredFileEntity } from '../storage/entities/stored-file.entity';
+import { LocalizationService } from '../localization/localization.service';
+import { LOCALIZATION_SPECS } from '../localization/localization-specs';
+import {
+  DEFAULT_LOCALE,
+  SupportedLocale,
+} from '../localization/supported-locale.enum';
 import { CreateOfficialDto } from './dto/create-official.dto';
 import { ListAdminOfficialsQueryDto } from './dto/list-admin-officials-query.dto';
 import { ListOfficialsQueryDto } from './dto/list-officials-query.dto';
@@ -25,10 +32,13 @@ export class OfficialsService {
     private readonly officialsRepository: Repository<OfficialEntity>,
     @InjectRepository(StoredFileEntity)
     private readonly storedFilesRepository: Repository<StoredFileEntity>,
+    @Optional()
+    private readonly localizationService?: LocalizationService,
   ) {}
 
   async listPublished(
     query: ListOfficialsQueryDto,
+    locale: SupportedLocale = DEFAULT_LOCALE,
   ): Promise<PaginatedOfficialsResponse> {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
@@ -45,14 +55,20 @@ export class OfficialsService {
     const [items, total] = await builder.getManyAndCount();
 
     return {
-      items: items.map(toOfficialResponse),
+      items: await this.localizeOfficialResponses(
+        items.map(toOfficialResponse),
+        locale,
+      ),
       page,
       limit,
       total,
     };
   }
 
-  async getPublishedBySlug(slug: string): Promise<OfficialResponse> {
+  async getPublishedBySlug(
+    slug: string,
+    locale: SupportedLocale = DEFAULT_LOCALE,
+  ): Promise<OfficialResponse> {
     const official = await this.officialsRepository.findOne({
       where: {
         slug: slug.toLowerCase(),
@@ -67,7 +83,12 @@ export class OfficialsService {
       throw new NotFoundException('Official not found');
     }
 
-    return toOfficialResponse(official);
+    return (
+      await this.localizeOfficialResponses(
+        [toOfficialResponse(official)],
+        locale,
+      )
+    )[0];
   }
 
   async listAdmin(
@@ -104,26 +125,39 @@ export class OfficialsService {
   }
 
   async create(dto: CreateOfficialDto): Promise<OfficialResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.officials,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const official = this.officialsRepository.create({
-      firstName: dto.firstName,
-      lastName: dto.lastName,
-      slug: this.normalizeSlug(dto.slug),
-      role: dto.role,
-      district: dto.district,
-      email: dto.email?.toLowerCase(),
-      phone: dto.phone,
-      bio: dto.bio,
-      termStart: dto.termStart,
-      termEnd: dto.termEnd,
-      displayOrder: dto.displayOrder ?? 0,
-      status: dto.status ?? OfficialStatus.DRAFT,
-      publishedAt: dto.publishedAt,
+      firstName: payload.firstName,
+      lastName: payload.lastName,
+      slug: this.normalizeSlug(payload.slug),
+      role: payload.role,
+      district: payload.district,
+      email: payload.email?.toLowerCase(),
+      phone: payload.phone,
+      bio: payload.bio,
+      termStart: payload.termStart,
+      termEnd: payload.termEnd,
+      displayOrder: payload.displayOrder ?? 0,
+      status: payload.status ?? OfficialStatus.DRAFT,
+      publishedAt: payload.publishedAt,
     });
 
-    await this.applyPhoto(official, dto.photoFileId);
+    await this.applyPhoto(official, payload.photoFileId);
 
     try {
-      return toOfficialResponse(await this.officialsRepository.save(official));
+      const saved = await this.officialsRepository.save(official);
+      if (localized) {
+        await this.localizationService?.syncSourceTranslations?.(
+          LOCALIZATION_SPECS.officials,
+          saved.id,
+          localized,
+        );
+      }
+      return toOfficialResponse(saved);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new ConflictException('Official slug already exists');
@@ -133,30 +167,43 @@ export class OfficialsService {
   }
 
   async update(id: number, dto: UpdateOfficialDto): Promise<OfficialResponse> {
+    const localized = await this.localizationService?.prepareSourcePayload?.(
+      LOCALIZATION_SPECS.officials,
+      dto,
+    );
+    const payload = localized?.payload ?? dto;
     const official = await this.getAdminEntity(id);
 
     Object.assign(official, {
-      firstName: dto.firstName ?? official.firstName,
-      lastName: dto.lastName ?? official.lastName,
-      slug: dto.slug ? this.normalizeSlug(dto.slug) : official.slug,
-      role: dto.role ?? official.role,
-      district: dto.district ?? official.district,
-      email: dto.email ? dto.email.toLowerCase() : official.email,
-      phone: dto.phone ?? official.phone,
-      bio: dto.bio ?? official.bio,
-      termStart: dto.termStart ?? official.termStart,
-      termEnd: dto.termEnd ?? official.termEnd,
-      displayOrder: dto.displayOrder ?? official.displayOrder,
-      status: dto.status ?? official.status,
-      publishedAt: dto.publishedAt ?? official.publishedAt,
+      firstName: payload.firstName ?? official.firstName,
+      lastName: payload.lastName ?? official.lastName,
+      slug: payload.slug ? this.normalizeSlug(payload.slug) : official.slug,
+      role: payload.role ?? official.role,
+      district: payload.district ?? official.district,
+      email: payload.email ? payload.email.toLowerCase() : official.email,
+      phone: payload.phone ?? official.phone,
+      bio: payload.bio ?? official.bio,
+      termStart: payload.termStart ?? official.termStart,
+      termEnd: payload.termEnd ?? official.termEnd,
+      displayOrder: payload.displayOrder ?? official.displayOrder,
+      status: payload.status ?? official.status,
+      publishedAt: payload.publishedAt ?? official.publishedAt,
     });
 
-    if (dto.photoFileId !== undefined) {
-      await this.applyPhoto(official, dto.photoFileId);
+    if (payload.photoFileId !== undefined) {
+      await this.applyPhoto(official, payload.photoFileId);
     }
 
     try {
-      return toOfficialResponse(await this.officialsRepository.save(official));
+      const saved = await this.officialsRepository.save(official);
+      if (localized) {
+        await this.localizationService?.syncSourceTranslations?.(
+          LOCALIZATION_SPECS.officials,
+          saved.id,
+          localized,
+        );
+      }
+      return toOfficialResponse(saved);
     } catch (error) {
       if (this.isUniqueViolation(error)) {
         throw new ConflictException('Official slug already exists');
@@ -219,5 +266,18 @@ export class OfficialsService {
       'code' in error &&
       error.code === '23505'
     );
+  }
+
+  private async localizeOfficialResponses(
+    items: OfficialResponse[],
+    locale: SupportedLocale,
+  ): Promise<OfficialResponse[]> {
+    if (!this.localizationService) return items;
+
+    return this.localizationService.localizeMany(
+      LOCALIZATION_SPECS.officials,
+      items,
+      locale,
+    ) as Promise<OfficialResponse[]>;
   }
 }

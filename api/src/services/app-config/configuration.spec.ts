@@ -50,6 +50,13 @@ describe('config helper', () => {
         maxFileSizeBytes: 10485760,
         uploadDir: 'uploads',
       },
+      translation: {
+        autoEnabled: false,
+        provider: 'deepl',
+        deeplAuthKey: '',
+        deeplTargetEnglishVariant: 'en-US',
+        maxFieldBytes: 100000,
+      },
       rateLimit: {
         login: {
           limit: 10,

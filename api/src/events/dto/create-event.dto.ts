@@ -1,9 +1,10 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsDate, IsEnum, IsOptional, IsString, Length } from 'class-validator';
+import { LocalizedSourceDto } from '../../localization/dto/localized-source.dto';
 import { EventStatus } from '../entities/event-status.enum';
 
-export class CreateEventDto {
+export class CreateEventDto extends LocalizedSourceDto {
   @ApiProperty()
   @IsString()
   @Length(2, 180)

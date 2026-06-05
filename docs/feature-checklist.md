@@ -21,6 +21,10 @@ Use this checklist before and after backend feature work. It is meant for Codex,
 - Entities match TypeORM migrations.
 - Public domain entities include timestamps and publish/visibility state.
 - Public endpoints return only published public data.
+- Public text endpoints support `en` and `bg` routes or are explicitly marked non-textual.
+- Missing localized text falls back to English with response metadata.
+- Localized admin create/update DTOs include `sourceLocale` when public text can be entered in English or Bulgarian.
+- Auto-translation provider use stays behind the localization module; no domain service should call DeepL directly.
 - Public list endpoints define pagination/query policy.
 - Admin write endpoints require JWT auth and admin role checks.
 - Admin-only endpoints use `JwtAuthGuard`, `RolesGuard`, and `@Roles(UserRole.ADMIN)`.
@@ -40,10 +44,12 @@ Use this checklist before and after backend feature work. It is meant for Codex,
 - Public read/download/search endpoints include public rate-limit metadata.
 - No secrets, tokens, password hashes, stack traces, storage keys, or internal paths are returned by public APIs.
 - No secrets, tokens, password hashes, storage keys, local paths, or raw upload paths are written to audit logs.
+- Translation writes are admin-only, audited, and rate limited. Auto-generated translations require configured provider settings and must stay admin-overridable.
 
 ## Database Checklist
 
 - Every schema change has a TypeORM migration.
+- Public text schema changes include translation table changes or a documented non-localized reason.
 - Migration `up` and `down` paths are included where practical.
 - Entity fields match migration columns.
 - Slugs, emails, and natural identifiers have explicit uniqueness when needed.
@@ -55,6 +61,7 @@ Use this checklist before and after backend feature work. It is meant for Codex,
 - Service tests cover business rules.
 - Public endpoints test published data visibility.
 - Public endpoints test unpublished/private data exclusion.
+- Public localized endpoints test Bulgarian content and English fallback.
 - Admin endpoints test anonymous denial.
 - Admin endpoints test legacy public/non-admin denial.
 - Admin endpoints test admin success path.

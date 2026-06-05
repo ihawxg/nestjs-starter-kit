@@ -2,6 +2,7 @@ import {
   CategoryResponse,
   toCategoryResponse,
 } from '../categories/category-response';
+import { LocalizationResponseMeta } from '../localization/localization-response';
 import { AssetKind } from '../storage/entities/asset-kind.enum';
 import { DocumentAssetEntity } from './entities/document-asset.entity';
 import { DocumentEntity } from './entities/document.entity';
@@ -27,6 +28,7 @@ export interface DocumentResponse {
   assets: DocumentAssetResponse[];
   createdAt: Date;
   updatedAt: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface PaginatedDocumentsResponse {

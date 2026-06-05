@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
+import { RequestLocale } from '../../localization/request-locale.decorator';
+import { SupportedLocale } from '../../localization/supported-locale.enum';
 import { RateLimit } from '../../rate-limit/decorators/rate-limit.decorator';
 import { RateLimitBucket } from '../../rate-limit/rate-limit-bucket.enum';
 import { ListNewsQueryDto } from '../dto/list-news-query.dto';
@@ -15,13 +17,16 @@ import { NewsService } from '../news.service';
 
 @ApiTags('news')
 @RateLimit(RateLimitBucket.PUBLIC)
-@Controller('news')
+@Controller(['news', 'en/news', 'bg/news'])
 export class NewsController {
   constructor(private readonly newsService: NewsService) {}
 
   @Get()
-  async list(@Query() query: ListNewsQueryDto) {
-    const news = await this.newsService.listPublished(query);
+  async list(
+    @Query() query: ListNewsQueryDto,
+    @RequestLocale() locale: SupportedLocale,
+  ) {
+    const news = await this.newsService.listPublished(query, locale);
 
     return {
       news,
@@ -29,8 +34,11 @@ export class NewsController {
   }
 
   @Get(':slug')
-  async detail(@Param('slug') slug: string) {
-    const news = await this.newsService.getPublishedBySlug(slug);
+  async detail(
+    @Param('slug') slug: string,
+    @RequestLocale() locale: SupportedLocale,
+  ) {
+    const news = await this.newsService.getPublishedBySlug(slug, locale);
 
     return {
       news,

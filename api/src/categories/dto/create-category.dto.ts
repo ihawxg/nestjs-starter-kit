@@ -8,9 +8,10 @@ import {
   Min,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { LocalizedSourceDto } from '../../localization/dto/localized-source.dto';
 import { CategoryScope } from '../entities/category-scope.enum';
 
-export class CreateCategoryDto {
+export class CreateCategoryDto extends LocalizedSourceDto {
   @ApiProperty()
   @IsString()
   @Length(2, 120)

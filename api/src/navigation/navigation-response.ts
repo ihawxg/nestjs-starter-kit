@@ -1,3 +1,4 @@
+import { LocalizationResponseMeta } from '../localization/localization-response';
 import { PageStatus } from '../pages/entities/page-status.enum';
 import { NavigationItemEntity } from './entities/navigation-item.entity';
 
@@ -6,6 +7,7 @@ export interface NavigationPageResponse {
   title: string;
   slug: string;
   status: PageStatus;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface NavigationItemResponse {
@@ -20,6 +22,7 @@ export interface NavigationItemResponse {
   isActive: boolean;
   createdAt: Date;
   updatedAt: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface PaginatedNavigationResponse {

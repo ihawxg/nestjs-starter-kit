@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DataSource, Repository } from 'typeorm';
@@ -9,6 +10,12 @@ import { AssetKind } from '../storage/entities/asset-kind.enum';
 import { StoredFileEntity } from '../storage/entities/stored-file.entity';
 import { StorageService } from '../storage/storage.service';
 import { LocalUploadFile } from '../storage/storage.types';
+import { LocalizationService } from '../localization/localization.service';
+import { LOCALIZATION_SPECS } from '../localization/localization-specs';
+import {
+  DEFAULT_LOCALE,
+  SupportedLocale,
+} from '../localization/supported-locale.enum';
 import { ListMediaQueryDto } from './dto/list-media-query.dto';
 import {
   MediaResponse,
@@ -23,6 +30,8 @@ export class MediaService {
     private readonly storedFilesRepository: Repository<StoredFileEntity>,
     private readonly storageService: StorageService,
     private readonly dataSource: DataSource,
+    @Optional()
+    private readonly localizationService?: LocalizationService,
   ) {}
 
   async listAdmin(query: ListMediaQueryDto): Promise<PaginatedMediaResponse> {
@@ -56,11 +65,14 @@ export class MediaService {
     };
   }
 
-  async getPublicById(id: number): Promise<MediaResponse> {
+  async getPublicById(
+    id: number,
+    locale: SupportedLocale = DEFAULT_LOCALE,
+  ): Promise<MediaResponse> {
     const storedFile = await this.getStoredFile(id);
     await this.ensurePubliclyReferenced(id);
 
-    return toMediaResponse(storedFile);
+    return this.localizeMediaResponse(toMediaResponse(storedFile), locale);
   }
 
   async upload(file: LocalUploadFile): Promise<MediaResponse> {
@@ -142,5 +154,18 @@ export class MediaService {
     }
 
     throw new NotFoundException('Media file not found');
+  }
+
+  private async localizeMediaResponse(
+    media: MediaResponse,
+    locale: SupportedLocale,
+  ): Promise<MediaResponse> {
+    if (!this.localizationService) return media;
+
+    return this.localizationService.localizeOne(
+      LOCALIZATION_SPECS.media,
+      media,
+      locale,
+    ) as Promise<MediaResponse>;
   }
 }

@@ -8,8 +8,9 @@ import {
   Length,
   Min,
 } from 'class-validator';
+import { LocalizedSourceDto } from '../../localization/dto/localized-source.dto';
 
-export class CreateNavigationItemDto {
+export class CreateNavigationItemDto extends LocalizedSourceDto {
   @ApiProperty()
   @IsString()
   @Length(2, 120)

@@ -1,3 +1,4 @@
+import { LocalizationResponseMeta } from '../localization/localization-response';
 import { DepartmentEntity } from '../departments/entities/department.entity';
 import { StoredFileEntity } from '../storage/entities/stored-file.entity';
 import { StaffEntity } from './entities/staff.entity';
@@ -34,6 +35,7 @@ export interface StaffResponse {
   publishedAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  localization?: LocalizationResponseMeta;
 }
 
 export interface PaginatedStaffResponse {
