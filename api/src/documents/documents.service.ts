@@ -15,6 +15,7 @@ import {
 import { StorageService } from '../storage/storage.service';
 import { AssignDocumentCategoriesDto } from './dto/assign-document-categories.dto';
 import { CreateDocumentDto } from './dto/create-document.dto';
+import { ListAdminDocumentsQueryDto } from './dto/list-admin-documents-query.dto';
 import { ListDocumentsQueryDto } from './dto/list-documents-query.dto';
 import { UpdateDocumentDto } from './dto/update-document.dto';
 import {
@@ -96,6 +97,46 @@ export class DocumentsService {
     }
 
     return toDocumentResponse(document);
+  }
+
+  async listAdmin(
+    query: ListAdminDocumentsQueryDto,
+  ): Promise<PaginatedDocumentsResponse> {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
+    const builder = this.documentsRepository
+      .createQueryBuilder('document')
+      .leftJoinAndSelect('document.categories', 'category')
+      .leftJoinAndSelect('document.assets', 'asset')
+      .leftJoinAndSelect('asset.storedFile', 'storedFile')
+      .orderBy('document.updatedAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit);
+
+    if (query.status) {
+      builder.andWhere('document.status = :status', {
+        status: query.status,
+      });
+    }
+
+    if (query.category) {
+      builder.andWhere('category.slug = :category', {
+        category: query.category.toLowerCase(),
+      });
+    }
+
+    const [items, total] = await builder.getManyAndCount();
+
+    return {
+      items: items.map(toDocumentResponse),
+      page,
+      limit,
+      total,
+    };
+  }
+
+  async getAdminById(id: number): Promise<DocumentResponse> {
+    return toDocumentResponse(await this.getAdminEntity(id));
   }
 
   async create(dto: CreateDocumentDto): Promise<DocumentResponse> {

@@ -35,6 +35,7 @@ Add indexes when fields support:
 - foreign-key joins
 - category scope and slug lookup
 - file asset ownership lookup
+- event status/date filtering and upcoming event lists
 
 Indexes speed reads but add write/storage overhead, so use them intentionally.
 
@@ -60,3 +61,9 @@ Public list endpoints must define pagination. Default to explicit `page`/`limit`
 - News/document category assignment uses join tables.
 - Stored file rows keep metadata only; file bytes stay outside PostgreSQL.
 - Asset tables link civic records to stored file metadata and should be indexed by owner id.
+
+## Events
+
+- Event slugs are unique.
+- Public upcoming event lists should have an index on start time and status/date fields.
+- Keep `starts_at` and `ends_at` as timestamps and validate the time window in service logic.

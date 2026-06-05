@@ -2,10 +2,12 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -23,6 +25,7 @@ import {
 import { LocalUploadFile } from '../../storage/storage.types';
 import { AssignNewsCategoriesDto } from '../dto/assign-news-categories.dto';
 import { CreateNewsDto } from '../dto/create-news.dto';
+import { ListAdminNewsQueryDto } from '../dto/list-admin-news-query.dto';
 import { UpdateNewsDto } from '../dto/update-news.dto';
 import { NewsService } from '../news.service';
 
@@ -33,6 +36,24 @@ import { NewsService } from '../news.service';
 @Controller('admin/news')
 export class NewsAdminController {
   constructor(private readonly newsService: NewsService) {}
+
+  @Get()
+  async list(@Query() query: ListAdminNewsQueryDto) {
+    const news = await this.newsService.listAdmin(query);
+
+    return {
+      news,
+    };
+  }
+
+  @Get(':id')
+  async detail(@Param('id', ParseIntPipe) id: number) {
+    const news = await this.newsService.getAdminById(id);
+
+    return {
+      news,
+    };
+  }
 
   @Post()
   async create(@Body() dto: CreateNewsDto) {

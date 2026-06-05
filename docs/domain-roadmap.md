@@ -90,12 +90,15 @@ Implementation note: category slugs are unique per scope.
 
 Purpose: meetings, public hearings, office events, and civic deadlines.
 
+Status: batch 3 foundation.
+
 Admin capabilities:
 
 - Create events.
 - Edit event title, description, location, start/end time, and status.
 - Publish or unpublish events.
 - Delete or archive events.
+- List and inspect draft, published, and archived events.
 
 Public capabilities:
 
@@ -123,6 +126,7 @@ Public capabilities:
 All domains should support:
 
 - Admin-only write operations.
+- Admin management read operations for unpublished and archived records.
 - Public-only read/download operations.
 - Published/unpublished state.
 - Created and updated timestamps.
@@ -138,5 +142,5 @@ All domains should support:
 3. News and announcements with categories and local assets. Batch 2.
 4. Documents and downloads with categories and local assets. Batch 2.
 5. Pages. Deferred.
-6. Events.
+6. Events. Batch 3.
 7. Contacts and departments.

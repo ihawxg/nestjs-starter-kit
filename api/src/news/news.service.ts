@@ -15,6 +15,7 @@ import {
 import { StorageService } from '../storage/storage.service';
 import { AssignNewsCategoriesDto } from './dto/assign-news-categories.dto';
 import { CreateNewsDto } from './dto/create-news.dto';
+import { ListAdminNewsQueryDto } from './dto/list-admin-news-query.dto';
 import { ListNewsQueryDto } from './dto/list-news-query.dto';
 import { UpdateNewsDto } from './dto/update-news.dto';
 import { NewsAssetEntity } from './entities/news-asset.entity';
@@ -92,6 +93,46 @@ export class NewsService {
     }
 
     return toNewsResponse(news);
+  }
+
+  async listAdmin(
+    query: ListAdminNewsQueryDto,
+  ): Promise<PaginatedNewsResponse> {
+    const page = query.page ?? 1;
+    const limit = query.limit ?? 20;
+    const builder = this.newsRepository
+      .createQueryBuilder('news')
+      .leftJoinAndSelect('news.categories', 'category')
+      .leftJoinAndSelect('news.assets', 'asset')
+      .leftJoinAndSelect('asset.storedFile', 'storedFile')
+      .orderBy('news.updatedAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit);
+
+    if (query.status) {
+      builder.andWhere('news.status = :status', {
+        status: query.status,
+      });
+    }
+
+    if (query.category) {
+      builder.andWhere('category.slug = :category', {
+        category: query.category.toLowerCase(),
+      });
+    }
+
+    const [items, total] = await builder.getManyAndCount();
+
+    return {
+      items: items.map(toNewsResponse),
+      page,
+      limit,
+      total,
+    };
+  }
+
+  async getAdminById(id: number): Promise<NewsResponse> {
+    return toNewsResponse(await this.getAdminEntity(id));
   }
 
   async create(dto: CreateNewsDto): Promise<NewsResponse> {

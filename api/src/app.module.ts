@@ -11,6 +11,7 @@ import { HealthModule } from './health/health.module';
 import { NewsModule } from './news/news.module';
 import { DocumentsModule } from './documents/documents.module';
 import { CategoriesModule } from './categories/categories.module';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CategoriesModule } from './categories/categories.module';
     CategoriesModule,
     NewsModule,
     DocumentsModule,
+    EventsModule,
   ],
 })
 export class AppModule {

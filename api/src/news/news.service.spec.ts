@@ -158,6 +158,50 @@ describe('NewsService', () => {
     expect(result.total).toBe(1);
   });
 
+  it('lists admin news with status and category filters', async () => {
+    const draftNews = {
+      ...news,
+      status: NewsStatus.DRAFT,
+    };
+    const builder = createQueryBuilderMock([[draftNews], 1]);
+    newsRepository.createQueryBuilder.mockReturnValue(builder);
+
+    const result = await service.listAdmin({
+      page: 1,
+      limit: 20,
+      status: NewsStatus.DRAFT,
+      category: 'public-notices',
+    });
+
+    expect(builder.andWhere).toHaveBeenCalledWith('news.status = :status', {
+      status: NewsStatus.DRAFT,
+    });
+    expect(builder.andWhere).toHaveBeenCalledWith('category.slug = :category', {
+      category: 'public-notices',
+    });
+    expect(result.items[0].status).toBe(NewsStatus.DRAFT);
+  });
+
+  it('gets admin news by id regardless of publication status', async () => {
+    newsRepository.findOne.mockResolvedValue({
+      ...news,
+      status: NewsStatus.ARCHIVED,
+    });
+
+    const found = await service.getAdminById(1);
+
+    expect(found.status).toBe(NewsStatus.ARCHIVED);
+    expect(newsRepository.findOne).toHaveBeenCalledWith({
+      where: { id: 1 },
+      relations: {
+        categories: true,
+        assets: {
+          storedFile: true,
+        },
+      },
+    });
+  });
+
   it('archives instead of hard deleting news', async () => {
     newsRepository.findOne.mockResolvedValue(news);
 

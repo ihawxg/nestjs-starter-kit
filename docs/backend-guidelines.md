@@ -132,6 +132,12 @@ Admin route rules:
 - Validate all body fields.
 - Keep destructive operations intentional and tested.
 - Prefer archive/unpublish behavior when product semantics are not final.
+- Include admin list/detail read paths when a domain has draft or archived states, so admin UIs do not depend on public routes.
+
+Current admin read pattern:
+
+- `GET /admin/<domain>?page&limit&status`
+- `GET /admin/<domain>/:id`
 
 ## Database
 
@@ -186,6 +192,14 @@ Categories are managed backend data, not arbitrary free-text fields.
 - Public category lists return active categories only.
 - Public content filters must ignore inactive categories.
 - Admin delete behavior should deactivate categories unless hard delete is explicitly required.
+
+## Events
+
+Event records should support public upcoming/current lists and admin management of draft, published, and archived records.
+
+- Public event lists return published current or upcoming events.
+- Admin event lists may include draft, published, and archived events.
+- Event time windows must have `endsAt` at or after `startsAt`.
 
 ## Validation And Errors
 

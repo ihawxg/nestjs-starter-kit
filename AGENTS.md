@@ -24,7 +24,7 @@ Use this file as durable guidance for Codex CLI and other coding agents working 
 - First admin account must be created by seed, migration, or CLI script. Current script: `npm run admin:create` with `ADMIN_EMAIL` and `ADMIN_PASSWORD`.
 - Public user registration is disabled. Do not re-enable it unless product scope changes and docs/guards are updated in the same change.
 - Never expose unpublished, private, draft, or admin-only data through public endpoints.
-- News and documents are the first civic content domains after auth. Pages are deferred until CMS-style static website content is needed.
+- News, documents, and events are the first civic content domains after auth. Pages are deferred until CMS-style static website content is needed.
 - News and document categories are managed backend data. Categories are scoped by domain and assigned through admin flows.
 
 ## Backend Feature Rules
@@ -87,6 +87,7 @@ Controller/service boundary:
 - Keep entities aligned with migrations.
 - Public civic-domain entities must include timestamp and publish/visibility policy.
 - Public list endpoints must define pagination/query policy before release.
+- Admin management APIs need read paths for listing and inspecting draft, published, and archived records.
 - Store document/file metadata in PostgreSQL.
 - Do not store uploaded document blobs in PostgreSQL unless project direction changes.
 - Use a storage layer for files so local, S3, or another provider can be swapped later.

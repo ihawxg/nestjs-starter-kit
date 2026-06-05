@@ -2,10 +2,12 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   ParseIntPipe,
   Patch,
   Post,
+  Query,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
@@ -23,6 +25,7 @@ import { JwtAuthGuard } from '../../user/guards/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from '../../user/guards/roles/roles.guard';
 import { AssignDocumentCategoriesDto } from '../dto/assign-document-categories.dto';
 import { CreateDocumentDto } from '../dto/create-document.dto';
+import { ListAdminDocumentsQueryDto } from '../dto/list-admin-documents-query.dto';
 import { UpdateDocumentDto } from '../dto/update-document.dto';
 import { DocumentsService } from '../documents.service';
 
@@ -33,6 +36,24 @@ import { DocumentsService } from '../documents.service';
 @Controller('admin/documents')
 export class DocumentsAdminController {
   constructor(private readonly documentsService: DocumentsService) {}
+
+  @Get()
+  async list(@Query() query: ListAdminDocumentsQueryDto) {
+    const documents = await this.documentsService.listAdmin(query);
+
+    return {
+      documents,
+    };
+  }
+
+  @Get(':id')
+  async detail(@Param('id', ParseIntPipe) id: number) {
+    const document = await this.documentsService.getAdminById(id);
+
+    return {
+      document,
+    };
+  }
 
   @Post()
   async create(@Body() dto: CreateDocumentDto) {

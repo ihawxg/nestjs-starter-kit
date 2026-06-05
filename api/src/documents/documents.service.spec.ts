@@ -156,6 +156,50 @@ describe('DocumentsService', () => {
     expect(result.total).toBe(1);
   });
 
+  it('lists admin documents with status and category filters', async () => {
+    const draftDocument = {
+      ...document,
+      status: DocumentStatus.DRAFT,
+    };
+    const builder = createQueryBuilderMock([[draftDocument], 1]);
+    documentsRepository.createQueryBuilder.mockReturnValue(builder);
+
+    const result = await service.listAdmin({
+      page: 1,
+      limit: 20,
+      status: DocumentStatus.DRAFT,
+      category: 'forms',
+    });
+
+    expect(builder.andWhere).toHaveBeenCalledWith('document.status = :status', {
+      status: DocumentStatus.DRAFT,
+    });
+    expect(builder.andWhere).toHaveBeenCalledWith('category.slug = :category', {
+      category: 'forms',
+    });
+    expect(result.items[0].status).toBe(DocumentStatus.DRAFT);
+  });
+
+  it('gets admin documents by id regardless of publication status', async () => {
+    documentsRepository.findOne.mockResolvedValue({
+      ...document,
+      status: DocumentStatus.ARCHIVED,
+    });
+
+    const found = await service.getAdminById(1);
+
+    expect(found.status).toBe(DocumentStatus.ARCHIVED);
+    expect(documentsRepository.findOne).toHaveBeenCalledWith({
+      where: { id: 1 },
+      relations: {
+        categories: true,
+        assets: {
+          storedFile: true,
+        },
+      },
+    });
+  });
+
   it('archives instead of hard deleting documents', async () => {
     documentsRepository.findOne.mockResolvedValue(document);
 
