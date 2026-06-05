@@ -33,6 +33,10 @@ Use this checklist before and after backend feature work. It is meant for Codex,
 - Public category filters use active categories only.
 - Public department responses include active contacts only.
 - Public search returns published civic summaries only and no storage/admin metadata.
+- Public CMS routes return only published pages, active settings, active navigation, and active alert windows.
+- Public media routes return safe metadata only and never expose storage keys or local paths.
+- Public staff, officials, and committees routes return published records only.
+- Media deletion refuses files that are still referenced by another domain.
 - Public read/download/search endpoints include public rate-limit metadata.
 - No secrets, tokens, password hashes, stack traces, storage keys, or internal paths are returned by public APIs.
 - No secrets, tokens, password hashes, storage keys, local paths, or raw upload paths are written to audit logs.
@@ -57,6 +61,7 @@ Use this checklist before and after backend feature work. It is meant for Codex,
 - Admin account tests cover create, update, list, disabled login denial, and non-admin login denial.
 - Audit log tests cover representative writes and metadata sanitization.
 - Search tests cover published-only results.
+- CMS tests cover pages, site settings, navigation, and alerts without seed data.
 - Rate-limit tests cover configured buckets where practical.
 - Auth, route, database, migration, cache, or storage changes run full verification.
 
@@ -133,3 +138,4 @@ Do not finish a backend feature while any of these are true:
 - `npm run guardrails` fails.
 - A dev server, build, Docker startup, or production start command was run without explicit user request.
 - Backend source changed and docs were not updated or explicitly marked not needed.
+- Seed scripts or starter content were added without explicit user request.

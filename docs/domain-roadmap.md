@@ -8,7 +8,7 @@ Townhall Manipulicity v1 backend should focus on core civic website data. Build 
 
 Purpose: managed website content pages.
 
-Status: deferred until static CMS-style website content is needed.
+Status: CMS foundation backend logic.
 
 Admin capabilities:
 
@@ -16,11 +16,134 @@ Admin capabilities:
 - Edit title, slug, body, and status.
 - Publish or unpublish pages.
 - Delete or archive pages.
+- Manage SEO title and description.
 
 Public capabilities:
 
 - List published pages.
 - View published page by slug.
+
+## Site Settings
+
+Purpose: global website identity, contact details, social links, logo metadata, and SEO defaults.
+
+Status: CMS foundation backend logic.
+
+Admin capabilities:
+
+- View current site settings.
+- Create or update singleton settings through `PATCH /admin/site-settings`.
+- Activate or deactivate public settings.
+
+Public capabilities:
+
+- View active site settings.
+
+Implementation note: no settings are seeded. Public response may be `null` until an admin creates settings.
+
+## Navigation
+
+Purpose: editable public menu structure for header, footer, sidebar, or other frontend locations.
+
+Status: CMS foundation backend logic.
+
+Admin capabilities:
+
+- Create, update, list, inspect, and deactivate navigation items.
+- Link items to either a URL or a CMS page.
+- Nest items with `parentId`.
+
+Public capabilities:
+
+- View active navigation by location.
+
+## Alerts
+
+Purpose: public website banners for emergency or important notices.
+
+Status: CMS foundation backend logic.
+
+Admin capabilities:
+
+- Create, update, list, inspect, and archive alerts.
+- Set severity, status, start time, and end time.
+
+Public capabilities:
+
+- View currently active published alerts.
+
+## Media Library
+
+Purpose: reusable uploaded files for CMS pages, site logos, staff photos, officials photos, service files, and future location media.
+
+Status: media and people/governance foundation.
+
+Admin capabilities:
+
+- Upload a single reusable media file.
+- List media files with pagination and optional type filter.
+- Delete media only when it is not referenced by another domain.
+
+Public capabilities:
+
+- View safe media metadata by id when the file is referenced by published/active public content.
+
+Implementation notes:
+
+- The media library reuses `stored_files`.
+- Public and admin responses never expose storage keys or local filesystem paths.
+- Public metadata routes hide unreferenced or draft-only uploads.
+- Existing documents remain the public downloadable document domain; media is the reusable file library.
+
+## Staff
+
+Purpose: public staff directory for townhall workers and office contacts beyond department-level generic contacts.
+
+Status: people/governance foundation.
+
+Admin capabilities:
+
+- Create, update, list, inspect, and archive staff records.
+- Assign optional department and photo file references.
+- Manage publication status and display order.
+
+Public capabilities:
+
+- List published staff.
+- View published staff detail by slug.
+
+## Officials
+
+Purpose: mayor, council members, board members, and other elected or appointed public officials.
+
+Status: people/governance foundation.
+
+Admin capabilities:
+
+- Create, update, list, inspect, and archive official records.
+- Assign optional photo file references.
+- Manage role, term fields, publication status, and display order.
+
+Public capabilities:
+
+- List published officials.
+- View published official detail by slug.
+
+## Committees
+
+Purpose: public committee and board listings.
+
+Status: people/governance foundation.
+
+Admin capabilities:
+
+- Create, update, list, inspect, and archive committee records.
+- Manage publication status and display order.
+
+Public capabilities:
+
+- List published committees.
+- View published committee detail by slug.
 
 ## News And Announcements
 
@@ -146,10 +269,12 @@ All domains should support:
 2. Seeded or scripted first-admin creation. Implemented in batch 1 with `npm run admin:create`.
 3. News and announcements with categories and local assets. Batch 2.
 4. Documents and downloads with categories and local assets. Batch 2.
-5. Pages. Deferred.
+5. Pages. Implemented as part of CMS foundation in batch 6.
 6. Events. Batch 3.
 7. Contacts and departments. Batch 4.
 8. Platform hardening: audit logs, rate limiting, admin account lifecycle, and search. Batch 5.
+9. CMS foundation: pages, site settings, navigation, and alerts. Batch 6.
+10. Media library, staff, officials, and committees. Batch 7.
 
 ## Platform Hardening
 

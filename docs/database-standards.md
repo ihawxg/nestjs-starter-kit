@@ -42,6 +42,9 @@ Add indexes when fields support:
 - department contact ownership/display-order filtering
 - admin account role/active-state filtering
 - audit log actor/action/target/timestamp filtering
+- CMS page slug/status filtering
+- navigation location/active filtering
+- alert status/date-window filtering
 
 Indexes speed reads but add write/storage overhead, so use them intentionally.
 
@@ -87,3 +90,10 @@ Public list endpoints must define pagination. Default to explicit `page`/`limit`
 - Admin account disabling uses `is_active` so historical audit rows remain meaningful.
 - Audit logs should index actor/action, target type/id, and creation time.
 - Audit log metadata uses `jsonb` for safe structured context only; never store secrets, tokens, storage keys, or local file paths.
+
+## CMS Foundation
+
+- Pages use unique slugs and indexed status/published date fields.
+- Site settings are a singleton-style table, but no row is seeded by default.
+- Navigation items index location/isActive and parent/display order.
+- Alerts index status, startsAt, and endsAt for active banner lookup.

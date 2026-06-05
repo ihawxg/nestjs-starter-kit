@@ -25,8 +25,9 @@ Use this file as durable guidance for Codex CLI and other coding agents working 
 - Public user registration is disabled. Do not add public accounts unless product scope changes and docs/guards are updated in the same change.
 - Authenticated accounts are admin-only. Legacy non-admin rows in the `users` table must not be able to log in or call admin routes.
 - Never expose unpublished, private, draft, or admin-only data through public endpoints.
-- News, documents, events, departments, and contacts are the first civic content domains after auth. Pages are deferred until CMS-style static website content is needed.
+- News, documents, events, departments, contacts, pages, site settings, navigation, alerts, media, staff, officials, and committees are core civic website domains after auth.
 - News and document categories are managed backend data. Categories are scoped by domain and assigned through admin flows.
+- Do not seed or hardcode municipality pages, labels, navigation items, or category content unless the user explicitly requests content seeding.
 - Platform hardening includes audit logs, rate limits, admin account lifecycle, and public search.
 
 ## Backend Feature Rules
@@ -93,6 +94,9 @@ Controller/service boundary:
 - Admin management APIs need read paths for listing and inspecting draft, published, and archived records.
 - Public department reads must return published departments and active contacts only.
 - Public search must return safe summaries for published news, documents, events, and departments only.
+- Public CMS routes must return only published pages, active settings, active navigation, and active alert windows.
+- Public media routes must return safe file metadata only and never expose storage keys or local paths.
+- Public people/governance routes must return only published staff, officials, and committees.
 - Admin writes must be audit logged with safe metadata only; never log passwords, tokens, storage keys, local paths, or raw uploaded file paths.
 - Rate limits are metadata-driven and configured through environment variables for login, public reads/downloads, and admin writes.
 - Store document/file metadata in PostgreSQL.

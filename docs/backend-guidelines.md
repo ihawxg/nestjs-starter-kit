@@ -163,6 +163,16 @@ Use `@RateLimit(...)` metadata for throttled routes:
 
 Defaults come from `.env` and `api/src/services/app-config/configuration.ts`.
 
+## CMS Foundation
+
+CMS foundation modules provide editable website structure without seeded content.
+
+- Pages use draft, published, and archived status.
+- Site settings are a singleton record and may be absent until an admin updates them.
+- Navigation items are active/inactive and may link to a URL or page.
+- Alerts are active publicly only when published and the current time is within their start/end window.
+- Do not add hardcoded municipality labels, menu items, sections, or starter pages without an explicit content-seeding request.
+
 ## Database
 
 Use TypeORM entities and migrations together. A schema change is incomplete without a migration.
@@ -202,10 +212,19 @@ Current local upload behavior:
 - File bytes are stored under the configured local upload directory.
 - File metadata is stored in PostgreSQL.
 - News and documents may have multiple attached assets.
+- The media library exposes reusable `stored_files` metadata for CMS and people/governance media.
 - Public APIs may return safe file metadata only.
 - Public APIs must never return storage keys or local filesystem paths.
 
 Public downloads must only serve published public files.
+
+Media library rules:
+
+- Media routes expose metadata only; they do not serve raw local filesystem paths.
+- `GET /media/:id` is public-safe metadata, not an admin file browser.
+- Public media metadata is visible only when the file is referenced by published/active public content.
+- `DELETE /admin/media/:id` should refuse deletion while the file is referenced by another domain.
+- Existing documents remain the public downloadable document records; do not overload media files as document records.
 
 ## Categories
 
@@ -234,6 +253,18 @@ Department records should support public contact discovery and admin management 
 - Contacts belong to exactly one department.
 - Contact delete behavior should deactivate contacts unless hard delete is explicitly required.
 - Department delete behavior should archive the department.
+
+## People And Governance
+
+Staff, officials, and committees are public governance content with protected admin management.
+
+- Public lists return published records only.
+- Admin lists may include draft, published, and archived records.
+- Staff can optionally link to a department and photo file.
+- Officials can optionally link to a photo file and term dates.
+- Committees are standalone in the first foundation pass; member relationships can be added later when product scope needs them.
+- Delete behavior archives records by setting status to `archived`.
+- Public responses may include safe photo metadata but never storage keys or local paths.
 
 ## Public Search
 

@@ -14,7 +14,7 @@ Current stack:
 
 The codebase still contains starter-kit baseline modules. Treat them as infrastructure, not final product shape.
 
-Current civic content work includes managed news, documents, events, departments, contacts, scoped categories, local file uploads, audit logs, rate limits, admin account lifecycle, and public search. CMS-style pages are deferred until static website content is needed.
+Current civic content work includes managed news, documents, events, departments, contacts, pages, site settings, navigation, alerts, media library files, staff, officials, committees, scoped categories, local file uploads, audit logs, rate limits, admin account lifecycle, and public search.
 
 ## Roles
 
@@ -23,7 +23,9 @@ Current civic content work includes managed news, documents, events, departments
 
 No public account registration is allowed. The first admin account must come from a seed, migration, or CLI script.
 
-Admin management routes use `/admin/...` paths for current civic domains and `/admin/accounts` for admin account lifecycle. Public routes only return published content, safe search summaries, and safe download metadata.
+Admin management routes use `/admin/...` paths for current civic domains and `/admin/accounts` for admin account lifecycle. Public routes only return published content, safe media metadata, safe search summaries, and safe download metadata.
+
+CMS content is created through admin APIs only. There is no seed script or starter municipality content.
 
 ## Local Setup
 

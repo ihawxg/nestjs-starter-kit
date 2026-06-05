@@ -16,6 +16,14 @@ import { DepartmentsModule } from './departments/departments.module';
 import { AuditLogModule } from './audit-log/audit-log.module';
 import { RateLimitModule } from './rate-limit/rate-limit.module';
 import { SearchModule } from './search/search.module';
+import { PagesModule } from './pages/pages.module';
+import { SiteSettingsModule } from './site-settings/site-settings.module';
+import { NavigationModule } from './navigation/navigation.module';
+import { AlertsModule } from './alerts/alerts.module';
+import { MediaModule } from './media/media.module';
+import { StaffModule } from './staff/staff.module';
+import { OfficialsModule } from './officials/officials.module';
+import { CommitteesModule } from './committees/committees.module';
 
 @Module({
   imports: [
@@ -37,6 +45,14 @@ import { SearchModule } from './search/search.module';
     DocumentsModule,
     EventsModule,
     DepartmentsModule,
+    PagesModule,
+    SiteSettingsModule,
+    NavigationModule,
+    AlertsModule,
+    MediaModule,
+    StaffModule,
+    OfficialsModule,
+    CommitteesModule,
     SearchModule,
   ],
 })

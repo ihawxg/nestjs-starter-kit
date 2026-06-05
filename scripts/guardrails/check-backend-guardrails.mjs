@@ -216,6 +216,8 @@ function controllerChecks() {
       /\/controllers\/.*-admin\.controller\.ts$/.test(relative);
     const publicListRouteMatches = [...text.matchAll(/(?:@\w+[^\n]*\n\s*)*@Get\s*\(\s*(?:['"`][/'"`]*['"`])?\s*\)[\s\S]{0,500}?\b(?:get|list|findAll|search)[A-Za-z0-9_]*\s*\(/g)];
     for (const match of publicListRouteMatches) {
+      if (relative.includes('/site-settings/')) continue;
+
       const routeContext = text.slice(match.index ?? 0, (match.index ?? 0) + 800);
       const guarded = /@UseGuards\s*\(/.test(routeContext);
       const hasPagination = /(@Query|Pagination|pagination|page|limit|take|skip|cursor|query)/i.test(routeContext);
