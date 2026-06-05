@@ -14,7 +14,7 @@ Current stack:
 
 The codebase still contains starter-kit baseline modules. Treat them as infrastructure, not final product shape.
 
-Current civic content work starts with managed news, documents, events, scoped categories, and local file uploads. CMS-style pages are deferred until static website content is needed.
+Current civic content work starts with managed news, documents, events, departments, contacts, scoped categories, and local file uploads. CMS-style pages are deferred until static website content is needed.
 
 ## Roles
 

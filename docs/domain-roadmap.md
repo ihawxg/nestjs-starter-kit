@@ -109,17 +109,22 @@ Public capabilities:
 
 Purpose: public contact information for townhall departments and offices.
 
+Status: batch 4 foundation.
+
 Admin capabilities:
 
 - Create departments and contacts.
 - Edit phone, email, location, hours, and display order.
 - Publish or hide contacts.
 - Delete or archive contacts.
+- List and inspect draft, published, and archived departments.
+- Deactivate contacts instead of hard deleting them.
 
 Public capabilities:
 
 - List published departments and contacts.
 - View department/contact details.
+- Public reads include active contacts only.
 
 ## Cross-Domain Requirements
 
@@ -143,4 +148,5 @@ All domains should support:
 4. Documents and downloads with categories and local assets. Batch 2.
 5. Pages. Deferred.
 6. Events. Batch 3.
-7. Contacts and departments.
+7. Contacts and departments. Batch 4.
+8. Platform hardening: audit logs, rate limiting, admin user management, and search.

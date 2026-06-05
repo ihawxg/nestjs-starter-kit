@@ -28,6 +28,7 @@ Use this checklist before and after backend feature work. It is meant for Codex,
 - File metadata lives in PostgreSQL; file bytes go through a storage layer.
 - Categories are managed records, scoped by domain, and assigned through admin flows.
 - Public category filters use active categories only.
+- Public department responses include active contacts only.
 - No secrets, tokens, password hashes, stack traces, storage keys, or internal paths are returned by public APIs.
 
 ## Database Checklist

@@ -12,6 +12,7 @@ import { NewsModule } from './news/news.module';
 import { DocumentsModule } from './documents/documents.module';
 import { CategoriesModule } from './categories/categories.module';
 import { EventsModule } from './events/events.module';
+import { DepartmentsModule } from './departments/departments.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { EventsModule } from './events/events.module';
     NewsModule,
     DocumentsModule,
     EventsModule,
+    DepartmentsModule,
   ],
 })
 export class AppModule {

@@ -36,6 +36,8 @@ Add indexes when fields support:
 - category scope and slug lookup
 - file asset ownership lookup
 - event status/date filtering and upcoming event lists
+- department status/display-order filtering
+- department contact ownership/display-order filtering
 
 Indexes speed reads but add write/storage overhead, so use them intentionally.
 
@@ -67,3 +69,10 @@ Public list endpoints must define pagination. Default to explicit `page`/`limit`
 - Event slugs are unique.
 - Public upcoming event lists should have an index on start time and status/date fields.
 - Keep `starts_at` and `ends_at` as timestamps and validate the time window in service logic.
+
+## Departments And Contacts
+
+- Department slugs are unique.
+- Department public/admin lists should index status and display order.
+- Department contacts should index department ownership and display order.
+- Contacts use `is_active` for visibility instead of a full status enum.

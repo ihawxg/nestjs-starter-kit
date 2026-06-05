@@ -201,6 +201,16 @@ Event records should support public upcoming/current lists and admin management 
 - Admin event lists may include draft, published, and archived events.
 - Event time windows must have `endsAt` at or after `startsAt`.
 
+## Departments And Contacts
+
+Department records should support public contact discovery and admin management of draft, published, and archived records.
+
+- Public department lists return published departments only.
+- Public department reads include active contacts only.
+- Contacts belong to exactly one department.
+- Contact delete behavior should deactivate contacts unless hard delete is explicitly required.
+- Department delete behavior should archive the department.
+
 ## Validation And Errors
 
 Use `class-validator` DTOs. Reject malformed input at the controller boundary.
