@@ -2,7 +2,7 @@
 
 ## Project
 
-Townhall Manipulicity is a municipal website project with a NestJS backend API and a planned Next.js public frontend.
+Townhall Manipulicity is a municipal website project with a NestJS backend API, a Next.js public frontend, and a protected Next.js admin dashboard foundation.
 
 Use this file as durable guidance for Codex CLI and other coding agents working in this repository.
 
@@ -14,11 +14,17 @@ Use this file as durable guidance for Codex CLI and other coding agents working 
 - Cache: Redis through Nest cache manager.
 - Auth: JWT/passport baseline exists.
 - API docs: Swagger at `/api`.
+- Backend CLI/export entrypoints live in `api/src/scripts`.
 - Local dependencies live in `.docker-node-api/docker-compose.yml`.
-- Frontend will live in `frontend/` beside `api/`.
-- Frontend framework decision: Next.js App Router with TypeScript.
-- Frontend public routes will use `en` and `bg` locale prefixes.
+- Frontend lives in `frontend/` beside `api/`.
+- Frontend framework: Next.js App Router with React and TypeScript.
+- Frontend public routes use `en` and `bg` locale prefixes.
 - Frontend backend types must be generated from backend OpenAPI.
+- Frontend foundation packages include Tailwind v4 utilities, `lucide-react` icons, Paraglide JS for frontend-owned UI translations, TanStack Query, Zod-backed env validation, React Hook Form, `sanitize-html`, `date-fns`, `clsx`, and `sharp`.
+- Public frontend UI is project-owned. Tailwind utility styling and lucide icons are allowed; external component libraries and DSFR remain banned for public UI.
+- Protected admin dashboard page routes live under `frontend/src/app/[locale]/admin`.
+- Mantine is allowed only for protected admin route/component files. Public UI must not import Mantine.
+- Frontend visual direction is a reference-style navy/gold civic theme. Project colors belong in `frontend/src/styles/townhall-theme.css`; do not scatter hardcoded colors through components, routes, or feature files.
 - Project skill registry: `.codex/project-skills.json`.
 - Project skills are manifest-only; do not vendor third-party skill folders in git.
 
@@ -35,7 +41,14 @@ Use this file as durable guidance for Codex CLI and other coding agents working 
 - Public civic content is bilingual: English default (`en`) and Bulgarian (`bg`). Public localized routes use path prefixes such as `/bg/news` and `/en/news`; unprefixed routes remain English aliases.
 - Auto-translation is supported through the localization module when explicitly configured. Current provider target: DeepL for English/Bulgarian. Generated translations are auto-published but remain admin-overridable.
 - News and document categories are managed backend data. Categories are scoped by domain and assigned through admin flows.
-- Do not seed or hardcode municipality pages, labels, navigation items, or category content unless the user explicitly requests content seeding.
+- Do not seed or hardcode municipality pages, labels, backend-managed navigation items, or category content unless the user explicitly requests content seeding.
+- The public frontend shell owns its global route menu in `frontend/src/lib/navigation/public-navigation.ts`; do not scatter header/footer menu links in components.
+- Preserve the public shell reference structure: utility strip, masthead, navy menu with white inactive links, rich dropdown, mobile accordion, footer action strip, contact block, columns, and legal links.
+- The current public locale root route renders only header, empty main content, and footer. Do not add homepage body sections until a specific public-page implementation batch is requested.
+- The public header has explicit fallback contact chrome requested by the user: `Mon-Fri, 8:30 AM-4:30 PM`, `(555) 014-2800`, and `24 Main Street, Millbrook`. Backend site settings may override these values later.
+- The admin dashboard page routes are localized under `/en/admin` and `/bg/admin`. Legacy `/admin` and `/admin/login` redirect to English admin routes.
+- Internal admin auth API routes stay unlocalized under `/admin/api/*`.
+- Admin frontend auth uses internal Next route handlers and an HttpOnly cookie; never store backend JWTs in browser-readable storage.
 - Platform hardening includes audit logs, rate limits, admin account lifecycle, and public search.
 
 ## Backend Feature Rules
@@ -86,7 +99,7 @@ Controller/service boundary:
 
 ## Frontend Feature Rules
 
-Do not scaffold or expand the frontend without following `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/frontend-feature-checklist.md`, and `docs/dsfr-usage-policy.md`.
+Do not scaffold or expand the frontend without following `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/frontend-feature-checklist.md`, and `docs/frontend-design-system-policy.md`.
 
 Non-negotiable frontend rules:
 
@@ -94,12 +107,24 @@ Non-negotiable frontend rules:
 - Keep frontend source under `frontend/src`.
 - Public locale routing must live under `frontend/src/app/[locale]` and support only `en` and `bg` until scope changes.
 - Public frontend code must not call `/admin/...`.
-- Backend API types and SDK code must be generated from backend OpenAPI. Do not handwrite backend DTO, entity, response, or payload types in frontend code.
-- Backend calls must go through generated API code or approved wrappers under `frontend/src/lib/api`.
+- Backend API types and SDK code must be generated from backend OpenAPI with `npm run api:generate -w frontend`. Do not handwrite backend DTO, entity, response, or payload types in frontend code.
+- Generated SDK code lives under `frontend/src/lib/api/generated` and can contain the full backend OpenAPI surface. Handwritten public app code must call approved wrappers under `frontend/src/lib/api` and must not call generated admin SDK functions.
+- Backend calls must not bypass approved wrappers under `frontend/src/lib/api`.
+- Runtime env must go through the Zod-backed frontend env helper; do not read public API URLs ad hoc from route or feature code.
+- Use `sanitize-html` through the project helper before rendering rich CMS/news/page HTML.
+- Use TanStack Query only for interactive client fetching that actually needs client caching/refetching. Server-rendered public reads stay in Server Components and API wrappers.
+- Use React Hook Form with Zod/resolvers for non-trivial forms when forms are introduced; do not add form state libraries per feature.
 - Do not store JWTs or auth state in `localStorage` or `sessionStorage`.
-- Future admin frontend auth must use HttpOnly cookies only.
-- DSFR imports must go through local design-system wrappers/providers. Do not scatter direct DSFR imports through routes or feature components.
-- Do not hardcode municipality pages, navigation, categories, departments, staff, officials, or public content.
+- Admin frontend auth must use HttpOnly cookies only. Cookie path is `/` so both `/en/admin` and `/bg/admin` can validate the same server-owned session.
+- Admin dashboard code lives under `frontend/src/app/[locale]/admin`, legacy redirects/internal APIs under `frontend/src/app/admin`, and shared admin code under `frontend/src/components/admin`, `frontend/src/lib/admin-api`, and `frontend/src/lib/admin-auth`.
+- Frontend-owned UI strings live in `frontend/messages/en.json` and `frontend/messages/bg.json`, compile through Paraglide into `frontend/src/lib/i18n/paraglide`, and are consumed through `frontend/src/lib/i18n/messages.ts`. Do not add handwritten EN/BG copy objects.
+- Admin generated SDK calls must be wrapped under `frontend/src/lib/admin-api`; public code must not import admin wrappers.
+- Custom UI components must live under `frontend/src/components/ui` or domain feature folders. Do not add `frontend/src/components/dsfr`.
+- Do not import DSFR, Bootstrap, MUI, Chakra, Ant, or similar external UI/component libraries. Mantine is the only current exception and is admin-only.
+- Tailwind utilities are allowed when they use project theme tokens such as `townhall-navy`, `townhall-gold`, and `townhall-cream`. Do not add ad hoc hex colors or inline color styles outside the approved theme file.
+- Do not use `fr-*` classes or library-owned component class names; use project-owned components and Tailwind theme tokens.
+- Do not hardcode municipality pages, categories, departments, staff, officials, or public content.
+- Global header/footer route navigation is frontend-owned in `frontend/src/lib/navigation/public-navigation.ts`; keep it generic route structure, not municipality-specific content.
 - Public frontend must not render storage keys, local paths, tokens, password hashes, stack traces, draft data, or admin metadata.
 - Frontend tests use Vitest and React Testing Library with colocated `*.spec.ts` or `*.spec.tsx` files for helpers, API wrappers, components, features, and public routes.
 - Browser/Playwright-style tests are explicit only and never part of routine frontend `verify`.
@@ -155,6 +180,16 @@ npm run verify:full
 
 Use `npm run verify` for backend code changes. Use `npm run verify:full` for auth, route, database, or integration changes. Use `npm run lint-ci` for a non-mutating lint/type check. Avoid `npm run lint` as the default verification command because it applies `--fix`.
 
+Frontend human-facing lifecycle scripts exist only inside the frontend workspace:
+
+```console
+npm run dev -w frontend
+npm run build -w frontend
+npm run start -w frontend
+```
+
+Do not add root `dev` or `build` aliases. Use workspace commands when a human explicitly asks for frontend lifecycle commands.
+
 Do not run dev servers, production starts, Docker environment starts, build commands, or browser tests after normal code completion. That means no `npm run start:dev`, `npm run dev`, `npm run devs`, `npm start`, `npm run build`, `next dev`, `next build`, `next start`, `pnpm dev`, `pnpm build`, `pnpm start`, `yarn dev`, `yarn build`, `yarn start`, `bun dev`, `bun run build`, `turbo dev`, `turbo build`, `nest start`, `nest build`, `docker-compose up`, `docker compose up`, or Playwright/Cypress/browser-test commands unless the user explicitly asks for that exact command. These can kill the user's active dev environment. Use `npm run guardrails`, `npm run lint-ci`, `npm test`, `npm run type-check`, or `npm run verify` instead. When the user explicitly asks for a blocked dev/build/start command, prefix it with `TOWNHALL_ALLOW_DEV_BUILD=1`. When the user explicitly asks for browser tests, use `TOWNHALL_ALLOW_BROWSER_TEST=1` and `FRONTEND_TEST_BASE_URL=...`; do not start the dev server.
 
 Local dependency startup:
@@ -185,7 +220,8 @@ npm run migrations:revert
 - Use `docs/hook-context-policy.md` for hook behavior and `docs/living-docs-policy.md` for docs drift rules.
 - Use `docs/codex-skill-routing.md` before invoking external skills. External skills are advisory only.
 - Use `docs/localization-standards.md` before changing public text fields, localized routes, translation tables, or locale fallback behavior.
-- Use `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/frontend-feature-checklist.md`, and `docs/dsfr-usage-policy.md` before adding frontend code.
+- Use `docs/frontend-architecture.md`, `docs/frontend-guidelines.md`, `docs/frontend-feature-checklist.md`, and `docs/frontend-design-system-policy.md` before adding frontend code.
+- Use `docs/admin-dashboard-guidelines.md` before changing protected admin frontend routes, auth helpers, Mantine components, or admin API wrappers.
 - Restore shared project skills from upstream with `npm run skills:dry-run`, `npm run skills:install`, and `npm run skills:verify` from the repo root. Restart Codex after installing skills.
 - If Codex CLI reports project hooks need review, run `/hooks` and trust the checked-in project guardrail hooks after reviewing them.
 

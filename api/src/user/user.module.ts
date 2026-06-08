@@ -11,6 +11,7 @@ import { JwtStrategy } from './services/auth/strategies/jwt/jwt.strategy';
 import { AppCacheModule } from '../app-cache/app-cache.module';
 import { RolesGuard } from './guards/roles/roles.guard';
 import { AdminAccountsController } from './controllers/admin-accounts.controller';
+import { AdminAuthController } from './controllers/admin-auth.controller';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { AdminAccountsController } from './controllers/admin-accounts.controller
     ConfigModule,
     AppCacheModule,
   ],
-  controllers: [UserController, AdminAccountsController],
+  controllers: [UserController, AdminAccountsController, AdminAuthController],
   providers: [
     AuthService,
     UserService,

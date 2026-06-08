@@ -147,4 +147,32 @@ describe('AuthService', () => {
       expect(checkPassSpy).not.toHaveBeenCalled();
     });
   });
+
+  describe('validateAdminSession', () => {
+    it('should resolve active admin account through user service', async () => {
+      const account = {
+        id: 1,
+        email: 'admin@example.com',
+        firstName: 'Townhall',
+        lastName: 'Admin',
+        role: UserRole.ADMIN as UserRole.ADMIN,
+        isActive: true,
+        createdAt: new Date('2026-01-01T00:00:00.000Z'),
+        updatedAt: new Date('2026-01-02T00:00:00.000Z'),
+      };
+      const payload = {
+        id: 1,
+        email: 'admin@example.com',
+        role: UserRole.ADMIN,
+      };
+      const sessionSpy = jest
+        .spyOn(userService, 'getActiveAdminAccountForSession')
+        .mockResolvedValue(account);
+
+      await expect(authService.validateAdminSession(payload)).resolves.toBe(
+        account,
+      );
+      expect(sessionSpy).toHaveBeenCalledWith(payload);
+    });
+  });
 });

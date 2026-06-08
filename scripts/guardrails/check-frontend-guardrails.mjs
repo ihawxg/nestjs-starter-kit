@@ -47,19 +47,14 @@ const generatedRoots = [
   "frontend/src/generated/",
   "frontend/src/lib/api/generated/",
   "frontend/src/lib/api/hey/",
+  "frontend/src/lib/i18n/paraglide/",
 ];
 const apiWrapperRoots = [
   "frontend/src/lib/api/",
+  "frontend/src/lib/admin-api/",
+  "frontend/src/lib/admin-auth/",
   "frontend/src/server/api/",
   "frontend/src/generated/",
-];
-const dsfrWrapperRoots = [
-  "frontend/src/components/dsfr/",
-  "frontend/src/components/ui/",
-  "frontend/src/lib/dsfr/",
-  "frontend/src/app/providers.",
-  "frontend/src/app/dsfr-provider.",
-  "frontend/src/app/layout.",
 ];
 const allowedRootSourceFiles = new Set([
   "frontend/next-env.d.ts",
@@ -78,6 +73,73 @@ const allowedRootSourceFiles = new Set([
   "frontend/vitest.setup.ts",
   "frontend/vitest.setup.tsx",
 ]);
+const themeFile = "frontend/src/styles/townhall-theme.css";
+const approvedColorFiles = new Set([themeFile]);
+const forbiddenUiDependencies = [
+  "@codegouvfr/react-dsfr",
+  "@gouvfr/dsfr",
+  "@mui/material",
+  "@chakra-ui/react",
+  "antd",
+  "bootstrap",
+  "react-bootstrap",
+  "semantic-ui-react",
+];
+const requiredAdminUiDependencies = [
+  "@mantine/core",
+  "@mantine/hooks",
+  "@mantine/form",
+  "@mantine/modals",
+  "@mantine/notifications",
+];
+const forbiddenLocalizationDependencies = ["next-intl"];
+const forbiddenUiImportPattern =
+  /@gouvfr\/dsfr|@codegouvfr\/react-dsfr|dsfr\.min|dsfr\.module|@mui\/material|@chakra-ui\/react|antd|bootstrap|react-bootstrap|semantic-ui-react/;
+const mantineImportPattern = /@mantine\//;
+const adminSourcePrefixes = [
+  "frontend/src/app/admin/",
+  "frontend/src/app/[locale]/admin/",
+  "frontend/src/components/admin/",
+  "frontend/src/lib/admin-api/",
+  "frontend/src/lib/admin-auth/",
+  "frontend/src/lib/i18n/",
+];
+const publicSourcePrefixes = [
+  "frontend/src/app/[locale]/",
+  "frontend/src/components/shell/",
+  "frontend/src/components/ui/",
+  "frontend/src/features/",
+  "frontend/src/lib/api/",
+  "frontend/src/lib/navigation/",
+  "frontend/src/lib/public-site/",
+];
+const designMockupGenerator = "scripts/design/generate-frontend-mockups.mjs";
+const designMockupReadme = "docs/frontend-design/README.md";
+const designMockupRoot = "docs/frontend-design/pages";
+const designMockupPages = [
+  "home",
+  "search",
+  "pages-list",
+  "page-detail",
+  "news-list",
+  "news-detail",
+  "documents-list",
+  "documents-detail",
+  "events-list",
+  "events-detail",
+  "departments-list",
+  "department-detail",
+  "staff-list",
+  "staff-detail",
+  "officials-list",
+  "official-detail",
+  "committees-list",
+  "committee-detail",
+];
+const designMockupViewports = {
+  desktop: 1440,
+  mobile: 390,
+};
 
 function rel(file) {
   return path.relative(root, file).replaceAll(path.sep, "/");
@@ -174,6 +236,14 @@ function hasDependency(parsed, dependency) {
   );
 }
 
+function hasRuntimeDependency(parsed, dependency) {
+  return Boolean(parsed.dependencies?.[dependency]);
+}
+
+function hasDevDependency(parsed, dependency) {
+  return Boolean(parsed.devDependencies?.[dependency]);
+}
+
 function rootWorkspaceChecks() {
   const packageJson = path.join(root, "package.json");
   if (!existsSync(packageJson)) {
@@ -202,7 +272,13 @@ function rootWorkspaceChecks() {
   }
 
   const scripts = parsed.scripts ?? {};
-  const requiredScripts = ["guardrails", "verify", "verify:backend", "verify:frontend"];
+  const requiredScripts = [
+    "guardrails",
+    "verify",
+    "verify:backend",
+    "verify:frontend",
+    "design:mockups",
+  ];
   for (const scriptName of requiredScripts) {
     if (!scripts[scriptName]) {
       fail.push(`Root package.json missing script "${scriptName}".`);
@@ -211,13 +287,28 @@ function rootWorkspaceChecks() {
 
   for (const [scriptName, script] of Object.entries(scripts)) {
     if (
-      ["guardrails", "verify", "verify:backend", "verify:frontend"].includes(
+      [
+        "guardrails",
+        "verify",
+        "verify:backend",
+        "verify:frontend",
+        "design:mockups",
+      ].includes(
         scriptName,
       ) &&
       scriptContainsBlockedCommand(script)
     ) {
       fail.push(
         `Root routine script "${scriptName}" must not run dev/build/start/Docker commands.`,
+      );
+    }
+
+    if (
+      scriptName === "design:mockups" &&
+      scriptContainsBrowserTest(script)
+    ) {
+      fail.push(
+        'Root script "design:mockups" must stay static and must not run browser/Playwright-style checks.',
       );
     }
   }
@@ -250,7 +341,34 @@ function frontendPackageChecks() {
   if (!parsed) return;
 
   const scripts = parsed.scripts ?? {};
+  for (const dependency of forbiddenUiDependencies) {
+    if (hasDependency(parsed, dependency)) {
+      fail.push(
+        `Frontend public UI must use the project-owned design system; external UI dependency is not allowed: ${dependency}`,
+      );
+    }
+  }
+
+  for (const dependency of forbiddenLocalizationDependencies) {
+    if (hasDependency(parsed, dependency)) {
+      fail.push(
+        `Frontend UI localization must use Paraglide, not deprecated dependency: ${dependency}`,
+      );
+    }
+  }
+
+  for (const dependency of requiredAdminUiDependencies) {
+    if (!hasRuntimeDependency(parsed, dependency)) {
+      fail.push(
+        `Admin dashboard foundation requires scoped Mantine dependency: ${dependency}`,
+      );
+    }
+  }
+
   const requiredScripts = [
+    "dev",
+    "build",
+    "start",
     "guardrails",
     "verify",
     "lint-ci",
@@ -258,10 +376,27 @@ function frontendPackageChecks() {
     "test",
     "test:watch",
     "test:coverage",
+    "i18n:compile",
   ];
   for (const scriptName of requiredScripts) {
     if (!scripts[scriptName]) {
       fail.push(`frontend/package.json missing script "${scriptName}".`);
+    }
+  }
+
+  const lifecycleScripts = {
+    dev: { pattern: /^next\s+dev$/, command: "next dev" },
+    build: { pattern: /^next\s+build$/, command: "next build" },
+    start: { pattern: /^next\s+start$/, command: "next start" },
+  };
+  for (const [scriptName, expected] of Object.entries(lifecycleScripts)) {
+    if (
+      scripts[scriptName] &&
+      !expected.pattern.test(scripts[scriptName].trim())
+    ) {
+      fail.push(
+        `frontend script "${scriptName}" must be "${expected.command}".`,
+      );
     }
   }
 
@@ -280,8 +415,52 @@ function frontendPackageChecks() {
     }
   }
 
+  const requiredRuntimeDeps = [
+    "lucide-react",
+    "@tanstack/react-query",
+    "zod",
+    "@t3-oss/env-nextjs",
+    "react-hook-form",
+    "@hookform/resolvers",
+    "clsx",
+    "sanitize-html",
+    "date-fns",
+    "sharp",
+  ];
+  for (const dependency of requiredRuntimeDeps) {
+    if (!hasRuntimeDependency(parsed, dependency)) {
+      fail.push(
+        `frontend/package.json missing required runtime dependency: ${dependency}`,
+      );
+    }
+  }
+
+  const requiredDevDeps = [
+    "@inlang/paraglide-js",
+    "@inlang/plugin-message-format",
+    "tailwindcss",
+    "@tailwindcss/postcss",
+    "postcss",
+    "@types/sanitize-html",
+    "@tanstack/react-query-devtools",
+  ];
+  for (const dependency of requiredDevDeps) {
+    if (!hasDevDependency(parsed, dependency)) {
+      fail.push(
+        `frontend/package.json missing required dev dependency: ${dependency}`,
+      );
+    }
+  }
+
   if (scripts.test && !/\bvitest\s+run\b/.test(scripts.test)) {
     fail.push('frontend script "test" must run "vitest run".');
+  }
+
+  if (
+    scripts["i18n:compile"] &&
+    !/paraglide-js\s+compile/.test(scripts["i18n:compile"])
+  ) {
+    fail.push('frontend script "i18n:compile" must run Paraglide compile.');
   }
 
   if (scripts["test:watch"] && !/\bvitest\b/.test(scripts["test:watch"])) {
@@ -309,7 +488,7 @@ function frontendPackageChecks() {
 
   for (const [scriptName, script] of Object.entries(scripts)) {
     if (
-      ["guardrails", "verify", "lint-ci", "type-check", "test"].includes(
+      ["guardrails", "verify", "lint-ci", "type-check", "test", "i18n:compile"].includes(
         scriptName,
       ) &&
       scriptContainsBlockedCommand(script)
@@ -320,7 +499,7 @@ function frontendPackageChecks() {
     }
 
     if (
-      ["guardrails", "verify", "lint-ci", "type-check", "test"].includes(
+      ["guardrails", "verify", "lint-ci", "type-check", "test", "i18n:compile"].includes(
         scriptName,
       ) &&
       scriptContainsBrowserTest(script)
@@ -343,6 +522,72 @@ function frontendPackageChecks() {
       fail.push(
         "frontend verify:browser must not run dev/build/start/Docker commands.",
       );
+    }
+  }
+}
+
+function paraglideLocalizationChecks() {
+  if (!existsSync(frontendRoot)) return;
+
+  const requiredFiles = [
+    "frontend/project.inlang/settings.json",
+    "frontend/messages/en.json",
+    "frontend/messages/bg.json",
+    "frontend/src/lib/i18n/messages.ts",
+    "frontend/src/lib/i18n/messages.spec.ts",
+    "frontend/src/lib/i18n/paraglide/messages.js",
+    "frontend/src/lib/i18n/paraglide/messages.d.ts",
+    "frontend/src/lib/i18n/paraglide/runtime.js",
+    "frontend/src/lib/i18n/paraglide/runtime.d.ts",
+  ];
+
+  for (const file of requiredFiles) {
+    if (!existsSync(path.join(root, file))) {
+      fail.push(`Paraglide frontend localization requires ${file}.`);
+    }
+  }
+
+  const settingsPath = path.join(frontendRoot, "project.inlang", "settings.json");
+  const settings = existsSync(settingsPath)
+    ? parseJson(settingsPath, "frontend/project.inlang/settings.json")
+    : undefined;
+  if (settings) {
+    if (settings.baseLocale !== "en") {
+      fail.push("Paraglide baseLocale must stay en.");
+    }
+    if (JSON.stringify(settings.locales) !== JSON.stringify(["en", "bg"])) {
+      fail.push('Paraglide locales must stay exactly ["en", "bg"].');
+    }
+    const modules = Array.isArray(settings.modules) ? settings.modules.join("\n") : "";
+    if (!modules.includes("@inlang/plugin-message-format")) {
+      fail.push("Paraglide settings must use @inlang/plugin-message-format.");
+    }
+  }
+
+  for (const locale of ["en", "bg"]) {
+    const file = path.join(frontendRoot, "messages", `${locale}.json`);
+    const messages = existsSync(file)
+      ? parseJson(file, `frontend/messages/${locale}.json`)
+      : undefined;
+    if (messages && Object.keys(messages).length === 0) {
+      fail.push(`frontend/messages/${locale}.json must not be empty.`);
+    }
+  }
+
+  const messageFacade = path.join(srcRoot, "lib", "i18n", "messages.ts");
+  if (existsSync(messageFacade)) {
+    const text = read(messageFacade);
+    for (const token of [
+      "./paraglide/messages.js",
+      "getAdminCopy",
+      "getPublicNavigationCopy",
+      "getPublicNotFoundCopy",
+      "getPublicSiteFallbackCopy",
+      "getPublicShellCopy",
+    ]) {
+      if (!text.includes(token)) {
+        fail.push(`Frontend i18n message facade must include ${token}.`);
+      }
     }
   }
 }
@@ -371,6 +616,191 @@ function appRouterChecks() {
       fail.push(
         `Hardcoded locale app folder is not allowed; use frontend/src/app/[locale], not ${locale}.`,
       );
+    }
+  }
+}
+
+function adminDashboardChecks() {
+  if (!existsSync(frontendRoot)) return;
+
+  const requiredFiles = [
+    "frontend/src/app/admin/layout.tsx",
+    "frontend/src/app/admin/page.tsx",
+    "frontend/src/app/admin/login/page.tsx",
+    "frontend/src/app/[locale]/admin/layout.tsx",
+    "frontend/src/app/[locale]/admin/login/page.tsx",
+    "frontend/src/app/[locale]/admin/(protected)/layout.tsx",
+    "frontend/src/app/[locale]/admin/(protected)/page.tsx",
+    "frontend/src/app/[locale]/admin/(protected)/not-found.tsx",
+    "frontend/src/app/[locale]/admin/(protected)/[...adminNotFound]/page.tsx",
+    "frontend/src/app/admin/api/[...adminApiNotFound]/route.ts",
+    "frontend/src/app/admin/api/auth/login/route.ts",
+    "frontend/src/app/admin/api/auth/logout/route.ts",
+    "frontend/src/app/admin/api/auth/session/route.ts",
+    "frontend/src/components/admin/admin-not-found-boundary.tsx",
+    "frontend/src/components/admin/admin-providers.tsx",
+    "frontend/src/components/admin/admin-login-form.tsx",
+    "frontend/src/components/admin/admin-not-found-content.tsx",
+    "frontend/src/components/admin/admin-shell.tsx",
+    "frontend/src/lib/admin-api/auth.ts",
+    "frontend/src/lib/admin-auth/server.ts",
+    "frontend/src/lib/admin-auth/session.ts",
+    "frontend/src/lib/admin-auth/client.ts",
+    "frontend/src/lib/i18n/messages.ts",
+  ];
+
+  for (const file of requiredFiles) {
+    if (!existsSync(path.join(root, file))) {
+      fail.push(`Admin dashboard foundation requires ${file}.`);
+    }
+  }
+
+  const adminLayout = path.join(srcRoot, "app", "admin", "layout.tsx");
+  if (existsSync(adminLayout)) {
+    const text = read(adminLayout);
+    for (const importName of [
+      "@mantine/core/styles.css",
+      "@mantine/notifications/styles.css",
+      "AdminProviders",
+    ]) {
+      if (!text.includes(importName)) {
+        fail.push(`Admin layout must include ${importName}.`);
+      }
+    }
+  }
+
+  const adminLoginPage = path.join(
+    srcRoot,
+    "app",
+    "[locale]",
+    "admin",
+    "login",
+    "page.tsx",
+  );
+  if (existsSync(adminLoginPage)) {
+    const text = read(adminLoginPage);
+    for (const token of [
+      "getCurrentAdminAccount",
+      "redirect",
+      "getAdminDashboardPath",
+      "AdminLoginForm",
+      "resolveRouteLocale",
+    ]) {
+      if (!text.includes(token)) {
+        fail.push(`Localized admin login page must use ${token}.`);
+      }
+    }
+  }
+
+  const protectedLayout = path.join(
+    srcRoot,
+    "app",
+    "[locale]",
+    "admin",
+    "(protected)",
+    "layout.tsx",
+  );
+  if (existsSync(protectedLayout)) {
+    const text = read(protectedLayout);
+    for (const token of [
+      "getCurrentAdminAccount",
+      "redirect",
+      "getAdminLoginPath",
+      "AdminShell",
+      "requireLocale",
+    ]) {
+      if (!text.includes(token)) {
+        fail.push(`Localized protected admin layout must use ${token}.`);
+      }
+    }
+  }
+
+  const adminNotFound = path.join(
+    srcRoot,
+    "app",
+    "[locale]",
+    "admin",
+    "(protected)",
+    "not-found.tsx",
+  );
+  if (existsSync(adminNotFound)) {
+    const text = read(adminNotFound);
+    if (!text.includes("AdminNotFoundBoundary")) {
+      fail.push("Protected admin not-found route must render AdminNotFoundBoundary.");
+    }
+  }
+
+  const unknownAdminPage = path.join(
+    srcRoot,
+    "app",
+    "[locale]",
+    "admin",
+    "(protected)",
+    "[...adminNotFound]",
+    "page.tsx",
+  );
+  if (existsSync(unknownAdminPage)) {
+    const text = read(unknownAdminPage);
+    if (!text.includes("notFound")) {
+      fail.push("Unknown protected admin pages must call notFound().");
+    }
+  }
+
+  const unknownAdminApi = path.join(
+    srcRoot,
+    "app",
+    "admin",
+    "api",
+    "[...adminApiNotFound]",
+    "route.ts",
+  );
+  if (existsSync(unknownAdminApi)) {
+    const text = read(unknownAdminApi);
+    if (!text.includes("NextResponse.json") || !text.includes("status: 404")) {
+      fail.push("Unknown admin API routes must return a JSON 404 response.");
+    }
+  }
+
+  const adminApi = path.join(srcRoot, "lib", "admin-api", "auth.ts");
+  if (existsSync(adminApi)) {
+    const text = read(adminApi);
+    if (!text.includes("userControllerLogin") || !text.includes("adminAuthControllerSession")) {
+      fail.push(
+        "Admin API wrapper must centralize backend login and session generated SDK usage.",
+      );
+    }
+  }
+
+  const adminSession = path.join(srcRoot, "lib", "admin-auth", "session.ts");
+  if (existsSync(adminSession)) {
+    const text = read(adminSession);
+    for (const token of [
+      "townhall_admin_session",
+      "httpOnly: true",
+      "sameSite: 'lax'",
+      "path: '/'",
+      "getAdminDashboardPath",
+      "getAdminLoginPath",
+      "switchAdminLocalePath",
+    ]) {
+      if (!text.includes(token)) {
+        fail.push(`Admin session cookie policy must include ${token}.`);
+      }
+    }
+  }
+
+  const localizedAdminComponents = [
+    "frontend/src/components/admin/admin-shell.tsx",
+    "frontend/src/components/admin/admin-login-form.tsx",
+    "frontend/src/components/admin/admin-dashboard-home.tsx",
+    "frontend/src/components/admin/admin-not-found-content.tsx",
+  ];
+  for (const file of localizedAdminComponents) {
+    const absolute = path.join(root, file);
+    if (!existsSync(absolute)) continue;
+    const text = read(absolute);
+    if (!text.includes("SupportedLocale") || !text.includes("getAdminCopy")) {
+      fail.push(`Localized admin component must use SupportedLocale and admin copy: ${file}.`);
     }
   }
 }
@@ -421,11 +851,37 @@ function generatedApiChecks() {
       );
     }
 
-    if (/\/admin\//.test(text) && !relative.startsWith("frontend/src/app/admin/")) {
+    if (
+      !isGenerated &&
+      /\/admin\//.test(text) &&
+      !adminSourcePrefixes.some((prefix) => relative.startsWith(prefix))
+    ) {
       fail.push(`Public frontend code must not call admin APIs: ${relative}`);
     }
 
-    if (/\bfetch\s*\(/.test(text) && !isApiWrapper) {
+    if (
+      !isGenerated &&
+      publicSourcePrefixes.some((prefix) => relative.startsWith(prefix)) &&
+      !adminSourcePrefixes.some((prefix) => relative.startsWith(prefix)) &&
+      /@\/(?:components\/admin|lib\/admin-api|lib\/admin-auth)/.test(text)
+    ) {
+      fail.push(
+        `Public frontend code must not import admin dashboard modules: ${relative}`,
+      );
+    }
+
+    if (
+      !isGenerated &&
+      !relative.startsWith("frontend/src/lib/admin-api/") &&
+      /@\/lib\/api\/generated/.test(text) &&
+      /\b(?:admin\w*Controller|Admin\w*Controller)/.test(text)
+    ) {
+      fail.push(
+        `Generated admin SDK functions must be wrapped under frontend/src/lib/admin-api: ${relative}`,
+      );
+    }
+
+    if (!isGenerated && /\bfetch\s*\(/.test(text) && !isApiWrapper) {
       fail.push(
         `Backend fetch calls must go through the generated API wrapper: ${relative}`,
       );
@@ -450,6 +906,8 @@ function clientSecurityChecks() {
 
   for (const file of files) {
     const relative = rel(file);
+    if (isGenerated(relative)) continue;
+
     const text = read(file);
 
     if (/\b(localStorage|sessionStorage)\b/.test(text)) {
@@ -477,8 +935,75 @@ function clientSecurityChecks() {
   }
 }
 
-function dsfrChecks() {
+function shellNavigationChecks() {
   if (!existsSync(frontendRoot)) return;
+
+  const navigationSource = path.join(
+    srcRoot,
+    "lib",
+    "navigation",
+    "public-navigation.ts",
+  );
+  if (!existsSync(navigationSource)) {
+    fail.push(
+      "Frontend shell navigation must be owned by frontend/src/lib/navigation/public-navigation.ts.",
+    );
+    return;
+  }
+
+  const navigationText = read(navigationSource);
+  for (const exportName of [
+    "getFrontendHeaderNavigation",
+    "getFrontendFooterNavigation",
+  ]) {
+    if (!navigationText.includes(exportName)) {
+      fail.push(
+        `Frontend shell navigation source must export ${exportName}.`,
+      );
+    }
+  }
+
+  const publicShellApi = path.join(srcRoot, "lib", "api", "public-shell.ts");
+  if (!existsSync(publicShellApi)) return;
+
+  const publicShellText = read(publicShellApi);
+  if (
+    !publicShellText.includes("getFrontendHeaderNavigation") ||
+    !publicShellText.includes("getFrontendFooterNavigation")
+  ) {
+    fail.push(
+      "Public shell data must use frontend-owned header/footer navigation.",
+    );
+  }
+
+  if (
+    /getPublicNavigation\(\s*locale\s*,\s*['"](?:header|footer)['"]\s*\)/.test(
+      publicShellText,
+    )
+  ) {
+    fail.push(
+      "Public shell header/footer navigation must not depend on backend navigation endpoints.",
+    );
+  }
+}
+
+function projectDesignSystemChecks() {
+  if (!existsSync(frontendRoot)) return;
+
+  const dsfrRoot = path.join(srcRoot, "components", "dsfr");
+  if (existsSync(dsfrRoot) && walk(dsfrRoot).length > 0) {
+    fail.push(
+      "Frontend must use project-owned UI components under frontend/src/components/ui, not frontend/src/components/dsfr.",
+    );
+  }
+
+  if (!existsSync(path.join(srcRoot, "components", "ui"))) {
+    fail.push("Frontend custom design-system components must live under frontend/src/components/ui.");
+  }
+
+  if (!existsSync(path.join(srcRoot, "components", "admin"))) {
+    fail.push("Admin dashboard components must live under frontend/src/components/admin.");
+  }
 
   const files = walk(frontendRoot).filter((file) =>
     /\.(ts|tsx|js|jsx|css|scss)$/.test(file),
@@ -486,20 +1011,152 @@ function dsfrChecks() {
 
   for (const file of files) {
     const relative = rel(file);
+    if (isGenerated(relative)) continue;
+
     const text = read(file);
-    const importsDsfr =
-      /@gouvfr\/dsfr|@codegouvfr\/react-dsfr|dsfr\.min|dsfr\.module/.test(
-        text,
-      );
 
-    if (!importsDsfr) continue;
-
-    const allowed = dsfrWrapperRoots.some((prefix) =>
-      relative.startsWith(prefix),
-    );
-    if (!allowed) {
+    if (forbiddenUiImportPattern.test(text)) {
       fail.push(
-        `DSFR imports must go through local design-system wrappers/providers: ${relative}`,
+        `Frontend source must not import banned external UI/component libraries: ${relative}`,
+      );
+    }
+
+    if (
+      mantineImportPattern.test(text) &&
+      !relative.startsWith("frontend/src/app/admin/") &&
+      !relative.startsWith("frontend/src/app/[locale]/admin/") &&
+      !relative.startsWith("frontend/src/components/admin/")
+    ) {
+      fail.push(
+        `Mantine imports are allowed only in admin route/component files: ${relative}`,
+      );
+    }
+
+    if (
+      mantineImportPattern.test(text) &&
+      /component=\{Link\}/.test(text) &&
+      !/^['"]use client['"];?/.test(text.trimStart())
+    ) {
+      fail.push(
+        `Mantine components that receive Next Link through component={Link} must be client components: ${relative}`,
+      );
+    }
+
+    const hasDsfrClass =
+      /\.(css|scss)$/.test(relative)
+        ? /\.fr-[\w-]+/.test(text)
+        : /['"`][^'"`]*\bfr-[\w-]+/.test(text);
+    if (hasDsfrClass) {
+      fail.push(
+        `Frontend source must not use DSFR fr-* classes; use townhall-* classes: ${relative}`,
+      );
+    }
+  }
+}
+
+function themeChecks() {
+  if (!existsSync(frontendRoot)) return;
+
+  const themePath = path.join(root, themeFile);
+  if (!existsSync(themePath)) {
+    fail.push("Frontend civic theme file is required: frontend/src/styles/townhall-theme.css");
+    return;
+  }
+
+  const themeText = read(themePath);
+  const requiredThemeTokens = [
+    "--color-townhall-navy:",
+    "--color-townhall-deep:",
+    "--color-townhall-gold:",
+    "--color-townhall-cream:",
+    "--color-townhall-paper:",
+    "--color-townhall-panel:",
+    "--color-townhall-slate:",
+    "--color-townhall-muted:",
+    "--color-townhall-border:",
+    "--color-townhall-border-light:",
+    "--color-townhall-footer-line:",
+    "--townhall-color-background:",
+    "--townhall-color-surface:",
+    "--townhall-color-primary:",
+    "--townhall-color-accent:",
+    "--townhall-focus-ring:",
+  ];
+  for (const token of requiredThemeTokens) {
+    if (!themeText.includes(token)) {
+      fail.push(`Frontend theme must define required civic token: ${token}`);
+    }
+  }
+
+  if (!/@theme\s*\{/.test(themeText)) {
+    fail.push("Frontend theme must expose Tailwind v4 tokens through an @theme block.");
+  }
+
+  const globalsPath = path.join(srcRoot, "styles", "globals.css");
+  if (!existsSync(globalsPath)) {
+    fail.push("Frontend globals CSS file is required: frontend/src/styles/globals.css");
+  } else {
+    const globalsText = read(globalsPath);
+    const tailwindImport = globalsText.indexOf('@import "tailwindcss"');
+    const themeImport = globalsText.indexOf('@import "./townhall-theme.css"');
+
+    if (tailwindImport === -1) {
+      fail.push("Frontend globals.css must import Tailwind CSS.");
+    }
+    if (themeImport === -1) {
+      fail.push("Frontend globals.css must import townhall-theme.css after Tailwind.");
+    } else if (tailwindImport !== -1 && themeImport < tailwindImport) {
+      fail.push("Frontend globals.css must import townhall-theme.css after Tailwind.");
+    }
+  }
+
+  const postcssPath = path.join(frontendRoot, "postcss.config.mjs");
+  if (!existsSync(postcssPath)) {
+    fail.push("Frontend Tailwind v4 setup requires frontend/postcss.config.mjs.");
+  } else if (!read(postcssPath).includes("@tailwindcss/postcss")) {
+    fail.push("Frontend postcss.config.mjs must use @tailwindcss/postcss.");
+  }
+
+  const rootLayout = path.join(srcRoot, "app", "layout.tsx");
+  if (existsSync(rootLayout)) {
+    const layoutText = read(rootLayout);
+    if (!layoutText.includes("@/styles/globals.css")) {
+      fail.push("Root layout must import frontend global CSS.");
+    }
+  }
+
+  const files = walk(srcRoot).filter((file) =>
+    /\.(ts|tsx|js|jsx|css|scss)$/.test(file),
+  );
+  const hexColorPattern = /(^|[^A-Za-z0-9_])#[0-9a-fA-F]{3,8}\b/g;
+  const inlineColorPattern =
+    /style\s*=\s*\{\{[^}]*\b(color|background|backgroundColor|borderColor|boxShadow)\b/;
+
+  for (const file of files) {
+    const relative = rel(file);
+    if (isGenerated(relative)) continue;
+
+    const text = read(file);
+    const hasHexColor = hexColorPattern.test(text);
+    hexColorPattern.lastIndex = 0;
+    if (hasHexColor && !approvedColorFiles.has(relative)) {
+      fail.push(
+        `Frontend hardcoded colors must live in the approved theme file, not ${relative}`,
+      );
+    }
+
+    if (/\.(ts|tsx|js|jsx)$/.test(relative) && inlineColorPattern.test(text)) {
+      fail.push(
+        `Frontend inline color styles must use theme classes or CSS tokens, not ${relative}`,
+      );
+    }
+
+    if (
+      /\.(ts|tsx|js|jsx)$/.test(relative) &&
+      /(?:bg|text|border|ring|shadow)-\[[^\]]*#[^\]]*\]/.test(text)
+    ) {
+      fail.push(
+        `Frontend Tailwind arbitrary hex color utilities are not allowed outside theme tokens: ${relative}`,
       );
     }
   }
@@ -516,16 +1173,23 @@ function contentHardcodingChecks() {
     "ОБЩИНСКА СОБСТВЕНОСТ",
     "Budget and finance",
     "Municipal property",
-    "Departments",
   ];
 
   for (const file of files) {
     const relative = rel(file);
-    if (relative.includes("/tests/") || relative.endsWith(".test.tsx")) {
+    if (isGenerated(relative)) continue;
+
+    if (relative.includes("/tests/") || isSpecFile(relative)) {
       continue;
     }
 
     const text = read(file);
+    if (/[\u0400-\u04FF]/.test(text)) {
+      fail.push(
+        `Frontend Bulgarian UI strings must live in frontend/messages/bg.json or generated Paraglide output, not ${relative}`,
+      );
+    }
+
     const found = suspiciousContent.filter((term) => text.includes(term));
     if (found.length > 0) {
       warn.push(
@@ -533,6 +1197,83 @@ function contentHardcodingChecks() {
       );
     }
   }
+}
+
+function designMockupChecks() {
+  if (!existsSync(frontendRoot)) return;
+
+  const generatorPath = path.join(root, designMockupGenerator);
+  if (!existsSync(generatorPath)) {
+    fail.push(`Frontend design mockup generator is required: ${designMockupGenerator}`);
+  } else {
+    const generatorText = read(generatorPath);
+    if (scriptContainsBlockedCommand(generatorText) || scriptContainsBrowserTest(generatorText)) {
+      fail.push(
+        "Frontend design mockup generator must stay static and must not run dev/build/start/Docker/browser commands.",
+      );
+    }
+    if (forbiddenUiImportPattern.test(generatorText) || /\bfr-[\w-]+/.test(generatorText)) {
+      fail.push(
+        "Frontend design mockup generator must reflect the project-owned design system, not DSFR/UI-library classes.",
+      );
+    }
+  }
+
+  if (!existsSync(path.join(root, designMockupReadme))) {
+    fail.push(`Frontend design mockup README is required: ${designMockupReadme}`);
+  }
+
+  const pagesRoot = path.join(root, designMockupRoot);
+  if (!existsSync(pagesRoot)) {
+    fail.push(`Frontend design mockup pages folder is required: ${designMockupRoot}`);
+    return;
+  }
+
+  const pngFiles = walk(pagesRoot).filter((file) => file.endsWith(".png"));
+  const expectedPngCount =
+    designMockupPages.length * Object.keys(designMockupViewports).length;
+  if (pngFiles.length !== expectedPngCount) {
+    fail.push(
+      `Frontend design mockups must contain exactly ${expectedPngCount} PNG files; found ${pngFiles.length}.`,
+    );
+  }
+
+  for (const page of designMockupPages) {
+    for (const [viewport, expectedWidth] of Object.entries(designMockupViewports)) {
+      const file = path.join(pagesRoot, page, `${viewport}.png`);
+      if (!existsSync(file)) {
+        fail.push(`Missing frontend design mockup: ${rel(file)}`);
+        continue;
+      }
+
+      const size = readPngSize(file);
+      if (!size) {
+        fail.push(`Frontend design mockup must be a valid PNG: ${rel(file)}`);
+        continue;
+      }
+
+      if (size.width !== expectedWidth) {
+        fail.push(
+          `Frontend design mockup ${rel(file)} must be ${expectedWidth}px wide, not ${size.width}px.`,
+        );
+      }
+
+      if (size.height < 1) {
+        fail.push(`Frontend design mockup has invalid height: ${rel(file)}`);
+      }
+    }
+  }
+}
+
+function readPngSize(file) {
+  const buffer = readFileSync(file);
+  const signature = buffer.subarray(0, 8).toString("hex");
+  if (signature !== "89504e470d0a1a0a" || buffer.length < 24) return null;
+
+  return {
+    width: buffer.readUInt32BE(16),
+    height: buffer.readUInt32BE(20),
+  };
 }
 
 function isGenerated(relative) {
@@ -587,6 +1328,7 @@ function testCoverageChecks() {
     "frontend/src/features/",
     "frontend/src/components/",
     "frontend/src/lib/",
+    "frontend/src/app/admin/",
     "frontend/src/app/[locale]/",
   ];
   const files = walk(srcRoot).filter((file) => /\.(ts|tsx)$/.test(file));
@@ -671,12 +1413,17 @@ function livingDocsChecks() {
 
 rootWorkspaceChecks();
 frontendPackageChecks();
+paraglideLocalizationChecks();
 appRouterChecks();
+adminDashboardChecks();
 sourcePlacementChecks();
 generatedApiChecks();
 clientSecurityChecks();
-dsfrChecks();
+shellNavigationChecks();
+projectDesignSystemChecks();
+themeChecks();
 contentHardcodingChecks();
+designMockupChecks();
 testCoverageChecks();
 configStrictnessChecks();
 livingDocsChecks();

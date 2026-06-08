@@ -110,6 +110,65 @@ describe('UserService', () => {
     });
   });
 
+  it('should resolve active admin account for an admin session payload', async () => {
+    const adminUser = {
+      ...mockUserEntity,
+      role: UserRole.ADMIN,
+      isActive: true,
+    };
+    const findOneSpy = jest.spyOn(repo, 'findOne').mockResolvedValue(adminUser);
+
+    await expect(
+      service.getActiveAdminAccountForSession({
+        id: adminUser.id,
+        email: 'EMAIL',
+        role: UserRole.ADMIN,
+      }),
+    ).resolves.toStrictEqual({
+      id: adminUser.id,
+      email: adminUser.email,
+      firstName: adminUser.firstName,
+      lastName: adminUser.lastName,
+      role: UserRole.ADMIN,
+      isActive: true,
+      createdAt: adminUser.createdAt,
+      updatedAt: adminUser.updatedAt,
+    });
+    expect(findOneSpy).toHaveBeenCalledWith({
+      where: {
+        id: adminUser.id,
+        email: 'email',
+        role: UserRole.ADMIN,
+        isActive: true,
+      },
+    });
+  });
+
+  it('should reject legacy public session payloads before repository lookup', async () => {
+    const findOneSpy = jest.spyOn(repo, 'findOne');
+
+    await expect(
+      service.getActiveAdminAccountForSession({
+        id: mockUserEntity.id,
+        email: mockUserEntity.email,
+        role: UserRole.PUBLIC,
+      }),
+    ).rejects.toThrow('Admin session invalid');
+    expect(findOneSpy).not.toHaveBeenCalled();
+  });
+
+  it('should reject disabled or missing admin session accounts', async () => {
+    jest.spyOn(repo, 'findOne').mockResolvedValue(null);
+
+    await expect(
+      service.getActiveAdminAccountForSession({
+        id: mockUserEntity.id,
+        email: mockUserEntity.email,
+        role: UserRole.ADMIN,
+      }),
+    ).rejects.toThrow('Admin session invalid');
+  });
+
   it('should check user password', async () => {
     const compareSpy = jest
       .spyOn(passwordService, 'compare')

@@ -9,7 +9,8 @@
     "guardrails": "npm run guardrails -w api && node scripts/guardrails/check-frontend-guardrails.mjs && node scripts/guardrails/check-skill-guardrails.mjs",
     "verify": "npm run guardrails && npm run verify:backend && npm run verify:frontend",
     "verify:backend": "npm run verify -w api",
-    "verify:frontend": "node scripts/guardrails/check-frontend-guardrails.mjs",
+    "verify:frontend": "npm run verify -w frontend",
+    "design:mockups": "node scripts/design/generate-frontend-mockups.mjs",
     "skills:dry-run": "node scripts/skills/install-project-skills.mjs --dry-run",
     "skills:install": "node scripts/skills/install-project-skills.mjs --install",
     "skills:verify": "node scripts/skills/install-project-skills.mjs --verify"

@@ -22,6 +22,9 @@ Current implementation:
 - Public `/user/register` is disabled.
 - Login is admin-only; disabled accounts and legacy non-admin rows are rejected.
 - Admin account lifecycle uses `/admin/accounts` while the physical persistence table remains `users`.
+- Protected JWT validation resolves an active admin account before routes run.
+- `GET /admin/auth/session` is the backend session check used by the protected frontend admin dashboard.
+- The frontend admin dashboard stores the backend JWT only in an HttpOnly cookie with path `/` so localized `/en/admin` and `/bg/admin` routes can validate it; browser JavaScript must never receive or persist it.
 
 ## Admin Routes
 

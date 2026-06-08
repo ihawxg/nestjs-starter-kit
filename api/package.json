@@ -17,6 +17,7 @@
     "lint-ci": "npm run type-check && eslint \"{src,apps,libs,test}/**/*.ts\"",
     "guardrails": "node ../scripts/guardrails/check-backend-guardrails.mjs",
     "admin:create": "node --require ts-node/register --require tsconfig-paths/register src/user/scripts/create-admin.ts",
+    "openapi:export": "node --require ts-node/register --require tsconfig-paths/register src/scripts/export-openapi.ts",
     "verify": "npm run guardrails && npm test",
     "verify:full": "npm run verify && npm run test:e2e",
     "pretest": "npm run lint-ci",

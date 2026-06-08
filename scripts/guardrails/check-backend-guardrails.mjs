@@ -45,6 +45,7 @@ const allowedInfra = new Set([
   "global",
   "health",
   "logger",
+  "scripts",
   "services",
   "storage",
   "user",

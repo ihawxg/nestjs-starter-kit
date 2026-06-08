@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { LoginDto } from '../../dto/login.dto';
 import { UserRole } from '../../entities/user-role.enum';
+import { JwtPayload } from './jwt-payload';
 
 @Injectable()
 export class AuthService {
@@ -20,6 +21,10 @@ export class AuthService {
     }
 
     this.failLogin('Incorrect password');
+  }
+
+  async validateAdminSession(payload: JwtPayload) {
+    return this.userService.getActiveAdminAccountForSession(payload);
   }
 
   private failLogin(message = 'Login failed') {

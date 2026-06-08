@@ -3,8 +3,8 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { AppLoggerService } from './logger/services/app-logger/app-logger.service';
 import { json } from 'body-parser';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
+import { createOpenApiDocument } from './openapi';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -30,17 +30,8 @@ async function bootstrap() {
   app.useLogger(logger);
 
   // API docs
-  const config = new DocumentBuilder()
-    .setTitle('Node API')
-    .setDescription(
-      `<a
-         target="_blank"
-         href="https://github.com/rodion-arr/nestjs-starter-kit"
-       >https://github.com/rodion-arr/nestjs-starter-kit</a>`,
-    )
-    .addBearerAuth()
-    .build();
-  const document = SwaggerModule.createDocument(app, config);
+  const document = createOpenApiDocument(app);
+  const { SwaggerModule } = await import('@nestjs/swagger');
   SwaggerModule.setup('api', app, document);
 
   const port = process.env.PORT || 3000;

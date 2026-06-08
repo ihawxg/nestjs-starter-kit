@@ -1,6 +1,6 @@
 # Townhall Manipulicity
 
-Municipal website project for Townhall Manipulicity. The current implementation is a NestJS backend API for public civic data and protected admin management flows. A strict frontend guardrail layer is in place before the Next.js frontend is scaffolded.
+Municipal website project for Townhall Manipulicity. The current implementation is a NestJS backend API for public civic data and protected admin management flows, plus a strict Next.js public frontend shell scaffold.
 
 Current backend stack:
 
@@ -12,13 +12,19 @@ Current backend stack:
 - Swagger API docs
 - Pino request logging with trace IDs
 
-Planned frontend stack:
+Frontend stack:
 
 - Next.js App Router
+- React 19
 - TypeScript
 - Generated OpenAPI client/types
 - Locale routes for English and Bulgarian
-- DSFR-based design system wrappers when production authorization is confirmed
+- Paraglide JS for frontend-owned UI translations
+- Tailwind v4 utilities with a project-owned navy/gold civic design system
+- `lucide-react` icons for public shell controls and civic affordances
+- Zod-backed environment validation, rich-text sanitization, locale date formatting, and a small class-name helper
+- TanStack Query and React Hook Form are installed for future interactive client fetching and forms, but public read pages should stay server-rendered by default
+- Protected admin foundation under `/admin` with Mantine scoped to admin routes/components only
 
 The codebase still contains starter-kit baseline modules. Treat them as infrastructure, not final product shape.
 
@@ -61,6 +67,12 @@ cd ../api
 npm ci
 ```
 
+Install workspace dependencies from the repo root after cloning:
+
+```console
+npm ci
+```
+
 Copy environment settings if needed:
 
 ```console
@@ -97,6 +109,51 @@ npm run start:dev
 - MailHog: `http://localhost:8025`
 - PostgreSQL: `localhost:55432`
 - Redis: `localhost:6379`
+
+## Frontend
+
+The public frontend lives in `frontend/`.
+
+The global header/footer route menu is frontend-owned in `frontend/src/lib/navigation/public-navigation.ts`; it does not require backend navigation records to appear.
+
+The protected admin dashboard foundation lives under `frontend/src/app/[locale]/admin`, with legacy redirects and internal auth APIs under `frontend/src/app/admin`. It uses internal Next auth route handlers and an HttpOnly cookie so the browser never stores the backend JWT. Mantine is allowed only for admin route/component files; public UI remains custom Tailwind/lucide.
+
+Generate the frontend API client from the backend OpenAPI export without starting a dev server:
+
+```console
+npm run api:generate -w frontend
+```
+
+Compile frontend UI translations from `frontend/messages` without starting a dev server:
+
+```console
+npm run i18n:compile -w frontend
+```
+
+Run routine frontend checks:
+
+```console
+npm run guardrails -w frontend
+npm run lint-ci -w frontend
+npm test -w frontend
+npm run verify -w frontend
+```
+
+Regenerate static public page design mockups without starting a frontend server:
+
+```console
+npm run design:mockups
+```
+
+Human-facing frontend lifecycle commands are available only through the frontend workspace:
+
+```console
+npm run dev -w frontend
+npm run build -w frontend
+npm run start -w frontend
+```
+
+Do not run frontend dev/build/start commands as routine checks or from Codex unless explicitly requested.
 
 ## Core Commands
 
@@ -146,7 +203,9 @@ ADMIN_EMAIL=admin@example.com ADMIN_PASSWORD='strong-password' npm run admin:cre
 - [Frontend architecture](./docs/frontend-architecture.md)
 - [Frontend guidelines](./docs/frontend-guidelines.md)
 - [Frontend feature checklist](./docs/frontend-feature-checklist.md)
-- [DSFR usage policy](./docs/dsfr-usage-policy.md)
+- [Frontend design system policy](./docs/frontend-design-system-policy.md)
+- [Admin dashboard guidelines](./docs/admin-dashboard-guidelines.md)
+- [Retired DSFR usage policy](./docs/dsfr-usage-policy.md)
 - [Domain roadmap](./docs/domain-roadmap.md)
 - [Feature checklist](./docs/feature-checklist.md)
 - [Architecture standards](./docs/architecture-standards.md)

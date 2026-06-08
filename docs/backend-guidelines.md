@@ -40,7 +40,8 @@ Boundary rules:
 - Domain modules own their business behavior.
 - Cross-domain imports should go through module providers, not deep relative paths.
 - Avoid imports that climb through multiple parent folders; the current ESLint config blocks `../../../*`.
-- Keep infrastructure modules (`db`, `global`, `logger`, `app-cache`, `health`) focused on infrastructure.
+- Keep infrastructure modules (`db`, `global`, `logger`, `app-cache`, `health`, `scripts`) focused on infrastructure.
+- Keep `api/src/scripts` limited to CLI/export entrypoints. Do not put civic business logic there.
 - Do not move starter-kit infrastructure during feature work unless the feature requires it.
 - New non-infrastructure source folders with TypeScript code must include a matching module file and follow the domain folder layout.
 - Empty experimental directories may exist temporarily, but adding TypeScript code to them turns them into domains and guardrails apply.
@@ -94,6 +95,8 @@ Current role implementation:
 - Public registration is disabled.
 - First admin is created or promoted through `npm run admin:create`.
 - Login is admin-only: disabled accounts and legacy non-admin rows are rejected.
+- JWT validation resolves an active admin account for protected requests; stale, disabled, missing, or legacy non-admin token payloads are rejected.
+- `GET /admin/auth/session` returns the safe current admin account for protected admin frontend session checks.
 - The physical table remains `users` for now; public API language should use admin accounts, not public users.
 
 Admin write routes are blocked until all are true:

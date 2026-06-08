@@ -2,6 +2,7 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../../entities/user.entity';
@@ -18,6 +19,7 @@ import {
   PaginatedAdminAccountsResponse,
   toAdminAccountResponse,
 } from '../../admin-account-response';
+import { JwtPayload } from '../auth/jwt-payload';
 
 @Injectable()
 export class UserService {
@@ -107,6 +109,33 @@ export class UserService {
       lastName: user.lastName,
       role: user.role,
     });
+  }
+
+  public async getActiveAdminAccountForSession(
+    payload: JwtPayload,
+  ): Promise<AdminAccountResponse> {
+    if (
+      typeof payload.id !== 'number' ||
+      typeof payload.email !== 'string' ||
+      payload.role !== UserRole.ADMIN
+    ) {
+      throw new UnauthorizedException('Admin session invalid');
+    }
+
+    const account = await this.usersRepository.findOne({
+      where: {
+        id: payload.id,
+        email: payload.email.toLowerCase(),
+        role: UserRole.ADMIN,
+        isActive: true,
+      },
+    });
+
+    if (!account) {
+      throw new UnauthorizedException('Admin session invalid');
+    }
+
+    return toAdminAccountResponse(account);
   }
 
   public async listAdminAccounts(

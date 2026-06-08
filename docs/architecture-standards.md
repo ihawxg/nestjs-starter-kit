@@ -16,11 +16,14 @@ Infrastructure modules are exceptions:
 - `global`
 - `health`
 - `logger`
+- `scripts`
 - `services`
 - `storage`
 - `user`
 
 New non-infrastructure folders with TypeScript code must follow the domain module shape.
+
+`scripts` is reserved for narrow CLI/export entrypoints such as OpenAPI generation. It must not contain domain business logic.
 
 `storage` is a focused infrastructure boundary for file metadata and local file operations. Domain modules may call storage through providers, but storage must not contain civic business rules.
 

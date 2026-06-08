@@ -97,7 +97,7 @@ Use `frontend-accessibility` for:
 Use `design-system-starter` for:
 
 - local design-system wrapper shape
-- DSFR wrapper boundaries
+- project-owned UI component boundaries
 - token/component organization
 - reusable component governance
 
@@ -117,7 +117,7 @@ Use `tanstack-query` for:
 
 Use `auth` and `security-best-practices` for:
 
-- future admin frontend auth
+- admin frontend auth
 - HttpOnly cookie strategy
 - public/admin route separation
 - token and secret exposure review
