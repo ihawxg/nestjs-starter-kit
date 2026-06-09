@@ -252,6 +252,12 @@ export class NewsService {
     });
   }
 
+  async restore(id: number): Promise<NewsResponse> {
+    return this.update(id, {
+      status: NewsStatus.DRAFT,
+    });
+  }
+
   async addAssets(
     id: number,
     files: LocalUploadFile[],
@@ -318,11 +324,37 @@ export class NewsService {
     return this.storageService.resolveDownload(asset.storedFile);
   }
 
-  sendDownload(response: Response, file: DownloadableStoredFile): void {
+  async getAdminAssetDownload(
+    id: number,
+    assetId: number,
+  ): Promise<DownloadableStoredFile> {
+    const asset = await this.newsAssetsRepository.findOne({
+      where: {
+        id: assetId,
+        newsId: id,
+      },
+      relations: {
+        news: true,
+        storedFile: true,
+      },
+    });
+
+    if (!asset) {
+      throw new NotFoundException('News asset not found');
+    }
+
+    return this.storageService.resolveDownload(asset.storedFile);
+  }
+
+  sendDownload(
+    response: Response,
+    file: DownloadableStoredFile,
+    options: { inline?: boolean } = {},
+  ): void {
     response.setHeader('Content-Type', file.mimeType);
     response.setHeader(
       'Content-Disposition',
-      `attachment; filename="${encodeURIComponent(file.filename)}"`,
+      `${options.inline ? 'inline' : 'attachment'}; filename="${encodeURIComponent(file.filename)}"`,
     );
     response.sendFile(file.absolutePath);
   }

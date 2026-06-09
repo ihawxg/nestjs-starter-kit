@@ -50,7 +50,7 @@
 - Do not move whole pages to client components to solve a small interactive problem.
 - Keep route-level data requirements explicit in the route or feature API wrapper.
 - Avoid global mutable client state for public content.
-- Use TanStack Query only when client-side refetching, cache invalidation, or optimistic interaction is actually needed.
+- Use TanStack Query for admin CRUD screens and when client-side refetching, cache invalidation, or optimistic interaction is actually needed.
 - Do not use TanStack Query for basic server-rendered public lists/details.
 
 ## Forms And Validation
@@ -66,7 +66,9 @@
 - Tailwind v4 utilities are allowed for project-owned components when they use project theme tokens.
 - Use `lucide-react` icons for navigation, search, contact rows, alerts, and common control affordances when an icon is useful.
 - Do not add external UI/component libraries such as DSFR, Bootstrap, MUI, Chakra, Ant, or similar packages.
-- Mantine is allowed only for the protected admin dashboard under `frontend/src/app/admin` and `frontend/src/components/admin`.
+- Mantine is allowed only for the protected admin dashboard under admin route/component files and approved admin feature folders such as `frontend/src/features/admin-news`.
+- `@mantine/dropzone` is allowed only for protected admin attachment controls.
+- Tiptap is allowed only for protected admin rich text editing in approved admin feature folders.
 - Localized admin route files under `frontend/src/app/[locale]/admin` may also import Mantine.
 - Admin Mantine components that pass `next/link` as `component={Link}` must be marked as client components.
 - Public components, public routes, and public feature code must not import Mantine or admin helpers.
@@ -94,6 +96,9 @@
 - Never expose backend secrets through `NEXT_PUBLIC_*`.
 - Do not trust URL params or search params. Validate and normalize locale, page, limit, type, and slug inputs.
 - Use backend public download routes rather than constructing local storage paths.
+- Use protected internal Next admin routes for admin asset preview/download. Do not construct storage paths or direct Nest admin URLs in browser code.
+- Persisted admin asset previews must render through protected internal `/admin/api/*` view routes. Unsaved staged file previews may use temporary browser object URLs only and must never be stored in local/session storage.
+- For create forms where files require a persisted backend id, stage files in browser memory, create the record first, then upload staged files through protected internal admin API routes. Keep staged files out of local/session storage.
 - Sanitize rich HTML with the project `sanitize-html` helper before rendering CMS, news, page, or similar body content.
 - Never render unsanitized backend HTML with `dangerouslySetInnerHTML`.
 

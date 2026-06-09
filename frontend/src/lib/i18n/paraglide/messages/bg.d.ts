@@ -22,7 +22,121 @@
 /** @typedef {{}} Admin_Nav_ContentInputs */
 /** @typedef {{}} Admin_Nav_DashboardInputs */
 /** @typedef {{}} Admin_Nav_DocumentsInputs */
+/** @typedef {{}} Admin_Nav_NewsInputs */
 /** @typedef {{}} Admin_Nav_SettingsInputs */
+/** @typedef {{}} Admin_News_Action_ArchiveInputs */
+/** @typedef {{}} Admin_News_Action_CancelInputs */
+/** @typedef {{}} Admin_News_Action_CreateInputs */
+/** @typedef {{}} Admin_News_Action_EditInputs */
+/** @typedef {{}} Admin_News_Action_RetryInputs */
+/** @typedef {{}} Admin_News_Action_RestoreInputs */
+/** @typedef {{}} Admin_News_Action_SaveInputs */
+/** @typedef {{}} Admin_News_Assets_DescriptionInputs */
+/** @typedef {{}} Admin_News_Assets_DownloadInputs */
+/** @typedef {{}} Admin_News_Assets_Dropzone_DescriptionInputs */
+/** @typedef {{}} Admin_News_Assets_Dropzone_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_Dropzone_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_EmptyInputs */
+/** @typedef {{}} Admin_News_Assets_Pending_EmptyInputs */
+/** @typedef {{}} Admin_News_Assets_Pending_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_RemoveInputs */
+/** @typedef {{}} Admin_News_Assets_SelectInputs */
+/** @typedef {{}} Admin_News_Assets_Staged_HelpInputs */
+/** @typedef {{}} Admin_News_Assets_Staged_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_UploadInputs */
+/** @typedef {{}} Admin_News_Assets_Upload_After_CreateInputs */
+/** @typedef {{}} Admin_News_Assets_Upload_Failed_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_Close_PreviewInputs */
+/** @typedef {{}} Admin_News_Assets_Csv_Preview_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_File_Preview_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_File_Type_UnknownInputs */
+/** @typedef {{}} Admin_News_Assets_Image_Preview_AltInputs */
+/** @typedef {{}} Admin_News_Assets_Open_In_BrowserInputs */
+/** @typedef {{}} Admin_News_Assets_Pdf_Preview_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_PreviewInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_FailedInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_LoadingInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_TruncatedInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_UnavailableInputs */
+/** @typedef {{}} Admin_News_Assets_Text_Preview_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_Unsupported_PreviewInputs */
+/** @typedef {{}} Admin_News_Assets_Uploaded_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_ViewInputs */
+/** @typedef {{}} Admin_News_Categories_ActiveInputs */
+/** @typedef {{}} Admin_News_Categories_CreateInputs */
+/** @typedef {{}} Admin_News_Categories_DeactivateInputs */
+/** @typedef {{}} Admin_News_Categories_DescriptionInputs */
+/** @typedef {{}} Admin_News_Categories_Display_OrderInputs */
+/** @typedef {{}} Admin_News_Categories_EmptyInputs */
+/** @typedef {{}} Admin_News_Categories_InactiveInputs */
+/** @typedef {{}} Admin_News_Categories_NameInputs */
+/** @typedef {{}} Admin_News_Categories_SaveInputs */
+/** @typedef {{}} Admin_News_Categories_SlugInputs */
+/** @typedef {{}} Admin_News_Categories_TitleInputs */
+/** @typedef {{}} Admin_News_Create_SubtitleInputs */
+/** @typedef {{}} Admin_News_Create_TitleInputs */
+/** @typedef {{}} Admin_News_Editor_BlockquoteInputs */
+/** @typedef {{}} Admin_News_Editor_BoldInputs */
+/** @typedef {{}} Admin_News_Editor_Bullet_ListInputs */
+/** @typedef {{}} Admin_News_Editor_Clear_FormattingInputs */
+/** @typedef {{}} Admin_News_Editor_Heading_ThreeInputs */
+/** @typedef {{}} Admin_News_Editor_Heading_TwoInputs */
+/** @typedef {{}} Admin_News_Editor_Horizontal_RuleInputs */
+/** @typedef {{}} Admin_News_Editor_ItalicInputs */
+/** @typedef {{}} Admin_News_Editor_LinkInputs */
+/** @typedef {{}} Admin_News_Editor_Ordered_ListInputs */
+/** @typedef {{}} Admin_News_Editor_ParagraphInputs */
+/** @typedef {{}} Admin_News_Editor_Preview_HtmlInputs */
+/** @typedef {{}} Admin_News_Editor_RedoInputs */
+/** @typedef {{}} Admin_News_Editor_StrikethroughInputs */
+/** @typedef {{}} Admin_News_Editor_TitleInputs */
+/** @typedef {{}} Admin_News_Editor_UnderlineInputs */
+/** @typedef {{}} Admin_News_Editor_UndoInputs */
+/** @typedef {{}} Admin_News_Editor_UnlinkInputs */
+/** @typedef {{}} Admin_News_EmptyInputs */
+/** @typedef {{}} Admin_News_ErrorInputs */
+/** @typedef {{}} Admin_News_Field_BodyInputs */
+/** @typedef {{}} Admin_News_Field_CategoriesInputs */
+/** @typedef {{}} Admin_News_Field_Published_AtInputs */
+/** @typedef {{}} Admin_News_Field_SlugInputs */
+/** @typedef {{}} Admin_News_Field_Source_Language_AdvancedInputs */
+/** @typedef {{}} Admin_News_Field_Source_Locale_BgInputs */
+/** @typedef {{}} Admin_News_Field_Source_Locale_DescriptionInputs */
+/** @typedef {{}} Admin_News_Field_Source_Locale_EnInputs */
+/** @typedef {{}} Admin_News_Field_Source_LocaleInputs */
+/** @typedef {{}} Admin_News_Field_StatusInputs */
+/** @typedef {{}} Admin_News_Field_SummaryInputs */
+/** @typedef {{}} Admin_News_Field_TitleInputs */
+/** @typedef {{}} Admin_News_Filter_All_CategoriesInputs */
+/** @typedef {{}} Admin_News_Filter_All_StatusesInputs */
+/** @typedef {{}} Admin_News_Filter_CategoryInputs */
+/** @typedef {{}} Admin_News_Filter_StatusInputs */
+/** @typedef {{}} Admin_News_List_SubtitleInputs */
+/** @typedef {{}} Admin_News_List_TitleInputs */
+/** @typedef {{}} Admin_News_LoadingInputs */
+/** @typedef {{}} Admin_News_Status_ArchivedInputs */
+/** @typedef {{}} Admin_News_Status_DraftInputs */
+/** @typedef {{}} Admin_News_Status_PublishedInputs */
+/** @typedef {{}} Admin_News_Table_ActionsInputs */
+/** @typedef {{}} Admin_News_Table_CategoriesInputs */
+/** @typedef {{}} Admin_News_Table_Published_AtInputs */
+/** @typedef {{}} Admin_News_Table_StatusInputs */
+/** @typedef {{}} Admin_News_Table_TitleInputs */
+/** @typedef {{}} Admin_News_Table_Updated_AtInputs */
+/** @typedef {{}} Admin_News_Translations_AutoInputs */
+/** @typedef {{}} Admin_News_Translations_BodyInputs */
+/** @typedef {{}} Admin_News_Translations_EmptyInputs */
+/** @typedef {{}} Admin_News_Translations_Locale_BgInputs */
+/** @typedef {{}} Admin_News_Translations_Locale_EnInputs */
+/** @typedef {{}} Admin_News_Translations_SaveInputs */
+/** @typedef {{}} Admin_News_Translations_Source_MachineInputs */
+/** @typedef {{}} Admin_News_Translations_Source_ManualInputs */
+/** @typedef {{}} Admin_News_Translations_SubtitleInputs */
+/** @typedef {{}} Admin_News_Translations_SummaryInputs */
+/** @typedef {{}} Admin_News_Translations_TitleInputs */
+/** @typedef {{}} Admin_News_Validation_RequiredInputs */
 /** @typedef {{}} Admin_Not_Found_BodyInputs */
 /** @typedef {{}} Admin_Not_Found_DashboardInputs */
 /** @typedef {{}} Admin_Not_Found_EyebrowInputs */
@@ -126,7 +240,121 @@ export const admin_login_title: (inputs: Admin_Login_TitleInputs) => LocalizedSt
 export const admin_nav_content: (inputs: Admin_Nav_ContentInputs) => LocalizedString;
 export const admin_nav_dashboard: (inputs: Admin_Nav_DashboardInputs) => LocalizedString;
 export const admin_nav_documents: (inputs: Admin_Nav_DocumentsInputs) => LocalizedString;
+export const admin_nav_news: (inputs: Admin_Nav_NewsInputs) => LocalizedString;
 export const admin_nav_settings: (inputs: Admin_Nav_SettingsInputs) => LocalizedString;
+export const admin_news_action_archive: (inputs: Admin_News_Action_ArchiveInputs) => LocalizedString;
+export const admin_news_action_cancel: (inputs: Admin_News_Action_CancelInputs) => LocalizedString;
+export const admin_news_action_create: (inputs: Admin_News_Action_CreateInputs) => LocalizedString;
+export const admin_news_action_edit: (inputs: Admin_News_Action_EditInputs) => LocalizedString;
+export const admin_news_action_retry: (inputs: Admin_News_Action_RetryInputs) => LocalizedString;
+export const admin_news_action_restore: (inputs: Admin_News_Action_RestoreInputs) => LocalizedString;
+export const admin_news_action_save: (inputs: Admin_News_Action_SaveInputs) => LocalizedString;
+export const admin_news_assets_description: (inputs: Admin_News_Assets_DescriptionInputs) => LocalizedString;
+export const admin_news_assets_download: (inputs: Admin_News_Assets_DownloadInputs) => LocalizedString;
+export const admin_news_assets_dropzone_description: (inputs: Admin_News_Assets_Dropzone_DescriptionInputs) => LocalizedString;
+export const admin_news_assets_dropzone_label: (inputs: Admin_News_Assets_Dropzone_LabelInputs) => LocalizedString;
+export const admin_news_assets_dropzone_title: (inputs: Admin_News_Assets_Dropzone_TitleInputs) => LocalizedString;
+export const admin_news_assets_empty: (inputs: Admin_News_Assets_EmptyInputs) => LocalizedString;
+export const admin_news_assets_pending_empty: (inputs: Admin_News_Assets_Pending_EmptyInputs) => LocalizedString;
+export const admin_news_assets_pending_title: (inputs: Admin_News_Assets_Pending_TitleInputs) => LocalizedString;
+export const admin_news_assets_remove: (inputs: Admin_News_Assets_RemoveInputs) => LocalizedString;
+export const admin_news_assets_select: (inputs: Admin_News_Assets_SelectInputs) => LocalizedString;
+export const admin_news_assets_staged_help: (inputs: Admin_News_Assets_Staged_HelpInputs) => LocalizedString;
+export const admin_news_assets_staged_title: (inputs: Admin_News_Assets_Staged_TitleInputs) => LocalizedString;
+export const admin_news_assets_title: (inputs: Admin_News_Assets_TitleInputs) => LocalizedString;
+export const admin_news_assets_upload: (inputs: Admin_News_Assets_UploadInputs) => LocalizedString;
+export const admin_news_assets_upload_after_create: (inputs: Admin_News_Assets_Upload_After_CreateInputs) => LocalizedString;
+export const admin_news_assets_upload_failed_title: (inputs: Admin_News_Assets_Upload_Failed_TitleInputs) => LocalizedString;
+export const admin_news_assets_close_preview: (inputs: Admin_News_Assets_Close_PreviewInputs) => LocalizedString;
+export const admin_news_assets_csv_preview_label: (inputs: Admin_News_Assets_Csv_Preview_LabelInputs) => LocalizedString;
+export const admin_news_assets_file_preview_label: (inputs: Admin_News_Assets_File_Preview_LabelInputs) => LocalizedString;
+export const admin_news_assets_file_type_unknown: (inputs: Admin_News_Assets_File_Type_UnknownInputs) => LocalizedString;
+export const admin_news_assets_image_preview_alt: (inputs: Admin_News_Assets_Image_Preview_AltInputs) => LocalizedString;
+export const admin_news_assets_open_in_browser: (inputs: Admin_News_Assets_Open_In_BrowserInputs) => LocalizedString;
+export const admin_news_assets_pdf_preview_label: (inputs: Admin_News_Assets_Pdf_Preview_LabelInputs) => LocalizedString;
+export const admin_news_assets_preview: (inputs: Admin_News_Assets_PreviewInputs) => LocalizedString;
+export const admin_news_assets_preview_failed: (inputs: Admin_News_Assets_Preview_FailedInputs) => LocalizedString;
+export const admin_news_assets_preview_loading: (inputs: Admin_News_Assets_Preview_LoadingInputs) => LocalizedString;
+export const admin_news_assets_preview_title: (inputs: Admin_News_Assets_Preview_TitleInputs) => LocalizedString;
+export const admin_news_assets_preview_truncated: (inputs: Admin_News_Assets_Preview_TruncatedInputs) => LocalizedString;
+export const admin_news_assets_preview_unavailable: (inputs: Admin_News_Assets_Preview_UnavailableInputs) => LocalizedString;
+export const admin_news_assets_text_preview_label: (inputs: Admin_News_Assets_Text_Preview_LabelInputs) => LocalizedString;
+export const admin_news_assets_unsupported_preview: (inputs: Admin_News_Assets_Unsupported_PreviewInputs) => LocalizedString;
+export const admin_news_assets_uploaded_title: (inputs: Admin_News_Assets_Uploaded_TitleInputs) => LocalizedString;
+export const admin_news_assets_view: (inputs: Admin_News_Assets_ViewInputs) => LocalizedString;
+export const admin_news_categories_active: (inputs: Admin_News_Categories_ActiveInputs) => LocalizedString;
+export const admin_news_categories_create: (inputs: Admin_News_Categories_CreateInputs) => LocalizedString;
+export const admin_news_categories_deactivate: (inputs: Admin_News_Categories_DeactivateInputs) => LocalizedString;
+export const admin_news_categories_description: (inputs: Admin_News_Categories_DescriptionInputs) => LocalizedString;
+export const admin_news_categories_display_order: (inputs: Admin_News_Categories_Display_OrderInputs) => LocalizedString;
+export const admin_news_categories_empty: (inputs: Admin_News_Categories_EmptyInputs) => LocalizedString;
+export const admin_news_categories_inactive: (inputs: Admin_News_Categories_InactiveInputs) => LocalizedString;
+export const admin_news_categories_name: (inputs: Admin_News_Categories_NameInputs) => LocalizedString;
+export const admin_news_categories_save: (inputs: Admin_News_Categories_SaveInputs) => LocalizedString;
+export const admin_news_categories_slug: (inputs: Admin_News_Categories_SlugInputs) => LocalizedString;
+export const admin_news_categories_title: (inputs: Admin_News_Categories_TitleInputs) => LocalizedString;
+export const admin_news_create_subtitle: (inputs: Admin_News_Create_SubtitleInputs) => LocalizedString;
+export const admin_news_create_title: (inputs: Admin_News_Create_TitleInputs) => LocalizedString;
+export const admin_news_editor_blockquote: (inputs: Admin_News_Editor_BlockquoteInputs) => LocalizedString;
+export const admin_news_editor_bold: (inputs: Admin_News_Editor_BoldInputs) => LocalizedString;
+export const admin_news_editor_bullet_list: (inputs: Admin_News_Editor_Bullet_ListInputs) => LocalizedString;
+export const admin_news_editor_clear_formatting: (inputs: Admin_News_Editor_Clear_FormattingInputs) => LocalizedString;
+export const admin_news_editor_heading_three: (inputs: Admin_News_Editor_Heading_ThreeInputs) => LocalizedString;
+export const admin_news_editor_heading_two: (inputs: Admin_News_Editor_Heading_TwoInputs) => LocalizedString;
+export const admin_news_editor_horizontal_rule: (inputs: Admin_News_Editor_Horizontal_RuleInputs) => LocalizedString;
+export const admin_news_editor_italic: (inputs: Admin_News_Editor_ItalicInputs) => LocalizedString;
+export const admin_news_editor_link: (inputs: Admin_News_Editor_LinkInputs) => LocalizedString;
+export const admin_news_editor_ordered_list: (inputs: Admin_News_Editor_Ordered_ListInputs) => LocalizedString;
+export const admin_news_editor_paragraph: (inputs: Admin_News_Editor_ParagraphInputs) => LocalizedString;
+export const admin_news_editor_preview_html: (inputs: Admin_News_Editor_Preview_HtmlInputs) => LocalizedString;
+export const admin_news_editor_redo: (inputs: Admin_News_Editor_RedoInputs) => LocalizedString;
+export const admin_news_editor_strikethrough: (inputs: Admin_News_Editor_StrikethroughInputs) => LocalizedString;
+export const admin_news_editor_title: (inputs: Admin_News_Editor_TitleInputs) => LocalizedString;
+export const admin_news_editor_underline: (inputs: Admin_News_Editor_UnderlineInputs) => LocalizedString;
+export const admin_news_editor_undo: (inputs: Admin_News_Editor_UndoInputs) => LocalizedString;
+export const admin_news_editor_unlink: (inputs: Admin_News_Editor_UnlinkInputs) => LocalizedString;
+export const admin_news_empty: (inputs: Admin_News_EmptyInputs) => LocalizedString;
+export const admin_news_error: (inputs: Admin_News_ErrorInputs) => LocalizedString;
+export const admin_news_field_body: (inputs: Admin_News_Field_BodyInputs) => LocalizedString;
+export const admin_news_field_categories: (inputs: Admin_News_Field_CategoriesInputs) => LocalizedString;
+export const admin_news_field_published_at: (inputs: Admin_News_Field_Published_AtInputs) => LocalizedString;
+export const admin_news_field_slug: (inputs: Admin_News_Field_SlugInputs) => LocalizedString;
+export const admin_news_field_source_language_advanced: (inputs: Admin_News_Field_Source_Language_AdvancedInputs) => LocalizedString;
+export const admin_news_field_source_locale_bg: (inputs: Admin_News_Field_Source_Locale_BgInputs) => LocalizedString;
+export const admin_news_field_source_locale_description: (inputs: Admin_News_Field_Source_Locale_DescriptionInputs) => LocalizedString;
+export const admin_news_field_source_locale_en: (inputs: Admin_News_Field_Source_Locale_EnInputs) => LocalizedString;
+export const admin_news_field_source_locale: (inputs: Admin_News_Field_Source_LocaleInputs) => LocalizedString;
+export const admin_news_field_status: (inputs: Admin_News_Field_StatusInputs) => LocalizedString;
+export const admin_news_field_summary: (inputs: Admin_News_Field_SummaryInputs) => LocalizedString;
+export const admin_news_field_title: (inputs: Admin_News_Field_TitleInputs) => LocalizedString;
+export const admin_news_filter_all_categories: (inputs: Admin_News_Filter_All_CategoriesInputs) => LocalizedString;
+export const admin_news_filter_all_statuses: (inputs: Admin_News_Filter_All_StatusesInputs) => LocalizedString;
+export const admin_news_filter_category: (inputs: Admin_News_Filter_CategoryInputs) => LocalizedString;
+export const admin_news_filter_status: (inputs: Admin_News_Filter_StatusInputs) => LocalizedString;
+export const admin_news_list_subtitle: (inputs: Admin_News_List_SubtitleInputs) => LocalizedString;
+export const admin_news_list_title: (inputs: Admin_News_List_TitleInputs) => LocalizedString;
+export const admin_news_loading: (inputs: Admin_News_LoadingInputs) => LocalizedString;
+export const admin_news_status_archived: (inputs: Admin_News_Status_ArchivedInputs) => LocalizedString;
+export const admin_news_status_draft: (inputs: Admin_News_Status_DraftInputs) => LocalizedString;
+export const admin_news_status_published: (inputs: Admin_News_Status_PublishedInputs) => LocalizedString;
+export const admin_news_table_actions: (inputs: Admin_News_Table_ActionsInputs) => LocalizedString;
+export const admin_news_table_categories: (inputs: Admin_News_Table_CategoriesInputs) => LocalizedString;
+export const admin_news_table_published_at: (inputs: Admin_News_Table_Published_AtInputs) => LocalizedString;
+export const admin_news_table_status: (inputs: Admin_News_Table_StatusInputs) => LocalizedString;
+export const admin_news_table_title: (inputs: Admin_News_Table_TitleInputs) => LocalizedString;
+export const admin_news_table_updated_at: (inputs: Admin_News_Table_Updated_AtInputs) => LocalizedString;
+export const admin_news_translations_auto: (inputs: Admin_News_Translations_AutoInputs) => LocalizedString;
+export const admin_news_translations_body: (inputs: Admin_News_Translations_BodyInputs) => LocalizedString;
+export const admin_news_translations_empty: (inputs: Admin_News_Translations_EmptyInputs) => LocalizedString;
+export const admin_news_translations_locale_bg: (inputs: Admin_News_Translations_Locale_BgInputs) => LocalizedString;
+export const admin_news_translations_locale_en: (inputs: Admin_News_Translations_Locale_EnInputs) => LocalizedString;
+export const admin_news_translations_save: (inputs: Admin_News_Translations_SaveInputs) => LocalizedString;
+export const admin_news_translations_source_machine: (inputs: Admin_News_Translations_Source_MachineInputs) => LocalizedString;
+export const admin_news_translations_source_manual: (inputs: Admin_News_Translations_Source_ManualInputs) => LocalizedString;
+export const admin_news_translations_subtitle: (inputs: Admin_News_Translations_SubtitleInputs) => LocalizedString;
+export const admin_news_translations_summary: (inputs: Admin_News_Translations_SummaryInputs) => LocalizedString;
+export const admin_news_translations_title: (inputs: Admin_News_Translations_TitleInputs) => LocalizedString;
+export const admin_news_validation_required: (inputs: Admin_News_Validation_RequiredInputs) => LocalizedString;
 export const admin_not_found_body: (inputs: Admin_Not_Found_BodyInputs) => LocalizedString;
 export const admin_not_found_dashboard: (inputs: Admin_Not_Found_DashboardInputs) => LocalizedString;
 export const admin_not_found_eyebrow: (inputs: Admin_Not_Found_EyebrowInputs) => LocalizedString;
@@ -231,7 +459,121 @@ export type Admin_Login_TitleInputs = {};
 export type Admin_Nav_ContentInputs = {};
 export type Admin_Nav_DashboardInputs = {};
 export type Admin_Nav_DocumentsInputs = {};
+export type Admin_Nav_NewsInputs = {};
 export type Admin_Nav_SettingsInputs = {};
+export type Admin_News_Action_ArchiveInputs = {};
+export type Admin_News_Action_CancelInputs = {};
+export type Admin_News_Action_CreateInputs = {};
+export type Admin_News_Action_EditInputs = {};
+export type Admin_News_Action_RetryInputs = {};
+export type Admin_News_Action_RestoreInputs = {};
+export type Admin_News_Action_SaveInputs = {};
+export type Admin_News_Assets_DescriptionInputs = {};
+export type Admin_News_Assets_DownloadInputs = {};
+export type Admin_News_Assets_Dropzone_DescriptionInputs = {};
+export type Admin_News_Assets_Dropzone_LabelInputs = {};
+export type Admin_News_Assets_Dropzone_TitleInputs = {};
+export type Admin_News_Assets_EmptyInputs = {};
+export type Admin_News_Assets_Pending_EmptyInputs = {};
+export type Admin_News_Assets_Pending_TitleInputs = {};
+export type Admin_News_Assets_RemoveInputs = {};
+export type Admin_News_Assets_SelectInputs = {};
+export type Admin_News_Assets_Staged_HelpInputs = {};
+export type Admin_News_Assets_Staged_TitleInputs = {};
+export type Admin_News_Assets_TitleInputs = {};
+export type Admin_News_Assets_UploadInputs = {};
+export type Admin_News_Assets_Upload_After_CreateInputs = {};
+export type Admin_News_Assets_Upload_Failed_TitleInputs = {};
+export type Admin_News_Assets_Close_PreviewInputs = {};
+export type Admin_News_Assets_Csv_Preview_LabelInputs = {};
+export type Admin_News_Assets_File_Preview_LabelInputs = {};
+export type Admin_News_Assets_File_Type_UnknownInputs = {};
+export type Admin_News_Assets_Image_Preview_AltInputs = {};
+export type Admin_News_Assets_Open_In_BrowserInputs = {};
+export type Admin_News_Assets_Pdf_Preview_LabelInputs = {};
+export type Admin_News_Assets_PreviewInputs = {};
+export type Admin_News_Assets_Preview_FailedInputs = {};
+export type Admin_News_Assets_Preview_LoadingInputs = {};
+export type Admin_News_Assets_Preview_TitleInputs = {};
+export type Admin_News_Assets_Preview_TruncatedInputs = {};
+export type Admin_News_Assets_Preview_UnavailableInputs = {};
+export type Admin_News_Assets_Text_Preview_LabelInputs = {};
+export type Admin_News_Assets_Unsupported_PreviewInputs = {};
+export type Admin_News_Assets_Uploaded_TitleInputs = {};
+export type Admin_News_Assets_ViewInputs = {};
+export type Admin_News_Categories_ActiveInputs = {};
+export type Admin_News_Categories_CreateInputs = {};
+export type Admin_News_Categories_DeactivateInputs = {};
+export type Admin_News_Categories_DescriptionInputs = {};
+export type Admin_News_Categories_Display_OrderInputs = {};
+export type Admin_News_Categories_EmptyInputs = {};
+export type Admin_News_Categories_InactiveInputs = {};
+export type Admin_News_Categories_NameInputs = {};
+export type Admin_News_Categories_SaveInputs = {};
+export type Admin_News_Categories_SlugInputs = {};
+export type Admin_News_Categories_TitleInputs = {};
+export type Admin_News_Create_SubtitleInputs = {};
+export type Admin_News_Create_TitleInputs = {};
+export type Admin_News_Editor_BlockquoteInputs = {};
+export type Admin_News_Editor_BoldInputs = {};
+export type Admin_News_Editor_Bullet_ListInputs = {};
+export type Admin_News_Editor_Clear_FormattingInputs = {};
+export type Admin_News_Editor_Heading_ThreeInputs = {};
+export type Admin_News_Editor_Heading_TwoInputs = {};
+export type Admin_News_Editor_Horizontal_RuleInputs = {};
+export type Admin_News_Editor_ItalicInputs = {};
+export type Admin_News_Editor_LinkInputs = {};
+export type Admin_News_Editor_Ordered_ListInputs = {};
+export type Admin_News_Editor_ParagraphInputs = {};
+export type Admin_News_Editor_Preview_HtmlInputs = {};
+export type Admin_News_Editor_RedoInputs = {};
+export type Admin_News_Editor_StrikethroughInputs = {};
+export type Admin_News_Editor_TitleInputs = {};
+export type Admin_News_Editor_UnderlineInputs = {};
+export type Admin_News_Editor_UndoInputs = {};
+export type Admin_News_Editor_UnlinkInputs = {};
+export type Admin_News_EmptyInputs = {};
+export type Admin_News_ErrorInputs = {};
+export type Admin_News_Field_BodyInputs = {};
+export type Admin_News_Field_CategoriesInputs = {};
+export type Admin_News_Field_Published_AtInputs = {};
+export type Admin_News_Field_SlugInputs = {};
+export type Admin_News_Field_Source_Language_AdvancedInputs = {};
+export type Admin_News_Field_Source_Locale_BgInputs = {};
+export type Admin_News_Field_Source_Locale_DescriptionInputs = {};
+export type Admin_News_Field_Source_Locale_EnInputs = {};
+export type Admin_News_Field_Source_LocaleInputs = {};
+export type Admin_News_Field_StatusInputs = {};
+export type Admin_News_Field_SummaryInputs = {};
+export type Admin_News_Field_TitleInputs = {};
+export type Admin_News_Filter_All_CategoriesInputs = {};
+export type Admin_News_Filter_All_StatusesInputs = {};
+export type Admin_News_Filter_CategoryInputs = {};
+export type Admin_News_Filter_StatusInputs = {};
+export type Admin_News_List_SubtitleInputs = {};
+export type Admin_News_List_TitleInputs = {};
+export type Admin_News_LoadingInputs = {};
+export type Admin_News_Status_ArchivedInputs = {};
+export type Admin_News_Status_DraftInputs = {};
+export type Admin_News_Status_PublishedInputs = {};
+export type Admin_News_Table_ActionsInputs = {};
+export type Admin_News_Table_CategoriesInputs = {};
+export type Admin_News_Table_Published_AtInputs = {};
+export type Admin_News_Table_StatusInputs = {};
+export type Admin_News_Table_TitleInputs = {};
+export type Admin_News_Table_Updated_AtInputs = {};
+export type Admin_News_Translations_AutoInputs = {};
+export type Admin_News_Translations_BodyInputs = {};
+export type Admin_News_Translations_EmptyInputs = {};
+export type Admin_News_Translations_Locale_BgInputs = {};
+export type Admin_News_Translations_Locale_EnInputs = {};
+export type Admin_News_Translations_SaveInputs = {};
+export type Admin_News_Translations_Source_MachineInputs = {};
+export type Admin_News_Translations_Source_ManualInputs = {};
+export type Admin_News_Translations_SubtitleInputs = {};
+export type Admin_News_Translations_SummaryInputs = {};
+export type Admin_News_Translations_TitleInputs = {};
+export type Admin_News_Validation_RequiredInputs = {};
 export type Admin_Not_Found_BodyInputs = {};
 export type Admin_Not_Found_DashboardInputs = {};
 export type Admin_Not_Found_EyebrowInputs = {};

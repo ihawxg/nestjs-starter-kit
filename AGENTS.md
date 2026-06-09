@@ -24,6 +24,7 @@ Use this file as durable guidance for Codex CLI and other coding agents working 
 - Public frontend UI is project-owned. Tailwind utility styling and lucide icons are allowed; external component libraries and DSFR remain banned for public UI.
 - Protected admin dashboard page routes live under `frontend/src/app/[locale]/admin`.
 - Mantine is allowed only for protected admin route/component files. Public UI must not import Mantine.
+- Tiptap is allowed only for protected admin rich text editing in approved admin feature files.
 - Frontend visual direction is a reference-style navy/gold civic theme. Project colors belong in `frontend/src/styles/townhall-theme.css`; do not scatter hardcoded colors through components, routes, or feature files.
 - Project skill registry: `.codex/project-skills.json`.
 - Project skills are manifest-only; do not vendor third-party skill folders in git.
@@ -112,15 +113,17 @@ Non-negotiable frontend rules:
 - Backend calls must not bypass approved wrappers under `frontend/src/lib/api`.
 - Runtime env must go through the Zod-backed frontend env helper; do not read public API URLs ad hoc from route or feature code.
 - Use `sanitize-html` through the project helper before rendering rich CMS/news/page HTML.
-- Use TanStack Query only for interactive client fetching that actually needs client caching/refetching. Server-rendered public reads stay in Server Components and API wrappers.
+- Use TanStack Query for interactive admin CRUD screens and other client flows that actually need client caching/refetching. Server-rendered public reads stay in Server Components and API wrappers.
+- Admin create forms that need files before a backend id exists should stage files in browser memory, create the record first, then upload through protected internal `/admin/api/*` routes. Preview staged files only through browser object URLs or browser `File` APIs, and preview uploaded files only through protected internal admin routes. Do not expose storage paths or backend JWTs to make this work.
 - Use React Hook Form with Zod/resolvers for non-trivial forms when forms are introduced; do not add form state libraries per feature.
 - Do not store JWTs or auth state in `localStorage` or `sessionStorage`.
 - Admin frontend auth must use HttpOnly cookies only. Cookie path is `/` so both `/en/admin` and `/bg/admin` can validate the same server-owned session.
 - Admin dashboard code lives under `frontend/src/app/[locale]/admin`, legacy redirects/internal APIs under `frontend/src/app/admin`, and shared admin code under `frontend/src/components/admin`, `frontend/src/lib/admin-api`, and `frontend/src/lib/admin-auth`.
 - Frontend-owned UI strings live in `frontend/messages/en.json` and `frontend/messages/bg.json`, compile through Paraglide into `frontend/src/lib/i18n/paraglide`, and are consumed through `frontend/src/lib/i18n/messages.ts`. Do not add handwritten EN/BG copy objects.
 - Admin generated SDK calls must be wrapped under `frontend/src/lib/admin-api`; public code must not import admin wrappers.
+- Admin browser code calls internal Next `/admin/api/*` routes only. Do not call Nest admin URLs directly from the browser unless backend auth is deliberately redesigned around server-owned cookies and CSRF protection.
 - Custom UI components must live under `frontend/src/components/ui` or domain feature folders. Do not add `frontend/src/components/dsfr`.
-- Do not import DSFR, Bootstrap, MUI, Chakra, Ant, or similar external UI/component libraries. Mantine is the only current exception and is admin-only.
+- Do not import DSFR, Bootstrap, MUI, Chakra, Ant, or similar external UI/component libraries. Mantine, including admin-only helpers such as `@mantine/dropzone`, is the only current exception and is admin-only.
 - Tailwind utilities are allowed when they use project theme tokens such as `townhall-navy`, `townhall-gold`, and `townhall-cream`. Do not add ad hoc hex colors or inline color styles outside the approved theme file.
 - Do not use `fr-*` classes or library-owned component class names; use project-owned components and Tailwind theme tokens.
 - Do not hardcode municipality pages, categories, departments, staff, officials, or public content.
@@ -154,6 +157,8 @@ Frontend shared code needs at least two real consumers before moving into shared
 - Public people/governance routes must return only published staff, officials, and committees.
 - Public localized responses must fall back to English when Bulgarian text is missing and include localization metadata.
 - Admin translation writes may auto-generate the opposite locale when auto-translation is configured. Never commit provider keys. Machine translation metadata stays admin-only.
+- Civic content deletion defaults to archive/deactivate behavior. Admin UIs should expose restore/unarchive for archived records before hard delete is considered.
+- Admin asset preview/download routes must be protected, server-mediated, and must never expose storage keys or local filesystem paths. Frontend previews of persisted assets must use those protected routes, not storage paths. News admin previews support native browser-safe image, PDF, CSV, text, and JSON previews with a safe metadata fallback for Office/binary files. Public downloads remain published-only.
 - Admin writes must be audit logged with safe metadata only; never log passwords, tokens, storage keys, local paths, or raw uploaded file paths.
 - Rate limits are metadata-driven and configured through environment variables for login, public reads/downloads, and admin writes.
 - Store document/file metadata in PostgreSQL.

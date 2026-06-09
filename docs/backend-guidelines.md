@@ -133,6 +133,7 @@ Admin route rules:
 - Validate all body fields.
 - Keep destructive operations intentional and tested.
 - Prefer archive/unpublish behavior when product semantics are not final.
+- Provide restore/unarchive behavior for archived civic records when admins need to recover accidental archive actions.
 - Include admin list/detail read paths when a domain has draft or archived states, so admin UIs do not depend on public routes.
 
 Current admin read pattern:
@@ -235,7 +236,7 @@ Current local upload behavior:
 - Public APIs may return safe file metadata only.
 - Public APIs must never return storage keys or local filesystem paths.
 
-Public downloads must only serve published public files.
+Public downloads must only serve published public files. Admin asset downloads may serve draft, published, or archived assets only through protected admin routes.
 
 Media library rules:
 

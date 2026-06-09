@@ -91,15 +91,19 @@ const requiredAdminUiDependencies = [
   "@mantine/form",
   "@mantine/modals",
   "@mantine/notifications",
+  "@mantine/dropzone",
+  "@mantine/tiptap",
 ];
 const forbiddenLocalizationDependencies = ["next-intl"];
 const forbiddenUiImportPattern =
   /@gouvfr\/dsfr|@codegouvfr\/react-dsfr|dsfr\.min|dsfr\.module|@mui\/material|@chakra-ui\/react|antd|bootstrap|react-bootstrap|semantic-ui-react/;
 const mantineImportPattern = /@mantine\//;
+const tiptapImportPattern = /@tiptap\//;
 const adminSourcePrefixes = [
   "frontend/src/app/admin/",
   "frontend/src/app/[locale]/admin/",
   "frontend/src/components/admin/",
+  "frontend/src/features/admin-news/",
   "frontend/src/lib/admin-api/",
   "frontend/src/lib/admin-auth/",
   "frontend/src/lib/i18n/",
@@ -426,6 +430,11 @@ function frontendPackageChecks() {
     "sanitize-html",
     "date-fns",
     "sharp",
+    "@tiptap/react",
+    "@tiptap/pm",
+    "@tiptap/starter-kit",
+    "@tiptap/extension-link",
+    "@tiptap/extension-underline",
   ];
   for (const dependency of requiredRuntimeDeps) {
     if (!hasRuntimeDependency(parsed, dependency)) {
@@ -637,16 +646,35 @@ function adminDashboardChecks() {
     "frontend/src/app/admin/api/auth/login/route.ts",
     "frontend/src/app/admin/api/auth/logout/route.ts",
     "frontend/src/app/admin/api/auth/session/route.ts",
+    "frontend/src/app/admin/api/news/route.ts",
+    "frontend/src/app/admin/api/news/[id]/route.ts",
+    "frontend/src/app/admin/api/news/[id]/assets/route.ts",
+    "frontend/src/app/admin/api/news/[id]/assets/[assetId]/route.ts",
+    "frontend/src/app/admin/api/news/[id]/assets/[assetId]/download/route.ts",
+    "frontend/src/app/admin/api/news/[id]/assets/[assetId]/view/route.ts",
+    "frontend/src/app/admin/api/news/[id]/categories/route.ts",
+    "frontend/src/app/admin/api/news/[id]/restore/route.ts",
+    "frontend/src/app/admin/api/news/[id]/translations/route.ts",
+    "frontend/src/app/admin/api/news/[id]/translations/[translationLocale]/route.ts",
+    "frontend/src/app/admin/api/news/[id]/translations/[translationLocale]/auto-translate/route.ts",
+    "frontend/src/app/admin/api/news/categories/route.ts",
+    "frontend/src/app/admin/api/news/categories/[categoryId]/route.ts",
+    "frontend/src/app/[locale]/admin/(protected)/news/page.tsx",
+    "frontend/src/app/[locale]/admin/(protected)/news/new/page.tsx",
+    "frontend/src/app/[locale]/admin/(protected)/news/[id]/page.tsx",
     "frontend/src/components/admin/admin-not-found-boundary.tsx",
     "frontend/src/components/admin/admin-providers.tsx",
     "frontend/src/components/admin/admin-login-form.tsx",
     "frontend/src/components/admin/admin-not-found-content.tsx",
     "frontend/src/components/admin/admin-shell.tsx",
     "frontend/src/lib/admin-api/auth.ts",
+    "frontend/src/lib/admin-api/news.ts",
+    "frontend/src/lib/admin-api/news-client.ts",
     "frontend/src/lib/admin-auth/server.ts",
     "frontend/src/lib/admin-auth/session.ts",
     "frontend/src/lib/admin-auth/client.ts",
     "frontend/src/lib/i18n/messages.ts",
+    "frontend/src/features/admin-news/admin-news-queries.ts",
   ];
 
   for (const file of requiredFiles) {
@@ -660,11 +688,35 @@ function adminDashboardChecks() {
     const text = read(adminLayout);
     for (const importName of [
       "@mantine/core/styles.css",
+      "@mantine/dropzone/styles.css",
       "@mantine/notifications/styles.css",
+      "@mantine/tiptap/styles.css",
       "AdminProviders",
     ]) {
       if (!text.includes(importName)) {
         fail.push(`Admin layout must include ${importName}.`);
+      }
+    }
+  }
+
+  const localizedAdminLayout = path.join(
+    srcRoot,
+    "app",
+    "[locale]",
+    "admin",
+    "layout.tsx",
+  );
+  if (existsSync(localizedAdminLayout)) {
+    const text = read(localizedAdminLayout);
+    for (const importName of [
+      "@mantine/core/styles.css",
+      "@mantine/dropzone/styles.css",
+      "@mantine/notifications/styles.css",
+      "@mantine/tiptap/styles.css",
+      "AdminProviders",
+    ]) {
+      if (!text.includes(importName)) {
+        fail.push(`Localized admin layout must include ${importName}.`);
       }
     }
   }
@@ -1025,10 +1077,20 @@ function projectDesignSystemChecks() {
       mantineImportPattern.test(text) &&
       !relative.startsWith("frontend/src/app/admin/") &&
       !relative.startsWith("frontend/src/app/[locale]/admin/") &&
-      !relative.startsWith("frontend/src/components/admin/")
+      !relative.startsWith("frontend/src/components/admin/") &&
+      !relative.startsWith("frontend/src/features/admin-news/")
     ) {
       fail.push(
         `Mantine imports are allowed only in admin route/component files: ${relative}`,
+      );
+    }
+
+    if (
+      tiptapImportPattern.test(text) &&
+      !relative.startsWith("frontend/src/features/admin-news/")
+    ) {
+      fail.push(
+        `Tiptap imports are allowed only in the News admin feature: ${relative}`,
       );
     }
 

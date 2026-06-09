@@ -10,7 +10,12 @@ import {
   Query,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Audit } from '../../audit-log/decorators/audit.decorator';
 import { RateLimit } from '../../rate-limit/decorators/rate-limit.decorator';
 import { RateLimitBucket } from '../../rate-limit/rate-limit-bucket.enum';
@@ -18,6 +23,10 @@ import { Roles } from '../../user/decorators/roles.decorator';
 import { JwtAuthGuard } from '../../user/guards/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from '../../user/guards/roles/roles.guard';
 import { UserRole } from '../../user/entities/user-role.enum';
+import {
+  CategoriesListResponseDto,
+  CategoryItemResponseDto,
+} from '../category-response';
 import { CategoriesService } from '../categories.service';
 import { CreateCategoryDto } from '../dto/create-category.dto';
 import { ListCategoriesQueryDto } from '../dto/list-categories-query.dto';
@@ -32,6 +41,9 @@ export class CategoriesAdminController {
   constructor(private readonly categoriesService: CategoriesService) {}
 
   @Get()
+  @ApiOkResponse({
+    type: CategoriesListResponseDto,
+  })
   async list(@Query() query: ListCategoriesQueryDto) {
     const categories = await this.categoriesService.listAdmin(query);
 
@@ -41,6 +53,9 @@ export class CategoriesAdminController {
   }
 
   @Post()
+  @ApiCreatedResponse({
+    type: CategoryItemResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'category.create',
@@ -55,6 +70,9 @@ export class CategoriesAdminController {
   }
 
   @Patch(':id')
+  @ApiOkResponse({
+    type: CategoryItemResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'category.update',
@@ -73,6 +91,9 @@ export class CategoriesAdminController {
   }
 
   @Delete(':id')
+  @ApiOkResponse({
+    type: CategoryItemResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'category.deactivate',

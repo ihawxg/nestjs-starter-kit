@@ -25,7 +25,121 @@ import { getLocale, experimentalStaticLocale } from "../runtime.js"
 /** @typedef {{}} Admin_Nav_ContentInputs */
 /** @typedef {{}} Admin_Nav_DashboardInputs */
 /** @typedef {{}} Admin_Nav_DocumentsInputs */
+/** @typedef {{}} Admin_Nav_NewsInputs */
 /** @typedef {{}} Admin_Nav_SettingsInputs */
+/** @typedef {{}} Admin_News_Action_ArchiveInputs */
+/** @typedef {{}} Admin_News_Action_CancelInputs */
+/** @typedef {{}} Admin_News_Action_CreateInputs */
+/** @typedef {{}} Admin_News_Action_EditInputs */
+/** @typedef {{}} Admin_News_Action_RetryInputs */
+/** @typedef {{}} Admin_News_Action_RestoreInputs */
+/** @typedef {{}} Admin_News_Action_SaveInputs */
+/** @typedef {{}} Admin_News_Assets_DescriptionInputs */
+/** @typedef {{}} Admin_News_Assets_DownloadInputs */
+/** @typedef {{}} Admin_News_Assets_Dropzone_DescriptionInputs */
+/** @typedef {{}} Admin_News_Assets_Dropzone_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_Dropzone_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_EmptyInputs */
+/** @typedef {{}} Admin_News_Assets_Pending_EmptyInputs */
+/** @typedef {{}} Admin_News_Assets_Pending_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_RemoveInputs */
+/** @typedef {{}} Admin_News_Assets_SelectInputs */
+/** @typedef {{}} Admin_News_Assets_Staged_HelpInputs */
+/** @typedef {{}} Admin_News_Assets_Staged_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_UploadInputs */
+/** @typedef {{}} Admin_News_Assets_Upload_After_CreateInputs */
+/** @typedef {{}} Admin_News_Assets_Upload_Failed_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_Close_PreviewInputs */
+/** @typedef {{}} Admin_News_Assets_Csv_Preview_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_File_Preview_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_File_Type_UnknownInputs */
+/** @typedef {{}} Admin_News_Assets_Image_Preview_AltInputs */
+/** @typedef {{}} Admin_News_Assets_Open_In_BrowserInputs */
+/** @typedef {{}} Admin_News_Assets_Pdf_Preview_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_PreviewInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_FailedInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_LoadingInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_TruncatedInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_UnavailableInputs */
+/** @typedef {{}} Admin_News_Assets_Text_Preview_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_Unsupported_PreviewInputs */
+/** @typedef {{}} Admin_News_Assets_Uploaded_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_ViewInputs */
+/** @typedef {{}} Admin_News_Categories_ActiveInputs */
+/** @typedef {{}} Admin_News_Categories_CreateInputs */
+/** @typedef {{}} Admin_News_Categories_DeactivateInputs */
+/** @typedef {{}} Admin_News_Categories_DescriptionInputs */
+/** @typedef {{}} Admin_News_Categories_Display_OrderInputs */
+/** @typedef {{}} Admin_News_Categories_EmptyInputs */
+/** @typedef {{}} Admin_News_Categories_InactiveInputs */
+/** @typedef {{}} Admin_News_Categories_NameInputs */
+/** @typedef {{}} Admin_News_Categories_SaveInputs */
+/** @typedef {{}} Admin_News_Categories_SlugInputs */
+/** @typedef {{}} Admin_News_Categories_TitleInputs */
+/** @typedef {{}} Admin_News_Create_SubtitleInputs */
+/** @typedef {{}} Admin_News_Create_TitleInputs */
+/** @typedef {{}} Admin_News_Editor_BlockquoteInputs */
+/** @typedef {{}} Admin_News_Editor_BoldInputs */
+/** @typedef {{}} Admin_News_Editor_Bullet_ListInputs */
+/** @typedef {{}} Admin_News_Editor_Clear_FormattingInputs */
+/** @typedef {{}} Admin_News_Editor_Heading_ThreeInputs */
+/** @typedef {{}} Admin_News_Editor_Heading_TwoInputs */
+/** @typedef {{}} Admin_News_Editor_Horizontal_RuleInputs */
+/** @typedef {{}} Admin_News_Editor_ItalicInputs */
+/** @typedef {{}} Admin_News_Editor_LinkInputs */
+/** @typedef {{}} Admin_News_Editor_Ordered_ListInputs */
+/** @typedef {{}} Admin_News_Editor_ParagraphInputs */
+/** @typedef {{}} Admin_News_Editor_Preview_HtmlInputs */
+/** @typedef {{}} Admin_News_Editor_RedoInputs */
+/** @typedef {{}} Admin_News_Editor_StrikethroughInputs */
+/** @typedef {{}} Admin_News_Editor_TitleInputs */
+/** @typedef {{}} Admin_News_Editor_UnderlineInputs */
+/** @typedef {{}} Admin_News_Editor_UndoInputs */
+/** @typedef {{}} Admin_News_Editor_UnlinkInputs */
+/** @typedef {{}} Admin_News_EmptyInputs */
+/** @typedef {{}} Admin_News_ErrorInputs */
+/** @typedef {{}} Admin_News_Field_BodyInputs */
+/** @typedef {{}} Admin_News_Field_CategoriesInputs */
+/** @typedef {{}} Admin_News_Field_Published_AtInputs */
+/** @typedef {{}} Admin_News_Field_SlugInputs */
+/** @typedef {{}} Admin_News_Field_Source_Language_AdvancedInputs */
+/** @typedef {{}} Admin_News_Field_Source_Locale_BgInputs */
+/** @typedef {{}} Admin_News_Field_Source_Locale_DescriptionInputs */
+/** @typedef {{}} Admin_News_Field_Source_Locale_EnInputs */
+/** @typedef {{}} Admin_News_Field_Source_LocaleInputs */
+/** @typedef {{}} Admin_News_Field_StatusInputs */
+/** @typedef {{}} Admin_News_Field_SummaryInputs */
+/** @typedef {{}} Admin_News_Field_TitleInputs */
+/** @typedef {{}} Admin_News_Filter_All_CategoriesInputs */
+/** @typedef {{}} Admin_News_Filter_All_StatusesInputs */
+/** @typedef {{}} Admin_News_Filter_CategoryInputs */
+/** @typedef {{}} Admin_News_Filter_StatusInputs */
+/** @typedef {{}} Admin_News_List_SubtitleInputs */
+/** @typedef {{}} Admin_News_List_TitleInputs */
+/** @typedef {{}} Admin_News_LoadingInputs */
+/** @typedef {{}} Admin_News_Status_ArchivedInputs */
+/** @typedef {{}} Admin_News_Status_DraftInputs */
+/** @typedef {{}} Admin_News_Status_PublishedInputs */
+/** @typedef {{}} Admin_News_Table_ActionsInputs */
+/** @typedef {{}} Admin_News_Table_CategoriesInputs */
+/** @typedef {{}} Admin_News_Table_Published_AtInputs */
+/** @typedef {{}} Admin_News_Table_StatusInputs */
+/** @typedef {{}} Admin_News_Table_TitleInputs */
+/** @typedef {{}} Admin_News_Table_Updated_AtInputs */
+/** @typedef {{}} Admin_News_Translations_AutoInputs */
+/** @typedef {{}} Admin_News_Translations_BodyInputs */
+/** @typedef {{}} Admin_News_Translations_EmptyInputs */
+/** @typedef {{}} Admin_News_Translations_Locale_BgInputs */
+/** @typedef {{}} Admin_News_Translations_Locale_EnInputs */
+/** @typedef {{}} Admin_News_Translations_SaveInputs */
+/** @typedef {{}} Admin_News_Translations_Source_MachineInputs */
+/** @typedef {{}} Admin_News_Translations_Source_ManualInputs */
+/** @typedef {{}} Admin_News_Translations_SubtitleInputs */
+/** @typedef {{}} Admin_News_Translations_SummaryInputs */
+/** @typedef {{}} Admin_News_Translations_TitleInputs */
+/** @typedef {{}} Admin_News_Validation_RequiredInputs */
 /** @typedef {{}} Admin_Not_Found_BodyInputs */
 /** @typedef {{}} Admin_Not_Found_DashboardInputs */
 /** @typedef {{}} Admin_Not_Found_EyebrowInputs */
@@ -433,6 +547,20 @@ export const admin_nav_documents = /** @type {((inputs?: Admin_Nav_DocumentsInpu
 /**
 * | output |
 * | --- |
+* | "News" |
+*
+* @param {Admin_Nav_NewsInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_nav_news = /** @type {((inputs?: Admin_Nav_NewsInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_Nav_NewsInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_nav_news(inputs)
+	return __bg.admin_nav_news(inputs)
+});
+/**
+* | output |
+* | --- |
 * | "Settings" |
 *
 * @param {Admin_Nav_SettingsInputs} inputs
@@ -443,6 +571,1588 @@ export const admin_nav_settings = /** @type {((inputs?: Admin_Nav_SettingsInputs
 	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
 	if (locale === "en") return __en.admin_nav_settings(inputs)
 	return __bg.admin_nav_settings(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Archive" |
+*
+* @param {Admin_News_Action_ArchiveInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_action_archive = /** @type {((inputs?: Admin_News_Action_ArchiveInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Action_ArchiveInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_action_archive(inputs)
+	return __bg.admin_news_action_archive(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Cancel" |
+*
+* @param {Admin_News_Action_CancelInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_action_cancel = /** @type {((inputs?: Admin_News_Action_CancelInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Action_CancelInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_action_cancel(inputs)
+	return __bg.admin_news_action_cancel(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Create news" |
+*
+* @param {Admin_News_Action_CreateInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_action_create = /** @type {((inputs?: Admin_News_Action_CreateInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Action_CreateInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_action_create(inputs)
+	return __bg.admin_news_action_create(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Edit" |
+*
+* @param {Admin_News_Action_EditInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_action_edit = /** @type {((inputs?: Admin_News_Action_EditInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Action_EditInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_action_edit(inputs)
+	return __bg.admin_news_action_edit(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Retry" |
+*
+* @param {Admin_News_Action_RetryInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_action_retry = /** @type {((inputs?: Admin_News_Action_RetryInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Action_RetryInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_action_retry(inputs)
+	return __bg.admin_news_action_retry(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Restore" |
+*
+* @param {Admin_News_Action_RestoreInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_action_restore = /** @type {((inputs?: Admin_News_Action_RestoreInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Action_RestoreInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_action_restore(inputs)
+	return __bg.admin_news_action_restore(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Save changes" |
+*
+* @param {Admin_News_Action_SaveInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_action_save = /** @type {((inputs?: Admin_News_Action_SaveInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Action_SaveInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_action_save(inputs)
+	return __bg.admin_news_action_save(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Attach images, PDFs, and supporting files for this news item." |
+*
+* @param {Admin_News_Assets_DescriptionInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_description = /** @type {((inputs?: Admin_News_Assets_DescriptionInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_DescriptionInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_description(inputs)
+	return __bg.admin_news_assets_description(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Download" |
+*
+* @param {Admin_News_Assets_DownloadInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_download = /** @type {((inputs?: Admin_News_Assets_DownloadInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_DownloadInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_download(inputs)
+	return __bg.admin_news_assets_download(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Drag files here or choose them from your device. Files are stored only after the news item exists." |
+*
+* @param {Admin_News_Assets_Dropzone_DescriptionInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_dropzone_description = /** @type {((inputs?: Admin_News_Assets_Dropzone_DescriptionInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Dropzone_DescriptionInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_dropzone_description(inputs)
+	return __bg.admin_news_assets_dropzone_description(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Attach news files" |
+*
+* @param {Admin_News_Assets_Dropzone_LabelInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_dropzone_label = /** @type {((inputs?: Admin_News_Assets_Dropzone_LabelInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Dropzone_LabelInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_dropzone_label(inputs)
+	return __bg.admin_news_assets_dropzone_label(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Drop files here" |
+*
+* @param {Admin_News_Assets_Dropzone_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_dropzone_title = /** @type {((inputs?: Admin_News_Assets_Dropzone_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Dropzone_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_dropzone_title(inputs)
+	return __bg.admin_news_assets_dropzone_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "No assets uploaded yet." |
+*
+* @param {Admin_News_Assets_EmptyInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_empty = /** @type {((inputs?: Admin_News_Assets_EmptyInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_EmptyInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_empty(inputs)
+	return __bg.admin_news_assets_empty(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "No files selected for upload." |
+*
+* @param {Admin_News_Assets_Pending_EmptyInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_pending_empty = /** @type {((inputs?: Admin_News_Assets_Pending_EmptyInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Pending_EmptyInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_pending_empty(inputs)
+	return __bg.admin_news_assets_pending_empty(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Ready to upload" |
+*
+* @param {Admin_News_Assets_Pending_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_pending_title = /** @type {((inputs?: Admin_News_Assets_Pending_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Pending_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_pending_title(inputs)
+	return __bg.admin_news_assets_pending_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Remove" |
+*
+* @param {Admin_News_Assets_RemoveInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_remove = /** @type {((inputs?: Admin_News_Assets_RemoveInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_RemoveInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_remove(inputs)
+	return __bg.admin_news_assets_remove(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Select files" |
+*
+* @param {Admin_News_Assets_SelectInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_select = /** @type {((inputs?: Admin_News_Assets_SelectInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_SelectInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_select(inputs)
+	return __bg.admin_news_assets_select(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Choose files now; they will upload automatically after the news item is created." |
+*
+* @param {Admin_News_Assets_Staged_HelpInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_staged_help = /** @type {((inputs?: Admin_News_Assets_Staged_HelpInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Staged_HelpInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_staged_help(inputs)
+	return __bg.admin_news_assets_staged_help(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Files staged for create" |
+*
+* @param {Admin_News_Assets_Staged_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_staged_title = /** @type {((inputs?: Admin_News_Assets_Staged_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Staged_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_staged_title(inputs)
+	return __bg.admin_news_assets_staged_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Assets" |
+*
+* @param {Admin_News_Assets_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_title = /** @type {((inputs?: Admin_News_Assets_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_title(inputs)
+	return __bg.admin_news_assets_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Upload assets" |
+*
+* @param {Admin_News_Assets_UploadInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_upload = /** @type {((inputs?: Admin_News_Assets_UploadInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_UploadInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_upload(inputs)
+	return __bg.admin_news_assets_upload(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "You can attach files before saving. They will be uploaded after the news item is created." |
+*
+* @param {Admin_News_Assets_Upload_After_CreateInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_upload_after_create = /** @type {((inputs?: Admin_News_Assets_Upload_After_CreateInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Upload_After_CreateInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_upload_after_create(inputs)
+	return __bg.admin_news_assets_upload_after_create(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Assets were not uploaded" |
+*
+* @param {Admin_News_Assets_Upload_Failed_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_upload_failed_title = /** @type {((inputs?: Admin_News_Assets_Upload_Failed_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Upload_Failed_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_upload_failed_title(inputs)
+	return __bg.admin_news_assets_upload_failed_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Close preview" |
+*
+* @param {Admin_News_Assets_Close_PreviewInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_close_preview = /** @type {((inputs?: Admin_News_Assets_Close_PreviewInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Close_PreviewInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_close_preview(inputs)
+	return __bg.admin_news_assets_close_preview(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "CSV preview" |
+*
+* @param {Admin_News_Assets_Csv_Preview_LabelInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_csv_preview_label = /** @type {((inputs?: Admin_News_Assets_Csv_Preview_LabelInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Csv_Preview_LabelInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_csv_preview_label(inputs)
+	return __bg.admin_news_assets_csv_preview_label(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "File preview" |
+*
+* @param {Admin_News_Assets_File_Preview_LabelInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_file_preview_label = /** @type {((inputs?: Admin_News_Assets_File_Preview_LabelInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_File_Preview_LabelInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_file_preview_label(inputs)
+	return __bg.admin_news_assets_file_preview_label(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Unknown type" |
+*
+* @param {Admin_News_Assets_File_Type_UnknownInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_file_type_unknown = /** @type {((inputs?: Admin_News_Assets_File_Type_UnknownInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_File_Type_UnknownInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_file_type_unknown(inputs)
+	return __bg.admin_news_assets_file_type_unknown(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Image preview" |
+*
+* @param {Admin_News_Assets_Image_Preview_AltInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_image_preview_alt = /** @type {((inputs?: Admin_News_Assets_Image_Preview_AltInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Image_Preview_AltInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_image_preview_alt(inputs)
+	return __bg.admin_news_assets_image_preview_alt(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Open in browser" |
+*
+* @param {Admin_News_Assets_Open_In_BrowserInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_open_in_browser = /** @type {((inputs?: Admin_News_Assets_Open_In_BrowserInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Open_In_BrowserInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_open_in_browser(inputs)
+	return __bg.admin_news_assets_open_in_browser(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "PDF preview" |
+*
+* @param {Admin_News_Assets_Pdf_Preview_LabelInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_pdf_preview_label = /** @type {((inputs?: Admin_News_Assets_Pdf_Preview_LabelInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Pdf_Preview_LabelInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_pdf_preview_label(inputs)
+	return __bg.admin_news_assets_pdf_preview_label(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Preview" |
+*
+* @param {Admin_News_Assets_PreviewInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_preview = /** @type {((inputs?: Admin_News_Assets_PreviewInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_PreviewInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_preview(inputs)
+	return __bg.admin_news_assets_preview(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Preview failed" |
+*
+* @param {Admin_News_Assets_Preview_FailedInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_preview_failed = /** @type {((inputs?: Admin_News_Assets_Preview_FailedInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Preview_FailedInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_preview_failed(inputs)
+	return __bg.admin_news_assets_preview_failed(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Loading preview..." |
+*
+* @param {Admin_News_Assets_Preview_LoadingInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_preview_loading = /** @type {((inputs?: Admin_News_Assets_Preview_LoadingInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Preview_LoadingInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_preview_loading(inputs)
+	return __bg.admin_news_assets_preview_loading(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Asset preview" |
+*
+* @param {Admin_News_Assets_Preview_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_preview_title = /** @type {((inputs?: Admin_News_Assets_Preview_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Preview_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_preview_title(inputs)
+	return __bg.admin_news_assets_preview_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "This preview is capped for performance. Download the file to inspect the full content." |
+*
+* @param {Admin_News_Assets_Preview_TruncatedInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_preview_truncated = /** @type {((inputs?: Admin_News_Assets_Preview_TruncatedInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Preview_TruncatedInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_preview_truncated(inputs)
+	return __bg.admin_news_assets_preview_truncated(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Native browser preview is not available for this file type. Open it in the browser or download it." |
+*
+* @param {Admin_News_Assets_Preview_UnavailableInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_preview_unavailable = /** @type {((inputs?: Admin_News_Assets_Preview_UnavailableInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Preview_UnavailableInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_preview_unavailable(inputs)
+	return __bg.admin_news_assets_preview_unavailable(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Text preview" |
+*
+* @param {Admin_News_Assets_Text_Preview_LabelInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_text_preview_label = /** @type {((inputs?: Admin_News_Assets_Text_Preview_LabelInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Text_Preview_LabelInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_text_preview_label(inputs)
+	return __bg.admin_news_assets_text_preview_label(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Preview fallback" |
+*
+* @param {Admin_News_Assets_Unsupported_PreviewInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_unsupported_preview = /** @type {((inputs?: Admin_News_Assets_Unsupported_PreviewInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Unsupported_PreviewInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_unsupported_preview(inputs)
+	return __bg.admin_news_assets_unsupported_preview(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Uploaded files" |
+*
+* @param {Admin_News_Assets_Uploaded_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_uploaded_title = /** @type {((inputs?: Admin_News_Assets_Uploaded_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_Uploaded_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_uploaded_title(inputs)
+	return __bg.admin_news_assets_uploaded_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "View" |
+*
+* @param {Admin_News_Assets_ViewInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_assets_view = /** @type {((inputs?: Admin_News_Assets_ViewInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Assets_ViewInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_assets_view(inputs)
+	return __bg.admin_news_assets_view(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Active" |
+*
+* @param {Admin_News_Categories_ActiveInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_categories_active = /** @type {((inputs?: Admin_News_Categories_ActiveInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Categories_ActiveInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_categories_active(inputs)
+	return __bg.admin_news_categories_active(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Create category" |
+*
+* @param {Admin_News_Categories_CreateInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_categories_create = /** @type {((inputs?: Admin_News_Categories_CreateInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Categories_CreateInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_categories_create(inputs)
+	return __bg.admin_news_categories_create(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Deactivate" |
+*
+* @param {Admin_News_Categories_DeactivateInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_categories_deactivate = /** @type {((inputs?: Admin_News_Categories_DeactivateInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Categories_DeactivateInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_categories_deactivate(inputs)
+	return __bg.admin_news_categories_deactivate(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Description" |
+*
+* @param {Admin_News_Categories_DescriptionInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_categories_description = /** @type {((inputs?: Admin_News_Categories_DescriptionInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Categories_DescriptionInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_categories_description(inputs)
+	return __bg.admin_news_categories_description(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Display order" |
+*
+* @param {Admin_News_Categories_Display_OrderInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_categories_display_order = /** @type {((inputs?: Admin_News_Categories_Display_OrderInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Categories_Display_OrderInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_categories_display_order(inputs)
+	return __bg.admin_news_categories_display_order(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "No news categories yet." |
+*
+* @param {Admin_News_Categories_EmptyInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_categories_empty = /** @type {((inputs?: Admin_News_Categories_EmptyInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Categories_EmptyInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_categories_empty(inputs)
+	return __bg.admin_news_categories_empty(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Inactive" |
+*
+* @param {Admin_News_Categories_InactiveInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_categories_inactive = /** @type {((inputs?: Admin_News_Categories_InactiveInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Categories_InactiveInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_categories_inactive(inputs)
+	return __bg.admin_news_categories_inactive(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Name" |
+*
+* @param {Admin_News_Categories_NameInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_categories_name = /** @type {((inputs?: Admin_News_Categories_NameInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Categories_NameInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_categories_name(inputs)
+	return __bg.admin_news_categories_name(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Save category" |
+*
+* @param {Admin_News_Categories_SaveInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_categories_save = /** @type {((inputs?: Admin_News_Categories_SaveInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Categories_SaveInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_categories_save(inputs)
+	return __bg.admin_news_categories_save(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Slug" |
+*
+* @param {Admin_News_Categories_SlugInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_categories_slug = /** @type {((inputs?: Admin_News_Categories_SlugInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Categories_SlugInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_categories_slug(inputs)
+	return __bg.admin_news_categories_slug(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "News categories" |
+*
+* @param {Admin_News_Categories_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_categories_title = /** @type {((inputs?: Admin_News_Categories_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Categories_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_categories_title(inputs)
+	return __bg.admin_news_categories_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Create a draft, publish immediately, or enter Bulgarian source text for backend translation." |
+*
+* @param {Admin_News_Create_SubtitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_create_subtitle = /** @type {((inputs?: Admin_News_Create_SubtitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Create_SubtitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_create_subtitle(inputs)
+	return __bg.admin_news_create_subtitle(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Create news" |
+*
+* @param {Admin_News_Create_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_create_title = /** @type {((inputs?: Admin_News_Create_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Create_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_create_title(inputs)
+	return __bg.admin_news_create_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Blockquote" |
+*
+* @param {Admin_News_Editor_BlockquoteInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_blockquote = /** @type {((inputs?: Admin_News_Editor_BlockquoteInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_BlockquoteInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_blockquote(inputs)
+	return __bg.admin_news_editor_blockquote(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Bold" |
+*
+* @param {Admin_News_Editor_BoldInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_bold = /** @type {((inputs?: Admin_News_Editor_BoldInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_BoldInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_bold(inputs)
+	return __bg.admin_news_editor_bold(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Bullet list" |
+*
+* @param {Admin_News_Editor_Bullet_ListInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_bullet_list = /** @type {((inputs?: Admin_News_Editor_Bullet_ListInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_Bullet_ListInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_bullet_list(inputs)
+	return __bg.admin_news_editor_bullet_list(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Clear formatting" |
+*
+* @param {Admin_News_Editor_Clear_FormattingInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_clear_formatting = /** @type {((inputs?: Admin_News_Editor_Clear_FormattingInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_Clear_FormattingInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_clear_formatting(inputs)
+	return __bg.admin_news_editor_clear_formatting(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Heading 3" |
+*
+* @param {Admin_News_Editor_Heading_ThreeInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_heading_three = /** @type {((inputs?: Admin_News_Editor_Heading_ThreeInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_Heading_ThreeInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_heading_three(inputs)
+	return __bg.admin_news_editor_heading_three(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Heading 2" |
+*
+* @param {Admin_News_Editor_Heading_TwoInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_heading_two = /** @type {((inputs?: Admin_News_Editor_Heading_TwoInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_Heading_TwoInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_heading_two(inputs)
+	return __bg.admin_news_editor_heading_two(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Horizontal rule" |
+*
+* @param {Admin_News_Editor_Horizontal_RuleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_horizontal_rule = /** @type {((inputs?: Admin_News_Editor_Horizontal_RuleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_Horizontal_RuleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_horizontal_rule(inputs)
+	return __bg.admin_news_editor_horizontal_rule(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Italic" |
+*
+* @param {Admin_News_Editor_ItalicInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_italic = /** @type {((inputs?: Admin_News_Editor_ItalicInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_ItalicInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_italic(inputs)
+	return __bg.admin_news_editor_italic(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Link" |
+*
+* @param {Admin_News_Editor_LinkInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_link = /** @type {((inputs?: Admin_News_Editor_LinkInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_LinkInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_link(inputs)
+	return __bg.admin_news_editor_link(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Ordered list" |
+*
+* @param {Admin_News_Editor_Ordered_ListInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_ordered_list = /** @type {((inputs?: Admin_News_Editor_Ordered_ListInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_Ordered_ListInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_ordered_list(inputs)
+	return __bg.admin_news_editor_ordered_list(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Paragraph" |
+*
+* @param {Admin_News_Editor_ParagraphInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_paragraph = /** @type {((inputs?: Admin_News_Editor_ParagraphInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_ParagraphInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_paragraph(inputs)
+	return __bg.admin_news_editor_paragraph(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Stores clean HTML" |
+*
+* @param {Admin_News_Editor_Preview_HtmlInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_preview_html = /** @type {((inputs?: Admin_News_Editor_Preview_HtmlInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_Preview_HtmlInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_preview_html(inputs)
+	return __bg.admin_news_editor_preview_html(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Redo" |
+*
+* @param {Admin_News_Editor_RedoInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_redo = /** @type {((inputs?: Admin_News_Editor_RedoInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_RedoInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_redo(inputs)
+	return __bg.admin_news_editor_redo(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Strikethrough" |
+*
+* @param {Admin_News_Editor_StrikethroughInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_strikethrough = /** @type {((inputs?: Admin_News_Editor_StrikethroughInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_StrikethroughInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_strikethrough(inputs)
+	return __bg.admin_news_editor_strikethrough(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Rich body editor" |
+*
+* @param {Admin_News_Editor_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_title = /** @type {((inputs?: Admin_News_Editor_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_title(inputs)
+	return __bg.admin_news_editor_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Underline" |
+*
+* @param {Admin_News_Editor_UnderlineInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_underline = /** @type {((inputs?: Admin_News_Editor_UnderlineInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_UnderlineInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_underline(inputs)
+	return __bg.admin_news_editor_underline(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Undo" |
+*
+* @param {Admin_News_Editor_UndoInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_undo = /** @type {((inputs?: Admin_News_Editor_UndoInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_UndoInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_undo(inputs)
+	return __bg.admin_news_editor_undo(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Remove link" |
+*
+* @param {Admin_News_Editor_UnlinkInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_editor_unlink = /** @type {((inputs?: Admin_News_Editor_UnlinkInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Editor_UnlinkInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_editor_unlink(inputs)
+	return __bg.admin_news_editor_unlink(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "No news items match these filters." |
+*
+* @param {Admin_News_EmptyInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_empty = /** @type {((inputs?: Admin_News_EmptyInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_EmptyInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_empty(inputs)
+	return __bg.admin_news_empty(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "News admin request failed." |
+*
+* @param {Admin_News_ErrorInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_error = /** @type {((inputs?: Admin_News_ErrorInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_ErrorInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_error(inputs)
+	return __bg.admin_news_error(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Body" |
+*
+* @param {Admin_News_Field_BodyInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_field_body = /** @type {((inputs?: Admin_News_Field_BodyInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Field_BodyInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_field_body(inputs)
+	return __bg.admin_news_field_body(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Categories" |
+*
+* @param {Admin_News_Field_CategoriesInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_field_categories = /** @type {((inputs?: Admin_News_Field_CategoriesInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Field_CategoriesInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_field_categories(inputs)
+	return __bg.admin_news_field_categories(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Published at" |
+*
+* @param {Admin_News_Field_Published_AtInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_field_published_at = /** @type {((inputs?: Admin_News_Field_Published_AtInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Field_Published_AtInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_field_published_at(inputs)
+	return __bg.admin_news_field_published_at(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Slug" |
+*
+* @param {Admin_News_Field_SlugInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_field_slug = /** @type {((inputs?: Admin_News_Field_SlugInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Field_SlugInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_field_slug(inputs)
+	return __bg.admin_news_field_slug(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Advanced original language" |
+*
+* @param {Admin_News_Field_Source_Language_AdvancedInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_field_source_language_advanced = /** @type {((inputs?: Admin_News_Field_Source_Language_AdvancedInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Field_Source_Language_AdvancedInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_field_source_language_advanced(inputs)
+	return __bg.admin_news_field_source_language_advanced(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Bulgarian" |
+*
+* @param {Admin_News_Field_Source_Locale_BgInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_field_source_locale_bg = /** @type {((inputs?: Admin_News_Field_Source_Locale_BgInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Field_Source_Locale_BgInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_field_source_locale_bg(inputs)
+	return __bg.admin_news_field_source_locale_bg(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Use only when the entered text is not in the current admin language." |
+*
+* @param {Admin_News_Field_Source_Locale_DescriptionInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_field_source_locale_description = /** @type {((inputs?: Admin_News_Field_Source_Locale_DescriptionInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Field_Source_Locale_DescriptionInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_field_source_locale_description(inputs)
+	return __bg.admin_news_field_source_locale_description(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "English" |
+*
+* @param {Admin_News_Field_Source_Locale_EnInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_field_source_locale_en = /** @type {((inputs?: Admin_News_Field_Source_Locale_EnInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Field_Source_Locale_EnInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_field_source_locale_en(inputs)
+	return __bg.admin_news_field_source_locale_en(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Source locale" |
+*
+* @param {Admin_News_Field_Source_LocaleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_field_source_locale = /** @type {((inputs?: Admin_News_Field_Source_LocaleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Field_Source_LocaleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_field_source_locale(inputs)
+	return __bg.admin_news_field_source_locale(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Status" |
+*
+* @param {Admin_News_Field_StatusInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_field_status = /** @type {((inputs?: Admin_News_Field_StatusInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Field_StatusInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_field_status(inputs)
+	return __bg.admin_news_field_status(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Summary" |
+*
+* @param {Admin_News_Field_SummaryInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_field_summary = /** @type {((inputs?: Admin_News_Field_SummaryInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Field_SummaryInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_field_summary(inputs)
+	return __bg.admin_news_field_summary(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Title" |
+*
+* @param {Admin_News_Field_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_field_title = /** @type {((inputs?: Admin_News_Field_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Field_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_field_title(inputs)
+	return __bg.admin_news_field_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "All categories" |
+*
+* @param {Admin_News_Filter_All_CategoriesInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_filter_all_categories = /** @type {((inputs?: Admin_News_Filter_All_CategoriesInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Filter_All_CategoriesInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_filter_all_categories(inputs)
+	return __bg.admin_news_filter_all_categories(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "All statuses" |
+*
+* @param {Admin_News_Filter_All_StatusesInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_filter_all_statuses = /** @type {((inputs?: Admin_News_Filter_All_StatusesInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Filter_All_StatusesInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_filter_all_statuses(inputs)
+	return __bg.admin_news_filter_all_statuses(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Category" |
+*
+* @param {Admin_News_Filter_CategoryInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_filter_category = /** @type {((inputs?: Admin_News_Filter_CategoryInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Filter_CategoryInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_filter_category(inputs)
+	return __bg.admin_news_filter_category(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Status" |
+*
+* @param {Admin_News_Filter_StatusInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_filter_status = /** @type {((inputs?: Admin_News_Filter_StatusInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Filter_StatusInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_filter_status(inputs)
+	return __bg.admin_news_filter_status(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Create, edit, publish, archive, translate, and attach files for public news." |
+*
+* @param {Admin_News_List_SubtitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_list_subtitle = /** @type {((inputs?: Admin_News_List_SubtitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_List_SubtitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_list_subtitle(inputs)
+	return __bg.admin_news_list_subtitle(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "News management" |
+*
+* @param {Admin_News_List_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_list_title = /** @type {((inputs?: Admin_News_List_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_List_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_list_title(inputs)
+	return __bg.admin_news_list_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Loading news..." |
+*
+* @param {Admin_News_LoadingInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_loading = /** @type {((inputs?: Admin_News_LoadingInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_LoadingInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_loading(inputs)
+	return __bg.admin_news_loading(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Archived" |
+*
+* @param {Admin_News_Status_ArchivedInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_status_archived = /** @type {((inputs?: Admin_News_Status_ArchivedInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Status_ArchivedInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_status_archived(inputs)
+	return __bg.admin_news_status_archived(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Draft" |
+*
+* @param {Admin_News_Status_DraftInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_status_draft = /** @type {((inputs?: Admin_News_Status_DraftInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Status_DraftInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_status_draft(inputs)
+	return __bg.admin_news_status_draft(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Published" |
+*
+* @param {Admin_News_Status_PublishedInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_status_published = /** @type {((inputs?: Admin_News_Status_PublishedInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Status_PublishedInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_status_published(inputs)
+	return __bg.admin_news_status_published(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Actions" |
+*
+* @param {Admin_News_Table_ActionsInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_table_actions = /** @type {((inputs?: Admin_News_Table_ActionsInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Table_ActionsInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_table_actions(inputs)
+	return __bg.admin_news_table_actions(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Categories" |
+*
+* @param {Admin_News_Table_CategoriesInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_table_categories = /** @type {((inputs?: Admin_News_Table_CategoriesInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Table_CategoriesInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_table_categories(inputs)
+	return __bg.admin_news_table_categories(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Published" |
+*
+* @param {Admin_News_Table_Published_AtInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_table_published_at = /** @type {((inputs?: Admin_News_Table_Published_AtInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Table_Published_AtInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_table_published_at(inputs)
+	return __bg.admin_news_table_published_at(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Status" |
+*
+* @param {Admin_News_Table_StatusInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_table_status = /** @type {((inputs?: Admin_News_Table_StatusInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Table_StatusInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_table_status(inputs)
+	return __bg.admin_news_table_status(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Title" |
+*
+* @param {Admin_News_Table_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_table_title = /** @type {((inputs?: Admin_News_Table_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Table_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_table_title(inputs)
+	return __bg.admin_news_table_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Updated" |
+*
+* @param {Admin_News_Table_Updated_AtInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_table_updated_at = /** @type {((inputs?: Admin_News_Table_Updated_AtInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Table_Updated_AtInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_table_updated_at(inputs)
+	return __bg.admin_news_table_updated_at(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Auto-translate" |
+*
+* @param {Admin_News_Translations_AutoInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_translations_auto = /** @type {((inputs?: Admin_News_Translations_AutoInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Translations_AutoInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_translations_auto(inputs)
+	return __bg.admin_news_translations_auto(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Body" |
+*
+* @param {Admin_News_Translations_BodyInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_translations_body = /** @type {((inputs?: Admin_News_Translations_BodyInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Translations_BodyInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_translations_body(inputs)
+	return __bg.admin_news_translations_body(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "No translation rows yet." |
+*
+* @param {Admin_News_Translations_EmptyInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_translations_empty = /** @type {((inputs?: Admin_News_Translations_EmptyInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Translations_EmptyInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_translations_empty(inputs)
+	return __bg.admin_news_translations_empty(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Bulgarian" |
+*
+* @param {Admin_News_Translations_Locale_BgInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_translations_locale_bg = /** @type {((inputs?: Admin_News_Translations_Locale_BgInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Translations_Locale_BgInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_translations_locale_bg(inputs)
+	return __bg.admin_news_translations_locale_bg(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "English" |
+*
+* @param {Admin_News_Translations_Locale_EnInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_translations_locale_en = /** @type {((inputs?: Admin_News_Translations_Locale_EnInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Translations_Locale_EnInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_translations_locale_en(inputs)
+	return __bg.admin_news_translations_locale_en(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Save translation" |
+*
+* @param {Admin_News_Translations_SaveInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_translations_save = /** @type {((inputs?: Admin_News_Translations_SaveInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Translations_SaveInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_translations_save(inputs)
+	return __bg.admin_news_translations_save(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Machine" |
+*
+* @param {Admin_News_Translations_Source_MachineInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_translations_source_machine = /** @type {((inputs?: Admin_News_Translations_Source_MachineInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Translations_Source_MachineInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_translations_source_machine(inputs)
+	return __bg.admin_news_translations_source_machine(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Manual" |
+*
+* @param {Admin_News_Translations_Source_ManualInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_translations_source_manual = /** @type {((inputs?: Admin_News_Translations_Source_ManualInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Translations_Source_ManualInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_translations_source_manual(inputs)
+	return __bg.admin_news_translations_source_manual(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Manual edits override machine translations." |
+*
+* @param {Admin_News_Translations_SubtitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_translations_subtitle = /** @type {((inputs?: Admin_News_Translations_SubtitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Translations_SubtitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_translations_subtitle(inputs)
+	return __bg.admin_news_translations_subtitle(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Summary" |
+*
+* @param {Admin_News_Translations_SummaryInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_translations_summary = /** @type {((inputs?: Admin_News_Translations_SummaryInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Translations_SummaryInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_translations_summary(inputs)
+	return __bg.admin_news_translations_summary(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "Translations" |
+*
+* @param {Admin_News_Translations_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_translations_title = /** @type {((inputs?: Admin_News_Translations_TitleInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Translations_TitleInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_translations_title(inputs)
+	return __bg.admin_news_translations_title(inputs)
+});
+/**
+* | output |
+* | --- |
+* | "This field is required." |
+*
+* @param {Admin_News_Validation_RequiredInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const admin_news_validation_required = /** @type {((inputs?: Admin_News_Validation_RequiredInputs, options?: { locale?: "en" | "bg" }) => LocalizedString) & import('../runtime.js').MessageMetadata<Admin_News_Validation_RequiredInputs, { locale?: "en" | "bg" }, {}>} */ ((inputs = {}, options = {}) => {
+	const locale = experimentalStaticLocale ?? options.locale ?? getLocale()
+	if (locale === "en") return __en.admin_news_validation_required(inputs)
+	return __bg.admin_news_validation_required(inputs)
 });
 /**
 * | output |

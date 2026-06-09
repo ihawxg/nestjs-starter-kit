@@ -23,6 +23,7 @@ The admin dashboard is the protected content-management surface for Townhall Man
 - Browser code never receives or stores the backend JWT.
 - Do not use `localStorage`, `sessionStorage`, JS-readable cookies, or public env vars for admin tokens.
 - Internal route handlers may call the backend login/session APIs server-side.
+- Internal admin CRUD route handlers may call backend admin APIs server-side with the HttpOnly-cookie-backed JWT.
 - Protected admin layouts must validate the current session before rendering.
 - Admin not-found pages are protected by the same layout. Anonymous users on unknown admin page routes must be redirected to login before seeing admin chrome.
 - Backend JWT validation must resolve an active admin account, not blindly trust token role claims.
@@ -30,7 +31,10 @@ The admin dashboard is the protected content-management surface for Townhall Man
 ## UI Policy
 
 - Mantine is allowed only for the admin dashboard foundation.
-- Mantine imports may appear only in `frontend/src/app/admin`, `frontend/src/app/[locale]/admin`, and `frontend/src/components/admin`.
+- Mantine imports may appear only in admin route/component files and approved admin feature folders such as `frontend/src/features/admin-news`.
+- `@mantine/dropzone` is allowed for protected admin upload and attachment controls only.
+- Tiptap imports may appear only in approved admin rich text editor feature files.
+- Admin rich text editors should provide a practical CMS baseline: paragraph reset, H2/H3 headings, blockquote, horizontal rule, bold/italic/underline/strikethrough, clear formatting, bullet/ordered lists, link/unlink, and undo/redo. Avoid ad hoc color controls unless a public rendering policy is defined.
 - Mantine components that pass `next/link` through `component={Link}` must live in client components so server routes do not pass function props across the Server/Client boundary.
 - Public UI remains project-owned Tailwind/lucide components and must not import Mantine.
 - Do not add MUI, Chakra, Ant, Bootstrap, DSFR, or another component library.
@@ -42,6 +46,11 @@ The admin dashboard is the protected content-management surface for Townhall Man
 - Generated OpenAPI code remains under `frontend/src/lib/api/generated`.
 - Admin SDK calls must be wrapped under `frontend/src/lib/admin-api`.
 - Browser-facing admin auth helpers live under `frontend/src/lib/admin-auth`.
+- Browser-facing admin CRUD helpers call internal `/admin/api/*` routes only; do not call Nest admin URLs directly from client components.
+- Interactive admin CRUD screens should use TanStack Query with centralized feature query keys and mutation invalidation.
+- Admin create screens may stage files in browser memory when the backend upload route needs a persisted record id. The screen must create the record first, then upload staged files through protected internal `/admin/api/*` routes and show a clear upload failure if the second step fails.
+- Admin asset panels may render image, PDF, CSV, text, and JSON previews when the browser can safely display them. Unsaved staged previews use temporary object URLs or browser `File` APIs only; persisted previews use protected internal view routes so draft and archived assets are available to admins without exposing storage keys or local paths. Office and other binary files should show a safe fallback with open/download actions unless a dedicated parser feature is planned.
+- News admin uses protected internal routes for asset view/download so draft and archived assets are available to admins without exposing storage keys or local paths.
 - Public code must not import admin helpers or call `/admin/...`.
 
 ## Testing And Verification

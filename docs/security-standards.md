@@ -25,6 +25,7 @@ Current implementation:
 - Protected JWT validation resolves an active admin account before routes run.
 - `GET /admin/auth/session` is the backend session check used by the protected frontend admin dashboard.
 - The frontend admin dashboard stores the backend JWT only in an HttpOnly cookie with path `/` so localized `/en/admin` and `/bg/admin` routes can validate it; browser JavaScript must never receive or persist it.
+- Frontend admin browser code calls internal Next admin routes for CRUD and protected downloads. Direct browser-to-Nest admin calls require a deliberate cookie/CSRF auth redesign.
 
 ## Admin Routes
 
@@ -51,6 +52,8 @@ Public routes must:
 ## File And Download Safety
 
 Downloads must check publication state before serving files.
+
+Admin preview/download routes may serve draft or archived assets only after JWT and admin role validation. Frontend previews for persisted admin assets must use these protected routes, and unsaved staged file previews may use temporary browser object URLs or browser `File` APIs only. Preview UI may render image, PDF, CSV, text, and JSON content when browser-safe, but Office/binary files should fall back to safe metadata plus protected open/download actions unless a parser feature is explicitly designed.
 
 Uploads must validate MIME type and size before persisting local files.
 

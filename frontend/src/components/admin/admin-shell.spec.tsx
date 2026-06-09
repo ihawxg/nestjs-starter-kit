@@ -69,6 +69,10 @@ describe('AdminShell', () => {
       'href',
       '/en/admin',
     );
+    expect(screen.getByRole('link', { name: 'News' })).toHaveAttribute(
+      'href',
+      '/en/admin/news',
+    );
     expect(screen.getByRole('link', { name: 'View public site' })).toHaveAttribute(
       'href',
       '/en',
@@ -97,6 +101,10 @@ describe('AdminShell', () => {
     expect(screen.getByRole('link', { name: 'Табло' })).toHaveAttribute(
       'href',
       '/bg/admin',
+    );
+    expect(screen.getByRole('link', { name: 'Новини' })).toHaveAttribute(
+      'href',
+      '/bg/admin/news',
     );
     expect(screen.getByRole('link', { name: 'EN' })).toHaveAttribute(
       'href',

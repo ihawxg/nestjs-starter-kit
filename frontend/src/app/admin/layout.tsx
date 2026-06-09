@@ -1,7 +1,9 @@
 import type { Metadata } from 'next';
 import type { ReactNode } from 'react';
 import '@mantine/core/styles.css';
+import '@mantine/dropzone/styles.css';
 import '@mantine/notifications/styles.css';
+import '@mantine/tiptap/styles.css';
 import { AdminProviders } from '@/components/admin/admin-providers';
 
 export const metadata: Metadata = {

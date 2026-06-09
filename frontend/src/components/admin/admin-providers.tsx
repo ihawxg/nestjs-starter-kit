@@ -3,7 +3,8 @@
 import { MantineProvider, createTheme } from '@mantine/core';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
-import type { ReactNode } from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useState, type ReactNode } from 'react';
 
 const adminTheme = createTheme({
   primaryColor: 'blue',
@@ -17,12 +18,31 @@ type AdminProvidersProps = {
 };
 
 export function AdminProviders({ children }: AdminProvidersProps) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            staleTime: 30_000,
+            gcTime: 5 * 60_000,
+            retry: 1,
+            refetchOnWindowFocus: false,
+          },
+          mutations: {
+            retry: 0,
+          },
+        },
+      }),
+  );
+
   return (
-    <MantineProvider theme={adminTheme}>
-      <ModalsProvider>
-        {children}
-        <Notifications position="top-right" />
-      </ModalsProvider>
-    </MantineProvider>
+    <QueryClientProvider client={queryClient}>
+      <MantineProvider theme={adminTheme}>
+        <ModalsProvider>
+          {children}
+          <Notifications position="top-right" />
+        </ModalsProvider>
+      </MantineProvider>
+    </QueryClientProvider>
   );
 }

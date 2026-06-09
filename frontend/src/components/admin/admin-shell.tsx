@@ -48,8 +48,8 @@ const adminNavigation = [
     icon: LayoutDashboard,
   },
   {
-    copyKey: 'content',
-    path: '/content',
+    copyKey: 'news',
+    path: '/news',
     icon: Newspaper,
   },
   {

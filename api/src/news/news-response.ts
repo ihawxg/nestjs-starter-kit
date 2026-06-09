@@ -1,8 +1,13 @@
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import {
   CategoryResponse,
+  CategoryResponseDto,
   toCategoryResponse,
 } from '../categories/category-response';
-import { LocalizationResponseMeta } from '../localization/localization-response';
+import {
+  LocalizationResponseMeta,
+  LocalizationResponseMetaDto,
+} from '../localization/localization-response';
 import { AssetKind } from '../storage/entities/asset-kind.enum';
 import { NewsAssetEntity } from './entities/news-asset.entity';
 import { NewsEntity } from './entities/news.entity';
@@ -37,6 +42,126 @@ export interface PaginatedNewsResponse {
   page: number;
   limit: number;
   total: number;
+}
+
+export class NewsAssetResponseDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty({
+    enum: AssetKind,
+  })
+  kind: AssetKind;
+
+  @ApiProperty()
+  originalName: string;
+
+  @ApiProperty()
+  mimeType: string;
+
+  @ApiProperty()
+  size: number;
+
+  @ApiProperty()
+  displayOrder: number;
+}
+
+export class NewsResponseDto {
+  @ApiProperty()
+  id: number;
+
+  @ApiProperty()
+  title: string;
+
+  @ApiProperty()
+  slug: string;
+
+  @ApiProperty()
+  summary: string;
+
+  @ApiProperty()
+  body: string;
+
+  @ApiProperty({
+    enum: NewsStatus,
+  })
+  status: NewsStatus;
+
+  @ApiPropertyOptional({
+    type: String,
+    format: 'date-time',
+    nullable: true,
+  })
+  publishedAt?: Date | null;
+
+  @ApiProperty({
+    type: [CategoryResponseDto],
+  })
+  categories: CategoryResponseDto[];
+
+  @ApiProperty({
+    type: [NewsAssetResponseDto],
+  })
+  assets: NewsAssetResponseDto[];
+
+  @ApiProperty({
+    type: String,
+    format: 'date-time',
+  })
+  createdAt: Date;
+
+  @ApiProperty({
+    type: String,
+    format: 'date-time',
+  })
+  updatedAt: Date;
+
+  @ApiPropertyOptional({
+    type: LocalizationResponseMetaDto,
+  })
+  localization?: LocalizationResponseMetaDto;
+}
+
+export class PaginatedNewsResponseDto {
+  @ApiProperty({
+    type: [NewsResponseDto],
+  })
+  items: NewsResponseDto[];
+
+  @ApiProperty()
+  page: number;
+
+  @ApiProperty()
+  limit: number;
+
+  @ApiProperty()
+  total: number;
+}
+
+export class NewsListResponseDto {
+  @ApiProperty({
+    type: PaginatedNewsResponseDto,
+  })
+  news: PaginatedNewsResponseDto;
+}
+
+export class NewsItemResponseDto {
+  @ApiProperty({
+    type: NewsResponseDto,
+  })
+  news: NewsResponseDto;
+}
+
+export class NewsAssetsResponseDto {
+  @ApiProperty({
+    type: [NewsAssetResponseDto],
+  })
+  assets: NewsAssetResponseDto[];
+}
+
+export class NewsAssetRemovedResponseDto {
+  @ApiProperty()
+  message: string;
 }
 
 export function toNewsResponse(news: NewsEntity): NewsResponse {

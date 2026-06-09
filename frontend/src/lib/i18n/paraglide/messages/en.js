@@ -23,7 +23,121 @@
 /** @typedef {{}} Admin_Nav_ContentInputs */
 /** @typedef {{}} Admin_Nav_DashboardInputs */
 /** @typedef {{}} Admin_Nav_DocumentsInputs */
+/** @typedef {{}} Admin_Nav_NewsInputs */
 /** @typedef {{}} Admin_Nav_SettingsInputs */
+/** @typedef {{}} Admin_News_Action_ArchiveInputs */
+/** @typedef {{}} Admin_News_Action_CancelInputs */
+/** @typedef {{}} Admin_News_Action_CreateInputs */
+/** @typedef {{}} Admin_News_Action_EditInputs */
+/** @typedef {{}} Admin_News_Action_RetryInputs */
+/** @typedef {{}} Admin_News_Action_RestoreInputs */
+/** @typedef {{}} Admin_News_Action_SaveInputs */
+/** @typedef {{}} Admin_News_Assets_DescriptionInputs */
+/** @typedef {{}} Admin_News_Assets_DownloadInputs */
+/** @typedef {{}} Admin_News_Assets_Dropzone_DescriptionInputs */
+/** @typedef {{}} Admin_News_Assets_Dropzone_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_Dropzone_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_EmptyInputs */
+/** @typedef {{}} Admin_News_Assets_Pending_EmptyInputs */
+/** @typedef {{}} Admin_News_Assets_Pending_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_RemoveInputs */
+/** @typedef {{}} Admin_News_Assets_SelectInputs */
+/** @typedef {{}} Admin_News_Assets_Staged_HelpInputs */
+/** @typedef {{}} Admin_News_Assets_Staged_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_UploadInputs */
+/** @typedef {{}} Admin_News_Assets_Upload_After_CreateInputs */
+/** @typedef {{}} Admin_News_Assets_Upload_Failed_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_Close_PreviewInputs */
+/** @typedef {{}} Admin_News_Assets_Csv_Preview_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_File_Preview_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_File_Type_UnknownInputs */
+/** @typedef {{}} Admin_News_Assets_Image_Preview_AltInputs */
+/** @typedef {{}} Admin_News_Assets_Open_In_BrowserInputs */
+/** @typedef {{}} Admin_News_Assets_Pdf_Preview_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_PreviewInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_FailedInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_LoadingInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_TruncatedInputs */
+/** @typedef {{}} Admin_News_Assets_Preview_UnavailableInputs */
+/** @typedef {{}} Admin_News_Assets_Text_Preview_LabelInputs */
+/** @typedef {{}} Admin_News_Assets_Unsupported_PreviewInputs */
+/** @typedef {{}} Admin_News_Assets_Uploaded_TitleInputs */
+/** @typedef {{}} Admin_News_Assets_ViewInputs */
+/** @typedef {{}} Admin_News_Categories_ActiveInputs */
+/** @typedef {{}} Admin_News_Categories_CreateInputs */
+/** @typedef {{}} Admin_News_Categories_DeactivateInputs */
+/** @typedef {{}} Admin_News_Categories_DescriptionInputs */
+/** @typedef {{}} Admin_News_Categories_Display_OrderInputs */
+/** @typedef {{}} Admin_News_Categories_EmptyInputs */
+/** @typedef {{}} Admin_News_Categories_InactiveInputs */
+/** @typedef {{}} Admin_News_Categories_NameInputs */
+/** @typedef {{}} Admin_News_Categories_SaveInputs */
+/** @typedef {{}} Admin_News_Categories_SlugInputs */
+/** @typedef {{}} Admin_News_Categories_TitleInputs */
+/** @typedef {{}} Admin_News_Create_SubtitleInputs */
+/** @typedef {{}} Admin_News_Create_TitleInputs */
+/** @typedef {{}} Admin_News_Editor_BlockquoteInputs */
+/** @typedef {{}} Admin_News_Editor_BoldInputs */
+/** @typedef {{}} Admin_News_Editor_Bullet_ListInputs */
+/** @typedef {{}} Admin_News_Editor_Clear_FormattingInputs */
+/** @typedef {{}} Admin_News_Editor_Heading_ThreeInputs */
+/** @typedef {{}} Admin_News_Editor_Heading_TwoInputs */
+/** @typedef {{}} Admin_News_Editor_Horizontal_RuleInputs */
+/** @typedef {{}} Admin_News_Editor_ItalicInputs */
+/** @typedef {{}} Admin_News_Editor_LinkInputs */
+/** @typedef {{}} Admin_News_Editor_Ordered_ListInputs */
+/** @typedef {{}} Admin_News_Editor_ParagraphInputs */
+/** @typedef {{}} Admin_News_Editor_Preview_HtmlInputs */
+/** @typedef {{}} Admin_News_Editor_RedoInputs */
+/** @typedef {{}} Admin_News_Editor_StrikethroughInputs */
+/** @typedef {{}} Admin_News_Editor_TitleInputs */
+/** @typedef {{}} Admin_News_Editor_UnderlineInputs */
+/** @typedef {{}} Admin_News_Editor_UndoInputs */
+/** @typedef {{}} Admin_News_Editor_UnlinkInputs */
+/** @typedef {{}} Admin_News_EmptyInputs */
+/** @typedef {{}} Admin_News_ErrorInputs */
+/** @typedef {{}} Admin_News_Field_BodyInputs */
+/** @typedef {{}} Admin_News_Field_CategoriesInputs */
+/** @typedef {{}} Admin_News_Field_Published_AtInputs */
+/** @typedef {{}} Admin_News_Field_SlugInputs */
+/** @typedef {{}} Admin_News_Field_Source_Language_AdvancedInputs */
+/** @typedef {{}} Admin_News_Field_Source_Locale_BgInputs */
+/** @typedef {{}} Admin_News_Field_Source_Locale_DescriptionInputs */
+/** @typedef {{}} Admin_News_Field_Source_Locale_EnInputs */
+/** @typedef {{}} Admin_News_Field_Source_LocaleInputs */
+/** @typedef {{}} Admin_News_Field_StatusInputs */
+/** @typedef {{}} Admin_News_Field_SummaryInputs */
+/** @typedef {{}} Admin_News_Field_TitleInputs */
+/** @typedef {{}} Admin_News_Filter_All_CategoriesInputs */
+/** @typedef {{}} Admin_News_Filter_All_StatusesInputs */
+/** @typedef {{}} Admin_News_Filter_CategoryInputs */
+/** @typedef {{}} Admin_News_Filter_StatusInputs */
+/** @typedef {{}} Admin_News_List_SubtitleInputs */
+/** @typedef {{}} Admin_News_List_TitleInputs */
+/** @typedef {{}} Admin_News_LoadingInputs */
+/** @typedef {{}} Admin_News_Status_ArchivedInputs */
+/** @typedef {{}} Admin_News_Status_DraftInputs */
+/** @typedef {{}} Admin_News_Status_PublishedInputs */
+/** @typedef {{}} Admin_News_Table_ActionsInputs */
+/** @typedef {{}} Admin_News_Table_CategoriesInputs */
+/** @typedef {{}} Admin_News_Table_Published_AtInputs */
+/** @typedef {{}} Admin_News_Table_StatusInputs */
+/** @typedef {{}} Admin_News_Table_TitleInputs */
+/** @typedef {{}} Admin_News_Table_Updated_AtInputs */
+/** @typedef {{}} Admin_News_Translations_AutoInputs */
+/** @typedef {{}} Admin_News_Translations_BodyInputs */
+/** @typedef {{}} Admin_News_Translations_EmptyInputs */
+/** @typedef {{}} Admin_News_Translations_Locale_BgInputs */
+/** @typedef {{}} Admin_News_Translations_Locale_EnInputs */
+/** @typedef {{}} Admin_News_Translations_SaveInputs */
+/** @typedef {{}} Admin_News_Translations_Source_MachineInputs */
+/** @typedef {{}} Admin_News_Translations_Source_ManualInputs */
+/** @typedef {{}} Admin_News_Translations_SubtitleInputs */
+/** @typedef {{}} Admin_News_Translations_SummaryInputs */
+/** @typedef {{}} Admin_News_Translations_TitleInputs */
+/** @typedef {{}} Admin_News_Validation_RequiredInputs */
 /** @typedef {{}} Admin_Not_Found_BodyInputs */
 /** @typedef {{}} Admin_Not_Found_DashboardInputs */
 /** @typedef {{}} Admin_Not_Found_EyebrowInputs */
@@ -198,8 +312,464 @@ export const admin_nav_documents = /** @type {(inputs: Admin_Nav_DocumentsInputs
 	return /** @type {LocalizedString} */ (`Documents`)
 };
 
+export const admin_nav_news = /** @type {(inputs: Admin_Nav_NewsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`News`)
+};
+
 export const admin_nav_settings = /** @type {(inputs: Admin_Nav_SettingsInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Settings`)
+};
+
+export const admin_news_action_archive = /** @type {(inputs: Admin_News_Action_ArchiveInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Archive`)
+};
+
+export const admin_news_action_cancel = /** @type {(inputs: Admin_News_Action_CancelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Cancel`)
+};
+
+export const admin_news_action_create = /** @type {(inputs: Admin_News_Action_CreateInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Create news`)
+};
+
+export const admin_news_action_edit = /** @type {(inputs: Admin_News_Action_EditInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Edit`)
+};
+
+export const admin_news_action_retry = /** @type {(inputs: Admin_News_Action_RetryInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Retry`)
+};
+
+export const admin_news_action_restore = /** @type {(inputs: Admin_News_Action_RestoreInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Restore`)
+};
+
+export const admin_news_action_save = /** @type {(inputs: Admin_News_Action_SaveInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Save changes`)
+};
+
+export const admin_news_assets_description = /** @type {(inputs: Admin_News_Assets_DescriptionInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Attach images, PDFs, and supporting files for this news item.`)
+};
+
+export const admin_news_assets_download = /** @type {(inputs: Admin_News_Assets_DownloadInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Download`)
+};
+
+export const admin_news_assets_dropzone_description = /** @type {(inputs: Admin_News_Assets_Dropzone_DescriptionInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Drag files here or choose them from your device. Files are stored only after the news item exists.`)
+};
+
+export const admin_news_assets_dropzone_label = /** @type {(inputs: Admin_News_Assets_Dropzone_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Attach news files`)
+};
+
+export const admin_news_assets_dropzone_title = /** @type {(inputs: Admin_News_Assets_Dropzone_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Drop files here`)
+};
+
+export const admin_news_assets_empty = /** @type {(inputs: Admin_News_Assets_EmptyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No assets uploaded yet.`)
+};
+
+export const admin_news_assets_pending_empty = /** @type {(inputs: Admin_News_Assets_Pending_EmptyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No files selected for upload.`)
+};
+
+export const admin_news_assets_pending_title = /** @type {(inputs: Admin_News_Assets_Pending_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Ready to upload`)
+};
+
+export const admin_news_assets_remove = /** @type {(inputs: Admin_News_Assets_RemoveInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Remove`)
+};
+
+export const admin_news_assets_select = /** @type {(inputs: Admin_News_Assets_SelectInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Select files`)
+};
+
+export const admin_news_assets_staged_help = /** @type {(inputs: Admin_News_Assets_Staged_HelpInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Choose files now; they will upload automatically after the news item is created.`)
+};
+
+export const admin_news_assets_staged_title = /** @type {(inputs: Admin_News_Assets_Staged_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Files staged for create`)
+};
+
+export const admin_news_assets_title = /** @type {(inputs: Admin_News_Assets_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Assets`)
+};
+
+export const admin_news_assets_upload = /** @type {(inputs: Admin_News_Assets_UploadInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Upload assets`)
+};
+
+export const admin_news_assets_upload_after_create = /** @type {(inputs: Admin_News_Assets_Upload_After_CreateInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`You can attach files before saving. They will be uploaded after the news item is created.`)
+};
+
+export const admin_news_assets_upload_failed_title = /** @type {(inputs: Admin_News_Assets_Upload_Failed_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Assets were not uploaded`)
+};
+
+export const admin_news_assets_close_preview = /** @type {(inputs: Admin_News_Assets_Close_PreviewInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Close preview`)
+};
+
+export const admin_news_assets_csv_preview_label = /** @type {(inputs: Admin_News_Assets_Csv_Preview_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`CSV preview`)
+};
+
+export const admin_news_assets_file_preview_label = /** @type {(inputs: Admin_News_Assets_File_Preview_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`File preview`)
+};
+
+export const admin_news_assets_file_type_unknown = /** @type {(inputs: Admin_News_Assets_File_Type_UnknownInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Unknown type`)
+};
+
+export const admin_news_assets_image_preview_alt = /** @type {(inputs: Admin_News_Assets_Image_Preview_AltInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Image preview`)
+};
+
+export const admin_news_assets_open_in_browser = /** @type {(inputs: Admin_News_Assets_Open_In_BrowserInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Open in browser`)
+};
+
+export const admin_news_assets_pdf_preview_label = /** @type {(inputs: Admin_News_Assets_Pdf_Preview_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`PDF preview`)
+};
+
+export const admin_news_assets_preview = /** @type {(inputs: Admin_News_Assets_PreviewInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Preview`)
+};
+
+export const admin_news_assets_preview_failed = /** @type {(inputs: Admin_News_Assets_Preview_FailedInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Preview failed`)
+};
+
+export const admin_news_assets_preview_loading = /** @type {(inputs: Admin_News_Assets_Preview_LoadingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Loading preview...`)
+};
+
+export const admin_news_assets_preview_title = /** @type {(inputs: Admin_News_Assets_Preview_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Asset preview`)
+};
+
+export const admin_news_assets_preview_truncated = /** @type {(inputs: Admin_News_Assets_Preview_TruncatedInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`This preview is capped for performance. Download the file to inspect the full content.`)
+};
+
+export const admin_news_assets_preview_unavailable = /** @type {(inputs: Admin_News_Assets_Preview_UnavailableInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Native browser preview is not available for this file type. Open it in the browser or download it.`)
+};
+
+export const admin_news_assets_text_preview_label = /** @type {(inputs: Admin_News_Assets_Text_Preview_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Text preview`)
+};
+
+export const admin_news_assets_unsupported_preview = /** @type {(inputs: Admin_News_Assets_Unsupported_PreviewInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Preview fallback`)
+};
+
+export const admin_news_assets_uploaded_title = /** @type {(inputs: Admin_News_Assets_Uploaded_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Uploaded files`)
+};
+
+export const admin_news_assets_view = /** @type {(inputs: Admin_News_Assets_ViewInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`View`)
+};
+
+export const admin_news_categories_active = /** @type {(inputs: Admin_News_Categories_ActiveInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Active`)
+};
+
+export const admin_news_categories_create = /** @type {(inputs: Admin_News_Categories_CreateInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Create category`)
+};
+
+export const admin_news_categories_deactivate = /** @type {(inputs: Admin_News_Categories_DeactivateInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Deactivate`)
+};
+
+export const admin_news_categories_description = /** @type {(inputs: Admin_News_Categories_DescriptionInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Description`)
+};
+
+export const admin_news_categories_display_order = /** @type {(inputs: Admin_News_Categories_Display_OrderInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Display order`)
+};
+
+export const admin_news_categories_empty = /** @type {(inputs: Admin_News_Categories_EmptyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No news categories yet.`)
+};
+
+export const admin_news_categories_inactive = /** @type {(inputs: Admin_News_Categories_InactiveInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Inactive`)
+};
+
+export const admin_news_categories_name = /** @type {(inputs: Admin_News_Categories_NameInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Name`)
+};
+
+export const admin_news_categories_save = /** @type {(inputs: Admin_News_Categories_SaveInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Save category`)
+};
+
+export const admin_news_categories_slug = /** @type {(inputs: Admin_News_Categories_SlugInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Slug`)
+};
+
+export const admin_news_categories_title = /** @type {(inputs: Admin_News_Categories_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`News categories`)
+};
+
+export const admin_news_create_subtitle = /** @type {(inputs: Admin_News_Create_SubtitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Create a draft, publish immediately, or enter Bulgarian source text for backend translation.`)
+};
+
+export const admin_news_create_title = /** @type {(inputs: Admin_News_Create_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Create news`)
+};
+
+export const admin_news_editor_blockquote = /** @type {(inputs: Admin_News_Editor_BlockquoteInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Blockquote`)
+};
+
+export const admin_news_editor_bold = /** @type {(inputs: Admin_News_Editor_BoldInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Bold`)
+};
+
+export const admin_news_editor_bullet_list = /** @type {(inputs: Admin_News_Editor_Bullet_ListInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Bullet list`)
+};
+
+export const admin_news_editor_clear_formatting = /** @type {(inputs: Admin_News_Editor_Clear_FormattingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Clear formatting`)
+};
+
+export const admin_news_editor_heading_three = /** @type {(inputs: Admin_News_Editor_Heading_ThreeInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Heading 3`)
+};
+
+export const admin_news_editor_heading_two = /** @type {(inputs: Admin_News_Editor_Heading_TwoInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Heading 2`)
+};
+
+export const admin_news_editor_horizontal_rule = /** @type {(inputs: Admin_News_Editor_Horizontal_RuleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Horizontal rule`)
+};
+
+export const admin_news_editor_italic = /** @type {(inputs: Admin_News_Editor_ItalicInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Italic`)
+};
+
+export const admin_news_editor_link = /** @type {(inputs: Admin_News_Editor_LinkInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Link`)
+};
+
+export const admin_news_editor_ordered_list = /** @type {(inputs: Admin_News_Editor_Ordered_ListInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Ordered list`)
+};
+
+export const admin_news_editor_paragraph = /** @type {(inputs: Admin_News_Editor_ParagraphInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Paragraph`)
+};
+
+export const admin_news_editor_preview_html = /** @type {(inputs: Admin_News_Editor_Preview_HtmlInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Stores clean HTML`)
+};
+
+export const admin_news_editor_redo = /** @type {(inputs: Admin_News_Editor_RedoInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Redo`)
+};
+
+export const admin_news_editor_strikethrough = /** @type {(inputs: Admin_News_Editor_StrikethroughInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Strikethrough`)
+};
+
+export const admin_news_editor_title = /** @type {(inputs: Admin_News_Editor_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Rich body editor`)
+};
+
+export const admin_news_editor_underline = /** @type {(inputs: Admin_News_Editor_UnderlineInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Underline`)
+};
+
+export const admin_news_editor_undo = /** @type {(inputs: Admin_News_Editor_UndoInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Undo`)
+};
+
+export const admin_news_editor_unlink = /** @type {(inputs: Admin_News_Editor_UnlinkInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Remove link`)
+};
+
+export const admin_news_empty = /** @type {(inputs: Admin_News_EmptyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No news items match these filters.`)
+};
+
+export const admin_news_error = /** @type {(inputs: Admin_News_ErrorInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`News admin request failed.`)
+};
+
+export const admin_news_field_body = /** @type {(inputs: Admin_News_Field_BodyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Body`)
+};
+
+export const admin_news_field_categories = /** @type {(inputs: Admin_News_Field_CategoriesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Categories`)
+};
+
+export const admin_news_field_published_at = /** @type {(inputs: Admin_News_Field_Published_AtInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Published at`)
+};
+
+export const admin_news_field_slug = /** @type {(inputs: Admin_News_Field_SlugInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Slug`)
+};
+
+export const admin_news_field_source_language_advanced = /** @type {(inputs: Admin_News_Field_Source_Language_AdvancedInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Advanced original language`)
+};
+
+export const admin_news_field_source_locale_bg = /** @type {(inputs: Admin_News_Field_Source_Locale_BgInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Bulgarian`)
+};
+
+export const admin_news_field_source_locale_description = /** @type {(inputs: Admin_News_Field_Source_Locale_DescriptionInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Use only when the entered text is not in the current admin language.`)
+};
+
+export const admin_news_field_source_locale_en = /** @type {(inputs: Admin_News_Field_Source_Locale_EnInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`English`)
+};
+
+export const admin_news_field_source_locale = /** @type {(inputs: Admin_News_Field_Source_LocaleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Source locale`)
+};
+
+export const admin_news_field_status = /** @type {(inputs: Admin_News_Field_StatusInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Status`)
+};
+
+export const admin_news_field_summary = /** @type {(inputs: Admin_News_Field_SummaryInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Summary`)
+};
+
+export const admin_news_field_title = /** @type {(inputs: Admin_News_Field_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Title`)
+};
+
+export const admin_news_filter_all_categories = /** @type {(inputs: Admin_News_Filter_All_CategoriesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`All categories`)
+};
+
+export const admin_news_filter_all_statuses = /** @type {(inputs: Admin_News_Filter_All_StatusesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`All statuses`)
+};
+
+export const admin_news_filter_category = /** @type {(inputs: Admin_News_Filter_CategoryInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Category`)
+};
+
+export const admin_news_filter_status = /** @type {(inputs: Admin_News_Filter_StatusInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Status`)
+};
+
+export const admin_news_list_subtitle = /** @type {(inputs: Admin_News_List_SubtitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Create, edit, publish, archive, translate, and attach files for public news.`)
+};
+
+export const admin_news_list_title = /** @type {(inputs: Admin_News_List_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`News management`)
+};
+
+export const admin_news_loading = /** @type {(inputs: Admin_News_LoadingInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Loading news...`)
+};
+
+export const admin_news_status_archived = /** @type {(inputs: Admin_News_Status_ArchivedInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Archived`)
+};
+
+export const admin_news_status_draft = /** @type {(inputs: Admin_News_Status_DraftInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Draft`)
+};
+
+export const admin_news_status_published = /** @type {(inputs: Admin_News_Status_PublishedInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Published`)
+};
+
+export const admin_news_table_actions = /** @type {(inputs: Admin_News_Table_ActionsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Actions`)
+};
+
+export const admin_news_table_categories = /** @type {(inputs: Admin_News_Table_CategoriesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Categories`)
+};
+
+export const admin_news_table_published_at = /** @type {(inputs: Admin_News_Table_Published_AtInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Published`)
+};
+
+export const admin_news_table_status = /** @type {(inputs: Admin_News_Table_StatusInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Status`)
+};
+
+export const admin_news_table_title = /** @type {(inputs: Admin_News_Table_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Title`)
+};
+
+export const admin_news_table_updated_at = /** @type {(inputs: Admin_News_Table_Updated_AtInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Updated`)
+};
+
+export const admin_news_translations_auto = /** @type {(inputs: Admin_News_Translations_AutoInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Auto-translate`)
+};
+
+export const admin_news_translations_body = /** @type {(inputs: Admin_News_Translations_BodyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Body`)
+};
+
+export const admin_news_translations_empty = /** @type {(inputs: Admin_News_Translations_EmptyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No translation rows yet.`)
+};
+
+export const admin_news_translations_locale_bg = /** @type {(inputs: Admin_News_Translations_Locale_BgInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Bulgarian`)
+};
+
+export const admin_news_translations_locale_en = /** @type {(inputs: Admin_News_Translations_Locale_EnInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`English`)
+};
+
+export const admin_news_translations_save = /** @type {(inputs: Admin_News_Translations_SaveInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Save translation`)
+};
+
+export const admin_news_translations_source_machine = /** @type {(inputs: Admin_News_Translations_Source_MachineInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Machine`)
+};
+
+export const admin_news_translations_source_manual = /** @type {(inputs: Admin_News_Translations_Source_ManualInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Manual`)
+};
+
+export const admin_news_translations_subtitle = /** @type {(inputs: Admin_News_Translations_SubtitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Manual edits override machine translations.`)
+};
+
+export const admin_news_translations_summary = /** @type {(inputs: Admin_News_Translations_SummaryInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Summary`)
+};
+
+export const admin_news_translations_title = /** @type {(inputs: Admin_News_Translations_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Translations`)
+};
+
+export const admin_news_validation_required = /** @type {(inputs: Admin_News_Validation_RequiredInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`This field is required.`)
 };
 
 export const admin_not_found_body = /** @type {(inputs: Admin_Not_Found_BodyInputs) => LocalizedString} */ () => {

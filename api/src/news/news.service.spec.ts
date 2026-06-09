@@ -335,6 +335,20 @@ describe('NewsService', () => {
     );
   });
 
+  it('restores archived news to draft', async () => {
+    newsRepository.findOne.mockResolvedValue({
+      ...news,
+      status: NewsStatus.ARCHIVED,
+    });
+
+    const restored = await service.restore(1);
+
+    expect(restored.status).toBe(NewsStatus.DRAFT);
+    expect(newsRepository.save).toHaveBeenCalledWith(
+      expect.objectContaining({ status: NewsStatus.DRAFT }),
+    );
+  });
+
   it('adds uploaded assets through storage service', async () => {
     newsRepository.findOne.mockResolvedValue(news);
 
@@ -361,6 +375,41 @@ describe('NewsService', () => {
     await expect(
       service.getPublishedAssetDownload('draft-news', 30),
     ).rejects.toBeInstanceOf(NotFoundException);
+  });
+
+  it('resolves admin asset download by news id and asset id', async () => {
+    newsAssetsRepository.findOne.mockResolvedValue({
+      id: 30,
+      newsId: 1,
+      news,
+      storedFile,
+    });
+
+    const file = await service.getAdminAssetDownload(1, 30);
+
+    expect(newsAssetsRepository.findOne).toHaveBeenCalledWith({
+      where: {
+        id: 30,
+        newsId: 1,
+      },
+      relations: {
+        news: true,
+        storedFile: true,
+      },
+    });
+    expect(file).toEqual(
+      expect.objectContaining({
+        filename: 'notice.pdf',
+      }),
+    );
+  });
+
+  it('denies admin asset download when asset does not belong to news', async () => {
+    newsAssetsRepository.findOne.mockResolvedValue(null);
+
+    await expect(service.getAdminAssetDownload(1, 99)).rejects.toBeInstanceOf(
+      NotFoundException,
+    );
   });
 });
 

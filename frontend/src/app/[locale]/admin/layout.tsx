@@ -2,7 +2,9 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
 import '@mantine/core/styles.css';
+import '@mantine/dropzone/styles.css';
 import '@mantine/notifications/styles.css';
+import '@mantine/tiptap/styles.css';
 import { AdminProviders } from '@/components/admin/admin-providers';
 import { resolveRouteLocale } from '@/lib/i18n/route-params';
 

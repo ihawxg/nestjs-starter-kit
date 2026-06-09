@@ -45,7 +45,9 @@ Use this checklist before and after frontend feature work.
 - Pagination is present for list screens.
 - UI primitives stay under `frontend/src/components/ui` or the owning feature folder.
 - No external UI/component library imports are added for public UI.
-- Mantine imports are allowed only in `frontend/src/app/admin`, `frontend/src/app/[locale]/admin`, and `frontend/src/components/admin`.
+- Mantine imports are allowed only in protected admin route/component files and approved admin feature folders such as `frontend/src/features/admin-news`.
+- `@mantine/dropzone` stays admin-only and is used only for protected upload/attachment controls.
+- Tiptap imports are allowed only in approved admin rich text editor feature files.
 - Frontend-owned UI strings use Paraglide messages through `frontend/src/lib/i18n/messages.ts`; do not add handwritten EN/BG copy objects.
 - Tailwind classes use project `townhall-*` theme tokens, not arbitrary hex utilities.
 - Runtime env access goes through `src/lib/config`.
@@ -55,7 +57,7 @@ Use this checklist before and after frontend feature work.
 - Color and surface styling uses `frontend/src/styles/townhall-theme.css` tokens and Tailwind `townhall-*` utility classes.
 - No ad hoc hex colors or inline color styles are added outside the approved theme file.
 - Styling uses project-owned components and design tokens.
-- TanStack Query is used only for interactive client fetching that needs cache/refetch behavior.
+- TanStack Query is used for admin CRUD screens and only for other interactive client fetching that needs cache/refetch behavior.
 - React Hook Form with Zod/resolvers is used for non-trivial forms.
 - Shared UI code has at least two real consumers before moving into shared folders.
 - No hardcoded municipality content is added.
@@ -72,6 +74,9 @@ Use this checklist before and after frontend feature work.
 - API wrapper tests cover query params and safe public endpoints.
 - Search uses public localized `/search` routes only.
 - Document/media links use safe backend public URLs.
+- Admin media/news asset preview and download links use protected internal `/admin/api/*` routes and never expose direct storage paths or browser-readable JWTs.
+- Admin asset preview cards show safe thumbnails/previews for images, PDFs, CSV, text, and JSON where supported; Office and binary files show a safe metadata fallback with open/download actions. Staged pre-save previews use object URLs or browser `File` APIs only.
+- Admin create flows that attach files before a persisted id exists stage files only in memory, create the record first, then upload through protected internal admin API routes.
 - Accessibility checks cover header, navigation, language switcher, forms, document lists, and alert banners when these exist.
 - Use Vitest, React Testing Library, jest-dom, user-event, jsdom, MSW, and V8 coverage once `frontend/` exists.
 - Generated API code is not tested directly; project API wrappers are tested.

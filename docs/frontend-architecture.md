@@ -24,7 +24,7 @@ Public routes consume published backend APIs only. Admin routes use protected ba
 - The generated SDK may contain the full backend OpenAPI surface, including admin routes. Public application code must call only project wrappers under `frontend/src/lib/api`; do not import or call admin SDK functions from pages, components, or features.
 - Frontend code must not handwrite backend DTO or response types.
 - Public data fetching defaults to Server Components. Use client components only for interactive UI.
-- TanStack Query is allowed only for interactive client fetching that benefits from client cache/refetch behavior.
+- TanStack Query is used for interactive admin CRUD screens and allowed for other client fetching that benefits from cache/refetch behavior.
 - Frontend env access goes through the Zod-backed helper in `frontend/src/lib/config`.
 - Rich CMS/news/page HTML must be sanitized server-side through the project helper before rendering.
 - Locale-aware dates use the `date-fns` helper in `frontend/src/lib/format`.
@@ -109,6 +109,11 @@ Root `package.json` owns workspace-level verification only. Framework commands s
 - Public wrappers may import public SDK functions from generated code. Public routes, components, and features must not import generated SDK functions directly.
 - Admin backend calls go through wrappers under `frontend/src/lib/admin-api`.
 - Browser-facing admin auth helpers go through `frontend/src/lib/admin-auth` and call internal `/admin/api/auth/*` routes only.
+- Browser-facing admin CRUD helpers call internal `/admin/api/*` route handlers only. These route handlers read the HttpOnly admin cookie server-side and call Nest admin APIs with the backend JWT.
+- News admin uses TanStack Query with centralized query keys under `frontend/src/features/admin-news`, including list/detail/category/translation cache invalidation after writes.
+- News admin uses Tiptap through Mantine for admin-only rich HTML editing. Tiptap imports stay in approved admin feature files.
+- News admin stages files in browser memory on the create screen, creates the News record first, then uploads staged files through protected internal `/admin/api/news/:id/assets` routes after the backend id exists.
+- Protected admin asset view/download flows proxy through internal Next routes and backend admin routes; they must not expose storage keys, local paths, or direct Nest admin URLs to client code. News admin preview cards use object URLs and browser `File` APIs for unsaved staged image, PDF, CSV, text, and JSON previews. Persisted previews use protected view routes for image/PDF and protected text loading for CSV/text/JSON; Office and other binary files use a safe metadata fallback with open/download actions.
 - Frontend-owned UI strings live in `frontend/messages/en.json` and `frontend/messages/bg.json`, compile through Paraglide into `frontend/src/lib/i18n/paraglide`, and are consumed through project helpers under `frontend/src/lib/i18n/messages.ts`.
 - Do not call `fetch()` directly from pages, components, or feature folders.
 - Do not handwrite backend DTO, entity, response, or payload types outside generated code.
@@ -119,7 +124,7 @@ Root `package.json` owns workspace-level verification only. Framework commands s
 ## Foundation Tooling
 
 - Paraglide JS: frontend-owned UI strings for public/admin chrome. Backend civic content remains localized by backend APIs.
-- `@tanstack/react-query`: interactive client fetching only, such as future filters or forms that need refetching without navigation.
+- `@tanstack/react-query`: interactive admin CRUD screens and other client filters/forms that need cache invalidation or refetching without navigation.
 - `react-hook-form` with `@hookform/resolvers`: non-trivial future forms.
 - `zod` and `@t3-oss/env-nextjs`: runtime env validation and future form/query validation.
 - `sanitize-html`: server-side rich text sanitization before rendering backend CMS content.
@@ -128,6 +133,8 @@ Root `package.json` owns workspace-level verification only. Framework commands s
 - `tailwindcss` with `@tailwindcss/postcss`: utility styling compiled from project-owned theme tokens.
 - `lucide-react`: icon primitives for buttons, navigation, search, contact rows, and status affordances.
 - `@mantine/*`: protected admin dashboard shell, login form, and future admin CRUD UI only.
+- `@mantine/dropzone`: protected admin file attachment controls only.
+- `@mantine/tiptap` and `@tiptap/*`: protected admin rich text editing only.
 - `sharp`: Next image optimization dependency.
 
 Adding these packages does not change the default architecture: public read pages should remain Server Components unless interactivity requires client state.
@@ -149,7 +156,7 @@ Adding these packages does not change the default architecture: public read page
 - `src/styles/townhall-theme.css` owns project colors, Tailwind `@theme` tokens, and shared base focus/body styles.
 - Components may use Tailwind utilities, but colors must come from `townhall-*` theme tokens rather than arbitrary hex values.
 - Do not create `src/components/dsfr` or import DSFR, Bootstrap, MUI, Chakra, or Ant.
-- Do not import Mantine outside `src/app/admin`, `src/app/[locale]/admin`, or `src/components/admin`.
+- Do not import Mantine outside admin route/component files or approved admin feature folders such as `src/features/admin-news`.
 
 Shared frontend code needs at least two real consumers before moving into `components/ui` or `lib`.
 

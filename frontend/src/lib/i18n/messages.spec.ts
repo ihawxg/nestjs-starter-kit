@@ -19,6 +19,14 @@ describe('Paraglide message facade', () => {
     expect(getAdminCopy('en').login.title).toBe('Admin sign in');
     expect(getAdminCopy('bg').login.title).toBe('Вход в администрацията');
     expect(getAdminCopy('bg').shell.nav.dashboard).toBe('Табло');
+    expect(getAdminCopy('en').shell.nav.news).toBe('News');
+    expect(getAdminCopy('bg').news.list.title).toBe('Управление на новини');
+    expect(getAdminCopy('en').news.actions.restore).toBe('Restore');
+    expect(getAdminCopy('bg').news.assets.view).toBe('Преглед');
+    expect(getAdminCopy('en').news.editor.headingTwo).toBe('Heading 2');
+    expect(getAdminCopy('bg').news.editor.clearFormatting).toBe(
+      'Изчисти форматирането',
+    );
   });
 
   it('returns localized public navigation copy from generated messages', () => {

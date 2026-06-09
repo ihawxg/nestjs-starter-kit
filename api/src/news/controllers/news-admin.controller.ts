@@ -8,12 +8,21 @@ import {
   Patch,
   Post,
   Query,
+  Res,
   UploadedFiles,
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiConsumes, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+} from '@nestjs/swagger';
+import { Response } from 'express';
 import { Audit } from '../../audit-log/decorators/audit.decorator';
 import { RateLimit } from '../../rate-limit/decorators/rate-limit.decorator';
 import { RateLimitBucket } from '../../rate-limit/rate-limit-bucket.enum';
@@ -31,6 +40,12 @@ import { CreateNewsDto } from '../dto/create-news.dto';
 import { ListAdminNewsQueryDto } from '../dto/list-admin-news-query.dto';
 import { UpdateNewsDto } from '../dto/update-news.dto';
 import { NewsService } from '../news.service';
+import {
+  NewsAssetRemovedResponseDto,
+  NewsAssetsResponseDto,
+  NewsItemResponseDto,
+  NewsListResponseDto,
+} from '../news-response';
 
 @ApiTags('admin news')
 @ApiBearerAuth()
@@ -41,6 +56,9 @@ export class NewsAdminController {
   constructor(private readonly newsService: NewsService) {}
 
   @Get()
+  @ApiOkResponse({
+    type: NewsListResponseDto,
+  })
   async list(@Query() query: ListAdminNewsQueryDto) {
     const news = await this.newsService.listAdmin(query);
 
@@ -50,6 +68,9 @@ export class NewsAdminController {
   }
 
   @Get(':id')
+  @ApiOkResponse({
+    type: NewsItemResponseDto,
+  })
   async detail(@Param('id', ParseIntPipe) id: number) {
     const news = await this.newsService.getAdminById(id);
 
@@ -59,6 +80,9 @@ export class NewsAdminController {
   }
 
   @Post()
+  @ApiCreatedResponse({
+    type: NewsItemResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'news.create',
@@ -73,6 +97,9 @@ export class NewsAdminController {
   }
 
   @Patch(':id')
+  @ApiOkResponse({
+    type: NewsItemResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'news.update',
@@ -91,6 +118,9 @@ export class NewsAdminController {
   }
 
   @Patch(':id/categories')
+  @ApiOkResponse({
+    type: NewsItemResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'news.categories.assign',
@@ -109,6 +139,9 @@ export class NewsAdminController {
   }
 
   @Post(':id/assets')
+  @ApiCreatedResponse({
+    type: NewsAssetsResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'news.asset.upload',
@@ -116,6 +149,21 @@ export class NewsAdminController {
     targetIdParam: 'id',
   })
   @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        files: {
+          type: 'array',
+          items: {
+            type: 'string',
+            format: 'binary',
+          },
+        },
+      },
+      required: ['files'],
+    },
+  })
   @UseInterceptors(
     FilesInterceptor('files', MAX_FILES_PER_UPLOAD, {
       limits: {
@@ -135,6 +183,9 @@ export class NewsAdminController {
   }
 
   @Delete(':id/assets/:assetId')
+  @ApiOkResponse({
+    type: NewsAssetRemovedResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'news.asset.remove',
@@ -152,7 +203,46 @@ export class NewsAdminController {
     };
   }
 
+  @Get(':id/assets/:assetId/download')
+  @ApiOkResponse({
+    description:
+      'Streams a news asset for protected admin preview or download.',
+  })
+  async downloadAsset(
+    @Param('id', ParseIntPipe) id: number,
+    @Param('assetId', ParseIntPipe) assetId: number,
+    @Query('disposition') disposition: 'inline' | 'attachment' | undefined,
+    @Res() response: Response,
+  ) {
+    const file = await this.newsService.getAdminAssetDownload(id, assetId);
+
+    this.newsService.sendDownload(response, file, {
+      inline: disposition === 'inline',
+    });
+  }
+
+  @Patch(':id/restore')
+  @ApiOkResponse({
+    type: NewsItemResponseDto,
+  })
+  @RateLimit(RateLimitBucket.ADMIN_WRITE)
+  @Audit({
+    action: 'news.restore',
+    targetType: 'news',
+    targetIdParam: 'id',
+  })
+  async restore(@Param('id', ParseIntPipe) id: number) {
+    const news = await this.newsService.restore(id);
+
+    return {
+      news,
+    };
+  }
+
   @Delete(':id')
+  @ApiOkResponse({
+    type: NewsItemResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'news.archive',

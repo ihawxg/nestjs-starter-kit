@@ -16,6 +16,23 @@ export type UpdateAdminAccountDto = {
     [key: string]: unknown;
 };
 
+export type TranslationResponseDto = {
+    locale: 'en' | 'bg';
+    fields: {
+        [key: string]: string | null;
+    };
+    translationSource?: 'manual' | 'machine';
+    translationProvider?: string | null;
+    translatedFromLocale?: 'en' | 'bg';
+    machineTranslatedAt?: string | null;
+    createdAt?: string;
+    updatedAt?: string;
+};
+
+export type TranslationsListResponseDto = {
+    translations: Array<TranslationResponseDto>;
+};
+
 export type UpdateLocalizedContentDto = {
     title?: string;
     summary?: string;
@@ -41,6 +58,29 @@ export type UpdateLocalizedContentDto = {
     caption?: string;
 };
 
+export type TranslationUpsertResponseDto = {
+    translation: TranslationResponseDto;
+    generatedTranslation?: TranslationResponseDto;
+};
+
+export type TranslationItemResponseDto = {
+    translation: TranslationResponseDto;
+};
+
+export type CategoryResponseDto = {
+    id: number;
+    name: string;
+    slug: string;
+    scope: 'news' | 'documents';
+    description?: string | null;
+    displayOrder: number;
+    isActive: boolean;
+};
+
+export type CategoriesListResponseDto = {
+    categories: Array<CategoryResponseDto>;
+};
+
 export type CreateCategoryDto = {
     /**
      * Locale of the localized text fields in this request. Defaults to English.
@@ -53,6 +93,10 @@ export type CreateCategoryDto = {
     displayOrder?: number;
 };
 
+export type CategoryItemResponseDto = {
+    category: CategoryResponseDto;
+};
+
 export type UpdateCategoryDto = {
     /**
      * Locale of the localized text fields in this request. Defaults to English.
@@ -63,6 +107,51 @@ export type UpdateCategoryDto = {
     scope?: 'news' | 'documents';
     description?: string;
     displayOrder?: number;
+};
+
+export type NewsAssetResponseDto = {
+    id: number;
+    kind: 'image' | 'file';
+    originalName: string;
+    mimeType: string;
+    size: number;
+    displayOrder: number;
+};
+
+export type LocalizationResponseMetaDto = {
+    requestedLocale: 'en' | 'bg';
+    locale: 'en' | 'bg';
+    fallbackUsed: boolean;
+};
+
+export type NewsResponseDto = {
+    id: number;
+    title: string;
+    slug: string;
+    summary: string;
+    body: string;
+    status: 'draft' | 'published' | 'archived';
+    publishedAt?: string | null;
+    categories: Array<CategoryResponseDto>;
+    assets: Array<NewsAssetResponseDto>;
+    createdAt: string;
+    updatedAt: string;
+    localization?: LocalizationResponseMetaDto;
+};
+
+export type PaginatedNewsResponseDto = {
+    items: Array<NewsResponseDto>;
+    page: number;
+    limit: number;
+    total: number;
+};
+
+export type NewsListResponseDto = {
+    news: PaginatedNewsResponseDto;
+};
+
+export type NewsItemResponseDto = {
+    news: NewsResponseDto;
 };
 
 export type CreateNewsDto = {
@@ -95,6 +184,14 @@ export type UpdateNewsDto = {
 
 export type AssignNewsCategoriesDto = {
     categoryIds: Array<number>;
+};
+
+export type NewsAssetsResponseDto = {
+    assets: Array<NewsAssetResponseDto>;
+};
+
+export type NewsAssetRemovedResponseDto = {
+    message: string;
 };
 
 export type CreateDocumentDto = {
@@ -602,8 +699,10 @@ export type LocalizationAdminControllerListDomainTranslationsData = {
 };
 
 export type LocalizationAdminControllerListDomainTranslationsResponses = {
-    200: unknown;
+    200: TranslationsListResponseDto;
 };
+
+export type LocalizationAdminControllerListDomainTranslationsResponse = LocalizationAdminControllerListDomainTranslationsResponses[keyof LocalizationAdminControllerListDomainTranslationsResponses];
 
 export type LocalizationAdminControllerUpsertDomainTranslationData = {
     body: UpdateLocalizedContentDto;
@@ -617,8 +716,10 @@ export type LocalizationAdminControllerUpsertDomainTranslationData = {
 };
 
 export type LocalizationAdminControllerUpsertDomainTranslationResponses = {
-    200: unknown;
+    200: TranslationUpsertResponseDto;
 };
+
+export type LocalizationAdminControllerUpsertDomainTranslationResponse = LocalizationAdminControllerUpsertDomainTranslationResponses[keyof LocalizationAdminControllerUpsertDomainTranslationResponses];
 
 export type LocalizationAdminControllerAutoTranslateDomainTranslationData = {
     body?: never;
@@ -632,8 +733,10 @@ export type LocalizationAdminControllerAutoTranslateDomainTranslationData = {
 };
 
 export type LocalizationAdminControllerAutoTranslateDomainTranslationResponses = {
-    201: unknown;
+    200: TranslationItemResponseDto;
 };
+
+export type LocalizationAdminControllerAutoTranslateDomainTranslationResponse = LocalizationAdminControllerAutoTranslateDomainTranslationResponses[keyof LocalizationAdminControllerAutoTranslateDomainTranslationResponses];
 
 export type LocalizationAdminControllerListSiteSettingsTranslationsData = {
     body?: never;
@@ -643,8 +746,10 @@ export type LocalizationAdminControllerListSiteSettingsTranslationsData = {
 };
 
 export type LocalizationAdminControllerListSiteSettingsTranslationsResponses = {
-    200: unknown;
+    200: TranslationsListResponseDto;
 };
+
+export type LocalizationAdminControllerListSiteSettingsTranslationsResponse = LocalizationAdminControllerListSiteSettingsTranslationsResponses[keyof LocalizationAdminControllerListSiteSettingsTranslationsResponses];
 
 export type LocalizationAdminControllerUpsertSiteSettingsTranslationData = {
     body: UpdateLocalizedContentDto;
@@ -656,8 +761,10 @@ export type LocalizationAdminControllerUpsertSiteSettingsTranslationData = {
 };
 
 export type LocalizationAdminControllerUpsertSiteSettingsTranslationResponses = {
-    200: unknown;
+    200: TranslationUpsertResponseDto;
 };
+
+export type LocalizationAdminControllerUpsertSiteSettingsTranslationResponse = LocalizationAdminControllerUpsertSiteSettingsTranslationResponses[keyof LocalizationAdminControllerUpsertSiteSettingsTranslationResponses];
 
 export type LocalizationAdminControllerAutoTranslateSiteSettingsTranslationData = {
     body?: never;
@@ -669,8 +776,10 @@ export type LocalizationAdminControllerAutoTranslateSiteSettingsTranslationData 
 };
 
 export type LocalizationAdminControllerAutoTranslateSiteSettingsTranslationResponses = {
-    201: unknown;
+    200: TranslationItemResponseDto;
 };
+
+export type LocalizationAdminControllerAutoTranslateSiteSettingsTranslationResponse = LocalizationAdminControllerAutoTranslateSiteSettingsTranslationResponses[keyof LocalizationAdminControllerAutoTranslateSiteSettingsTranslationResponses];
 
 export type LocalizationAdminControllerListDepartmentContactTranslationsData = {
     body?: never;
@@ -682,8 +791,10 @@ export type LocalizationAdminControllerListDepartmentContactTranslationsData = {
 };
 
 export type LocalizationAdminControllerListDepartmentContactTranslationsResponses = {
-    200: unknown;
+    200: TranslationsListResponseDto;
 };
+
+export type LocalizationAdminControllerListDepartmentContactTranslationsResponse = LocalizationAdminControllerListDepartmentContactTranslationsResponses[keyof LocalizationAdminControllerListDepartmentContactTranslationsResponses];
 
 export type LocalizationAdminControllerUpsertDepartmentContactTranslationData = {
     body: UpdateLocalizedContentDto;
@@ -696,8 +807,10 @@ export type LocalizationAdminControllerUpsertDepartmentContactTranslationData = 
 };
 
 export type LocalizationAdminControllerUpsertDepartmentContactTranslationResponses = {
-    200: unknown;
+    200: TranslationUpsertResponseDto;
 };
+
+export type LocalizationAdminControllerUpsertDepartmentContactTranslationResponse = LocalizationAdminControllerUpsertDepartmentContactTranslationResponses[keyof LocalizationAdminControllerUpsertDepartmentContactTranslationResponses];
 
 export type LocalizationAdminControllerAutoTranslateDepartmentContactTranslationData = {
     body?: never;
@@ -710,8 +823,10 @@ export type LocalizationAdminControllerAutoTranslateDepartmentContactTranslation
 };
 
 export type LocalizationAdminControllerAutoTranslateDepartmentContactTranslationResponses = {
-    201: unknown;
+    200: TranslationItemResponseDto;
 };
+
+export type LocalizationAdminControllerAutoTranslateDepartmentContactTranslationResponse = LocalizationAdminControllerAutoTranslateDepartmentContactTranslationResponses[keyof LocalizationAdminControllerAutoTranslateDepartmentContactTranslationResponses];
 
 export type CategoriesControllerList0Data = {
     body?: never;
@@ -762,8 +877,10 @@ export type CategoriesAdminControllerListData = {
 };
 
 export type CategoriesAdminControllerListResponses = {
-    200: unknown;
+    200: CategoriesListResponseDto;
 };
+
+export type CategoriesAdminControllerListResponse = CategoriesAdminControllerListResponses[keyof CategoriesAdminControllerListResponses];
 
 export type CategoriesAdminControllerCreateData = {
     body: CreateCategoryDto;
@@ -773,8 +890,10 @@ export type CategoriesAdminControllerCreateData = {
 };
 
 export type CategoriesAdminControllerCreateResponses = {
-    201: unknown;
+    201: CategoryItemResponseDto;
 };
+
+export type CategoriesAdminControllerCreateResponse = CategoriesAdminControllerCreateResponses[keyof CategoriesAdminControllerCreateResponses];
 
 export type CategoriesAdminControllerDeactivateData = {
     body?: never;
@@ -786,8 +905,10 @@ export type CategoriesAdminControllerDeactivateData = {
 };
 
 export type CategoriesAdminControllerDeactivateResponses = {
-    200: unknown;
+    200: CategoryItemResponseDto;
 };
+
+export type CategoriesAdminControllerDeactivateResponse = CategoriesAdminControllerDeactivateResponses[keyof CategoriesAdminControllerDeactivateResponses];
 
 export type CategoriesAdminControllerUpdateData = {
     body: UpdateCategoryDto;
@@ -799,8 +920,10 @@ export type CategoriesAdminControllerUpdateData = {
 };
 
 export type CategoriesAdminControllerUpdateResponses = {
-    200: unknown;
+    200: CategoryItemResponseDto;
 };
+
+export type CategoriesAdminControllerUpdateResponse = CategoriesAdminControllerUpdateResponses[keyof CategoriesAdminControllerUpdateResponses];
 
 export type NewsControllerList0Data = {
     body?: never;
@@ -941,8 +1064,10 @@ export type NewsAdminControllerListData = {
 };
 
 export type NewsAdminControllerListResponses = {
-    200: unknown;
+    200: NewsListResponseDto;
 };
+
+export type NewsAdminControllerListResponse = NewsAdminControllerListResponses[keyof NewsAdminControllerListResponses];
 
 export type NewsAdminControllerCreateData = {
     body: CreateNewsDto;
@@ -952,8 +1077,10 @@ export type NewsAdminControllerCreateData = {
 };
 
 export type NewsAdminControllerCreateResponses = {
-    201: unknown;
+    201: NewsItemResponseDto;
 };
+
+export type NewsAdminControllerCreateResponse = NewsAdminControllerCreateResponses[keyof NewsAdminControllerCreateResponses];
 
 export type NewsAdminControllerArchiveData = {
     body?: never;
@@ -965,8 +1092,10 @@ export type NewsAdminControllerArchiveData = {
 };
 
 export type NewsAdminControllerArchiveResponses = {
-    200: unknown;
+    200: NewsItemResponseDto;
 };
+
+export type NewsAdminControllerArchiveResponse = NewsAdminControllerArchiveResponses[keyof NewsAdminControllerArchiveResponses];
 
 export type NewsAdminControllerDetailData = {
     body?: never;
@@ -978,8 +1107,10 @@ export type NewsAdminControllerDetailData = {
 };
 
 export type NewsAdminControllerDetailResponses = {
-    200: unknown;
+    200: NewsItemResponseDto;
 };
+
+export type NewsAdminControllerDetailResponse = NewsAdminControllerDetailResponses[keyof NewsAdminControllerDetailResponses];
 
 export type NewsAdminControllerUpdateData = {
     body: UpdateNewsDto;
@@ -991,8 +1122,10 @@ export type NewsAdminControllerUpdateData = {
 };
 
 export type NewsAdminControllerUpdateResponses = {
-    200: unknown;
+    200: NewsItemResponseDto;
 };
+
+export type NewsAdminControllerUpdateResponse = NewsAdminControllerUpdateResponses[keyof NewsAdminControllerUpdateResponses];
 
 export type NewsAdminControllerAssignCategoriesData = {
     body: AssignNewsCategoriesDto;
@@ -1004,11 +1137,15 @@ export type NewsAdminControllerAssignCategoriesData = {
 };
 
 export type NewsAdminControllerAssignCategoriesResponses = {
-    200: unknown;
+    200: NewsItemResponseDto;
 };
 
+export type NewsAdminControllerAssignCategoriesResponse = NewsAdminControllerAssignCategoriesResponses[keyof NewsAdminControllerAssignCategoriesResponses];
+
 export type NewsAdminControllerUploadAssetsData = {
-    body?: never;
+    body: {
+        files: Array<Blob | File>;
+    };
     path: {
         id: number;
     };
@@ -1017,8 +1154,10 @@ export type NewsAdminControllerUploadAssetsData = {
 };
 
 export type NewsAdminControllerUploadAssetsResponses = {
-    201: unknown;
+    201: NewsAssetsResponseDto;
 };
+
+export type NewsAdminControllerUploadAssetsResponse = NewsAdminControllerUploadAssetsResponses[keyof NewsAdminControllerUploadAssetsResponses];
 
 export type NewsAdminControllerRemoveAssetData = {
     body?: never;
@@ -1031,8 +1170,42 @@ export type NewsAdminControllerRemoveAssetData = {
 };
 
 export type NewsAdminControllerRemoveAssetResponses = {
+    200: NewsAssetRemovedResponseDto;
+};
+
+export type NewsAdminControllerRemoveAssetResponse = NewsAdminControllerRemoveAssetResponses[keyof NewsAdminControllerRemoveAssetResponses];
+
+export type NewsAdminControllerDownloadAssetData = {
+    body?: never;
+    path: {
+        id: number;
+        assetId: number;
+    };
+    query?: never;
+    url: '/admin/news/{id}/assets/{assetId}/download';
+};
+
+export type NewsAdminControllerDownloadAssetResponses = {
+    /**
+     * Streams a news asset for protected admin preview or download.
+     */
     200: unknown;
 };
+
+export type NewsAdminControllerRestoreData = {
+    body?: never;
+    path: {
+        id: number;
+    };
+    query?: never;
+    url: '/admin/news/{id}/restore';
+};
+
+export type NewsAdminControllerRestoreResponses = {
+    200: NewsItemResponseDto;
+};
+
+export type NewsAdminControllerRestoreResponse = NewsAdminControllerRestoreResponses[keyof NewsAdminControllerRestoreResponses];
 
 export type DocumentsControllerList0Data = {
     body?: never;

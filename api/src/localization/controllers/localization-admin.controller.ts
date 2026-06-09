@@ -9,7 +9,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { Audit } from '../../audit-log/decorators/audit.decorator';
 import { RateLimit } from '../../rate-limit/decorators/rate-limit.decorator';
 import { RateLimitBucket } from '../../rate-limit/rate-limit-bucket.enum';
@@ -19,6 +19,11 @@ import { JwtAuthGuard } from '../../user/guards/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from '../../user/guards/roles/roles.guard';
 import { UpdateLocalizedContentDto } from '../dto/update-localized-content.dto';
 import { LocalizationService } from '../localization.service';
+import {
+  TranslationItemResponseDto,
+  TranslationsListResponseDto,
+  TranslationUpsertResponseDto,
+} from '../localization-response';
 import {
   LOCALIZATION_SPECS,
   ROUTE_LOCALIZATION_SPECS,
@@ -35,6 +40,9 @@ export class LocalizationAdminController {
   constructor(private readonly localizationService: LocalizationService) {}
 
   @Get(':domain/:id/translations')
+  @ApiOkResponse({
+    type: TranslationsListResponseDto,
+  })
   async listDomainTranslations(
     @Param('domain') domain: string,
     @Param('id', ParseIntPipe) id: number,
@@ -50,6 +58,9 @@ export class LocalizationAdminController {
   }
 
   @Patch(':domain/:id/translations/:locale')
+  @ApiOkResponse({
+    type: TranslationUpsertResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'translation.upsert',
@@ -71,6 +82,9 @@ export class LocalizationAdminController {
   }
 
   @Post(':domain/:id/translations/:locale/auto-translate')
+  @ApiOkResponse({
+    type: TranslationItemResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'translation.auto-translate',
@@ -95,6 +109,9 @@ export class LocalizationAdminController {
   }
 
   @Get('site-settings/translations')
+  @ApiOkResponse({
+    type: TranslationsListResponseDto,
+  })
   async listSiteSettingsTranslations() {
     const id = await this.localizationService.getSingletonParentId(
       LOCALIZATION_SPECS.siteSettings,
@@ -110,6 +127,9 @@ export class LocalizationAdminController {
   }
 
   @Patch('site-settings/translations/:locale')
+  @ApiOkResponse({
+    type: TranslationUpsertResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'translation.site-settings.upsert',
@@ -131,6 +151,9 @@ export class LocalizationAdminController {
   }
 
   @Post('site-settings/translations/:locale/auto-translate')
+  @ApiOkResponse({
+    type: TranslationItemResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'translation.site-settings.auto-translate',
@@ -155,6 +178,9 @@ export class LocalizationAdminController {
   }
 
   @Get('departments/:departmentId/contacts/:contactId/translations')
+  @ApiOkResponse({
+    type: TranslationsListResponseDto,
+  })
   async listDepartmentContactTranslations(
     @Param('contactId', ParseIntPipe) contactId: number,
   ) {
@@ -169,6 +195,9 @@ export class LocalizationAdminController {
   }
 
   @Patch('departments/:departmentId/contacts/:contactId/translations/:locale')
+  @ApiOkResponse({
+    type: TranslationUpsertResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'translation.department-contact.upsert',
@@ -191,6 +220,9 @@ export class LocalizationAdminController {
   @Post(
     'departments/:departmentId/contacts/:contactId/translations/:locale/auto-translate',
   )
+  @ApiOkResponse({
+    type: TranslationItemResponseDto,
+  })
   @RateLimit(RateLimitBucket.ADMIN_WRITE)
   @Audit({
     action: 'translation.department-contact.auto-translate',
