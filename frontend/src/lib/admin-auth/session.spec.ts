@@ -1,31 +1,19 @@
-import { describe, expect, it, vi } from 'vitest';
-import { readBackendAdminSession } from '@/lib/admin-api/auth';
+import { describe, expect, it } from 'vitest';
 import {
+  adminCsrfCookieName,
   adminSessionMaxAgeSeconds,
+  adminSessionCookieName,
   getAdminDashboardPath,
   getAdminLoginPath,
   getAdminPublicSitePath,
-  getAdminAccountFromToken,
-  getAdminSessionCookieOptions,
-  getExpiredAdminSessionCookieOptions,
   switchAdminLocalePath,
 } from './session';
 
-vi.mock('@/lib/admin-api/auth', () => ({
-  readBackendAdminSession: vi.fn(),
-}));
-
-const mockedReadSession = vi.mocked(readBackendAdminSession);
-
 describe('admin session helpers', () => {
-  it('uses secure HttpOnly cookie defaults for localized admin sessions', () => {
-    expect(getAdminSessionCookieOptions()).toEqual({
-      httpOnly: true,
-      sameSite: 'lax',
-      secure: false,
-      path: '/',
-      maxAge: adminSessionMaxAgeSeconds,
-    });
+  it('documents backend-owned admin cookie names for shared auth helpers', () => {
+    expect(adminSessionCookieName).toBe('townhall_admin_session');
+    expect(adminCsrfCookieName).toBe('townhall_admin_csrf');
+    expect(adminSessionMaxAgeSeconds).toBe(60 * 60 * 2);
   });
 
   it('builds locale-aware admin paths', () => {
@@ -45,33 +33,4 @@ describe('admin session helpers', () => {
     expect(switchAdminLocalePath('/en/news', 'bg')).toBe('/bg/admin');
   });
 
-  it('expires admin cookies with the same protected cookie attributes', () => {
-    expect(getExpiredAdminSessionCookieOptions()).toEqual({
-      ...getAdminSessionCookieOptions(),
-      maxAge: 0,
-    });
-  });
-
-  it('resolves current admin account through the backend session wrapper', async () => {
-    mockedReadSession.mockResolvedValue({
-      id: 1,
-      email: 'admin@example.com',
-      firstName: 'Townhall',
-      lastName: 'Admin',
-      isActive: true,
-    });
-
-    await expect(getAdminAccountFromToken('admin-token')).resolves.toEqual({
-      id: 1,
-      email: 'admin@example.com',
-      firstName: 'Townhall',
-      lastName: 'Admin',
-      isActive: true,
-    });
-    expect(mockedReadSession).toHaveBeenCalledWith('admin-token');
-  });
-
-  it('returns null when no admin token exists', async () => {
-    await expect(getAdminAccountFromToken(undefined)).resolves.toBeNull();
-  });
 });

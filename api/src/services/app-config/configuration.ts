@@ -65,8 +65,44 @@ export const getConfig = (): AppConfig => {
           parseInt(process.env.RATE_LIMIT_ADMIN_WRITE_MAX as string, 10) || 60,
       },
     },
+    cors: {
+      allowedOrigins: parseAllowedOrigins(process.env.FRONTEND_ALLOWED_ORIGINS),
+    },
+    adminAuth: {
+      cookieDomain: process.env.ADMIN_COOKIE_DOMAIN || undefined,
+      cookieSameSite: parseAdminCookieSameSite(
+        process.env.ADMIN_COOKIE_SAME_SITE,
+      ),
+      cookieSecure:
+        process.env.ADMIN_COOKIE_SECURE === 'true' ||
+        process.env.APP_ENV === AppEnv.PROD,
+    },
   };
 };
+
+function parseAllowedOrigins(value: string | undefined): string[] {
+  const configured = value
+    ?.split(',')
+    .map((origin) => origin.trim())
+    .filter(Boolean);
+
+  if (configured && configured.length > 0) {
+    return configured;
+  }
+
+  return [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'http://localhost:3002',
+  ];
+}
+
+function parseAdminCookieSameSite(
+  value: string | undefined,
+): AdminCookieSameSite {
+  if (value === 'strict' || value === 'none') return value;
+  return 'lax';
+}
 
 export interface AppConfig {
   port: number;
@@ -79,6 +115,8 @@ export interface AppConfig {
   storage: StorageConfig;
   translation: TranslationConfig;
   rateLimit: RateLimitConfig;
+  cors: CorsConfig;
+  adminAuth: AdminAuthConfig;
 }
 
 export enum AppEnv {
@@ -136,3 +174,15 @@ export interface RateLimitBucketConfig {
   windowMs: number;
   limit: number;
 }
+
+export interface CorsConfig {
+  allowedOrigins: string[];
+}
+
+export interface AdminAuthConfig {
+  cookieDomain?: string;
+  cookieSameSite: AdminCookieSameSite;
+  cookieSecure: boolean;
+}
+
+export type AdminCookieSameSite = 'lax' | 'strict' | 'none';

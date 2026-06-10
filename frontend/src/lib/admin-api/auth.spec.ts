@@ -1,68 +1,92 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import {
-  adminAuthControllerSession,
-  userControllerLogin,
-} from '@/lib/api/generated';
-import { loginToBackendAdmin, readBackendAdminSession } from './auth';
-
-vi.mock('@/lib/api/generated', () => ({
-  adminAuthControllerSession: vi.fn(),
-  userControllerLogin: vi.fn(),
-}));
-
-const mockedLogin = vi.mocked(userControllerLogin);
-const mockedSession = vi.mocked(adminAuthControllerSession);
+  loginToBackendAdmin,
+  logoutBackendAdmin,
+  readBackendAdminSessionFromCookieHeader,
+} from './auth';
 
 describe('admin API auth wrapper', () => {
+  const fetchSpy = vi.fn();
+
   beforeEach(() => {
-    vi.stubEnv('BACKEND_API_BASE_URL', 'http://backend.test');
-    mockedLogin.mockReset();
-    mockedSession.mockReset();
+    vi.stubEnv('NEXT_PUBLIC_API_BASE_URL', 'http://backend.test');
+    fetchSpy.mockReset();
+    vi.stubGlobal('fetch', fetchSpy);
   });
 
-  it('logs in through the backend user login endpoint without exposing token shape', async () => {
-    mockedLogin.mockResolvedValue({
-      data: {
-        message: 'Login successful',
-        token: 'admin-token',
-      },
-      error: undefined,
-    });
+  it('logs in through the backend admin cookie endpoint and returns safe account data', async () => {
+    fetchSpy.mockResolvedValue(
+      jsonResponse({
+        account: {
+          id: 1,
+          email: 'admin@example.com',
+          firstName: 'Townhall',
+          lastName: 'Admin',
+          isActive: true,
+        },
+      }),
+    );
 
     await expect(
       loginToBackendAdmin({
         email: 'admin@example.com',
         password: 'secret-password',
       }),
-    ).resolves.toBe('admin-token');
-    expect(mockedLogin).toHaveBeenCalledWith({
-      baseUrl: 'http://backend.test',
-      body: {
-        email: 'admin@example.com',
-        password: 'secret-password',
-      },
+    ).resolves.toEqual({
+      id: 1,
+      email: 'admin@example.com',
+      firstName: 'Townhall',
+      lastName: 'Admin',
+      isActive: true,
     });
+    expect(fetchSpy).toHaveBeenCalledWith(
+      new URL('/admin/auth/login', 'http://backend.test'),
+      expect.objectContaining({
+        body: JSON.stringify({
+          email: 'admin@example.com',
+          password: 'secret-password',
+        }),
+        credentials: 'include',
+        method: 'POST',
+      }),
+    );
   });
 
-  it('fails when the backend login response does not contain a token', async () => {
-    mockedLogin.mockResolvedValue({
-      data: {
-        message: 'Login successful',
-      },
-      error: undefined,
-    });
+  it('fails when backend admin login is rejected', async () => {
+    fetchSpy.mockResolvedValue(
+      jsonResponse(
+        {
+          message: 'Login failed',
+        },
+        401,
+      ),
+    );
 
     await expect(
       loginToBackendAdmin({
         email: 'admin@example.com',
         password: 'secret-password',
       }),
-    ).rejects.toThrow('Backend login did not return an admin token.');
+    ).rejects.toThrow('Login failed');
   });
 
-  it('reads a safe active admin account through the backend session endpoint', async () => {
-    mockedSession.mockResolvedValue({
-      data: {
+  it('clears the backend-owned admin cookies through backend logout', async () => {
+    fetchSpy.mockResolvedValue(jsonResponse({ ok: true }));
+
+    await logoutBackendAdmin();
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      new URL('/admin/auth/logout', 'http://backend.test'),
+      expect.objectContaining({
+        credentials: 'include',
+        method: 'POST',
+      }),
+    );
+  });
+
+  it('reads a safe active admin account by forwarding cookies to the backend session endpoint', async () => {
+    fetchSpy.mockResolvedValue(
+      jsonResponse({
         account: {
           id: 1,
           email: 'admin@example.com',
@@ -73,34 +97,51 @@ describe('admin API auth wrapper', () => {
           createdAt: '2026-01-01T00:00:00.000Z',
           updatedAt: '2026-01-02T00:00:00.000Z',
         },
-      },
-      error: undefined,
-    });
+      }),
+    );
 
-    await expect(readBackendAdminSession('admin-token')).resolves.toEqual({
+    await expect(
+      readBackendAdminSessionFromCookieHeader(
+        'townhall_admin_session=admin-token',
+      ),
+    ).resolves.toEqual({
       id: 1,
       email: 'admin@example.com',
       firstName: 'Townhall',
       lastName: 'Admin',
       isActive: true,
     });
-    expect(mockedSession).toHaveBeenCalledWith({
-      baseUrl: 'http://backend.test',
-      headers: {
-        Authorization: 'Bearer admin-token',
-      },
-    });
+    expect(fetchSpy).toHaveBeenCalledWith(
+      new URL('/admin/auth/session', 'http://backend.test'),
+      expect.objectContaining({
+        headers: {
+          cookie: 'townhall_admin_session=admin-token',
+        },
+      }),
+    );
   });
 
   it('returns null for invalid backend sessions', async () => {
-    mockedSession.mockResolvedValue({
-      data: undefined,
-      error: {
-        statusCode: 401,
-        message: 'Unauthorized',
-      },
-    });
+    fetchSpy.mockResolvedValue(
+      jsonResponse(
+        {
+          message: 'Unauthorized',
+        },
+        401,
+      ),
+    );
 
-    await expect(readBackendAdminSession('stale-token')).resolves.toBeNull();
+    await expect(
+      readBackendAdminSessionFromCookieHeader('townhall_admin_session=stale'),
+    ).resolves.toBeNull();
   });
 });
+
+function jsonResponse(body: unknown, status = 200): Response {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      'content-type': 'application/json',
+    },
+  });
+}

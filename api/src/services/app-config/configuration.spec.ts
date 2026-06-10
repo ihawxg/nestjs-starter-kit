@@ -24,6 +24,18 @@ describe('config helper', () => {
         password: '',
         port: 6379,
       },
+      adminAuth: {
+        cookieDomain: undefined,
+        cookieSameSite: 'lax',
+        cookieSecure: false,
+      },
+      cors: {
+        allowedOrigins: [
+          'http://localhost:3000',
+          'http://localhost:3001',
+          'http://localhost:3002',
+        ],
+      },
       database: {
         dbName: 'api',
         host: 'localhost',

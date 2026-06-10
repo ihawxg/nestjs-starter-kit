@@ -113,6 +113,34 @@ describe('AuthService', () => {
       expect(userUpdateSpy).not.toHaveBeenCalled();
     });
 
+    it('should return safe account data and token for backend-owned cookie login', async () => {
+      const adminUser = {
+        ...mockUserEntity,
+        role: UserRole.ADMIN,
+        isActive: true,
+      };
+      jest.spyOn(userService, 'isUserExists').mockResolvedValue(adminUser);
+      jest.spyOn(userService, 'checkUserPassword').mockResolvedValue(true);
+      jest.spyOn(userService, 'getUserToken').mockReturnValue('mock-token');
+
+      await expect(
+        authService.loginAdminSession({
+          email: 'email',
+          password: 'password',
+        }),
+      ).resolves.toEqual({
+        account: expect.objectContaining({
+          id: adminUser.id,
+          email: adminUser.email,
+          firstName: adminUser.firstName,
+          lastName: adminUser.lastName,
+          isActive: true,
+          role: UserRole.ADMIN,
+        }),
+        token: 'mock-token',
+      });
+    });
+
     it('should deny legacy public accounts', async () => {
       const checkPassSpy = jest.spyOn(userService, 'checkUserPassword');
       jest.spyOn(userService, 'isUserExists').mockResolvedValue({

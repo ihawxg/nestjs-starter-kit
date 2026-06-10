@@ -1,28 +1,26 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { loginToBackendAdmin, logoutBackendAdmin } from '@/lib/admin-api/auth';
 import { loginAdmin, logoutAdmin } from './client';
+
+vi.mock('@/lib/admin-api/auth', () => ({
+  loginToBackendAdmin: vi.fn(),
+  logoutBackendAdmin: vi.fn(),
+}));
 
 describe('admin auth client helpers', () => {
   afterEach(() => {
-    vi.restoreAllMocks();
+    vi.mocked(loginToBackendAdmin).mockReset();
+    vi.mocked(logoutBackendAdmin).mockReset();
   });
 
-  it('logs in through the internal admin auth route and returns safe account data', async () => {
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
-      new Response(
-        JSON.stringify({
-          account: {
-            id: 1,
-            email: 'admin@example.com',
-            firstName: 'Townhall',
-            lastName: 'Admin',
-            isActive: true,
-          },
-        }),
-        {
-          status: 200,
-        },
-      ),
-    );
+  it('logs in through the backend admin cookie wrapper and returns safe account data', async () => {
+    vi.mocked(loginToBackendAdmin).mockResolvedValue({
+      id: 1,
+      email: 'admin@example.com',
+      firstName: 'Townhall',
+      lastName: 'Admin',
+      isActive: true,
+    });
 
     await expect(
       loginAdmin({
@@ -39,29 +37,14 @@ describe('admin auth client helpers', () => {
         isActive: true,
       },
     });
-    expect(fetchSpy).toHaveBeenCalledWith('/admin/api/auth/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
+    expect(loginToBackendAdmin).toHaveBeenCalledWith({
         email: 'admin@example.com',
         password: 'secret-password',
-      }),
     });
   });
 
   it('returns the server error message for failed login attempts', async () => {
-    vi.spyOn(globalThis, 'fetch').mockResolvedValue(
-      new Response(
-        JSON.stringify({
-          message: 'Login failed',
-        }),
-        {
-          status: 401,
-        },
-      ),
-    );
+    vi.mocked(loginToBackendAdmin).mockRejectedValue(new Error('Login failed'));
 
     await expect(
       loginAdmin({
@@ -74,22 +57,11 @@ describe('admin auth client helpers', () => {
     });
   });
 
-  it('logs out through the internal admin auth route', async () => {
-    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(
-      new Response(
-        JSON.stringify({
-          ok: true,
-        }),
-        {
-          status: 200,
-        },
-      ),
-    );
+  it('logs out through the backend admin cookie wrapper', async () => {
+    vi.mocked(logoutBackendAdmin).mockResolvedValue(undefined);
 
     await logoutAdmin();
 
-    expect(fetchSpy).toHaveBeenCalledWith('/admin/api/auth/logout', {
-      method: 'POST',
-    });
+    expect(logoutBackendAdmin).toHaveBeenCalled();
   });
 });

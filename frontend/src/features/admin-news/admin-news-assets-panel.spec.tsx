@@ -12,9 +12,9 @@ import { AdminNewsAssetsPanel } from './admin-news-assets-panel';
 
 vi.mock('@/lib/admin-api/news-client', () => ({
   getAdminNewsAssetDownloadUrl: (id: number, assetId: number) =>
-    `/admin/api/news/${id}/assets/${assetId}/download`,
+    `http://backend.test/admin/news/${id}/assets/${assetId}/download?disposition=attachment`,
   getAdminNewsAssetViewUrl: (id: number, assetId: number) =>
-    `/admin/api/news/${id}/assets/${assetId}/view`,
+    `http://backend.test/admin/news/${id}/assets/${assetId}/download?disposition=inline`,
   fetchAdminNewsAssetPreviewText: vi.fn(),
   removeAdminNewsItemAsset: vi.fn(),
   uploadAdminNewsItemAssets: vi.fn(),
@@ -177,7 +177,7 @@ describe('AdminNewsAssetsPanel', () => {
     expect(screen.getByRole('button', { name: 'Preview' })).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Download' })).toHaveAttribute(
       'href',
-      '/admin/api/news/4/assets/9/download',
+      'http://backend.test/admin/news/4/assets/9/download?disposition=attachment',
     );
     await userEvent.click(screen.getByRole('button', { name: 'Remove' }));
 
@@ -215,15 +215,18 @@ describe('AdminNewsAssetsPanel', () => {
 
     expect(
       screen.getByRole('img', { name: 'Image preview: photo.png' }),
-    ).toHaveAttribute('src', '/admin/api/news/4/assets/9/view');
+    ).toHaveAttribute(
+      'src',
+      'http://backend.test/admin/news/4/assets/9/download?disposition=inline',
+    );
     await userEvent.click(screen.getAllByRole('button', { name: 'Preview' })[1]);
     expect(await screen.findByTitle('PDF preview: notice.pdf')).toHaveAttribute(
       'src',
-      '/admin/api/news/4/assets/10/view',
+      'http://backend.test/admin/news/4/assets/10/download?disposition=inline',
     );
   });
 
-  it('loads persisted CSV preview text through the protected internal route', async () => {
+  it('loads persisted CSV preview text through the protected backend route', async () => {
     mockedFetchPreviewText.mockResolvedValue('name,value\nBudget,100');
 
     render(
@@ -312,11 +315,11 @@ describe('AdminNewsAssetsPanel', () => {
     expect(await screen.findByText('Preview fallback')).toBeInTheDocument();
     expect(screen.getByRole('link', { name: 'Open in browser' })).toHaveAttribute(
       'href',
-      '/admin/api/news/4/assets/12/view',
+      'http://backend.test/admin/news/4/assets/12/download?disposition=inline',
     );
     expect(screen.getAllByRole('link', { name: 'Download' }).at(-1)).toHaveAttribute(
       'href',
-      '/admin/api/news/4/assets/12/download',
+      'http://backend.test/admin/news/4/assets/12/download?disposition=attachment',
     );
   });
 

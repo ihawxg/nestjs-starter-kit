@@ -19,7 +19,7 @@
 - Admin 404/not-found UI must stay under the protected admin route group and use admin chrome only for authenticated admins.
 - Do not call admin APIs from the public frontend.
 - Do not store JWTs or auth state in `localStorage` or `sessionStorage`.
-- Admin frontend auth must use HttpOnly cookies through internal Next route handlers.
+- Admin frontend auth must use backend-owned HttpOnly cookies and CSRF through approved admin API wrappers.
 - `/en/admin/login` and `/bg/admin/login` are the only unprotected admin pages. `/en/admin`, `/bg/admin`, and future management screens must validate the admin session before rendering.
 - Localized admin login pages must redirect active admin sessions to the matching localized dashboard.
 - Legacy `/admin` and `/admin/login` redirect to English localized admin routes.
@@ -36,7 +36,7 @@
 - Use `src/lib/api` wrappers for all backend calls from routes, components, and features.
 - Generated SDK code can include admin routes because it mirrors the full backend OpenAPI. Public frontend code must not import or call admin SDK functions.
 - Admin generated SDK functions must be wrapped under `src/lib/admin-api`.
-- Browser-facing admin auth helpers live under `src/lib/admin-auth` and call internal `/admin/api/auth/*` routes only.
+- Browser-facing admin auth helpers live under `src/lib/admin-auth` and `src/lib/admin-api/auth.ts`; they call backend `/admin/auth/*` routes with credentials included.
 - Frontend-owned UI copy lives in `frontend/messages/en.json` and `frontend/messages/bg.json`, compiles through Paraglide, and is consumed through `src/lib/i18n/messages.ts`.
 - Do not handwrite backend response or DTO types in frontend code.
 - Keep frontend-specific view models small and derived from generated types at the API boundary.
@@ -92,13 +92,14 @@
 
 - The public frontend is anonymous.
 - Never embed admin tokens in public code.
-- Admin JWTs are server-only. Store them only in HttpOnly cookies. Use cookie path `/` so both `/en/admin` and `/bg/admin` can validate the same session.
+- Admin JWTs are backend cookie-only. Store them only in HttpOnly cookies. Use cookie path `/` so both `/en/admin` and `/bg/admin` can validate the same session.
+- Admin browser requests must use the approved admin fetch wrapper so cookies and `x-townhall-csrf` are sent consistently.
 - Never expose backend secrets through `NEXT_PUBLIC_*`.
 - Do not trust URL params or search params. Validate and normalize locale, page, limit, type, and slug inputs.
 - Use backend public download routes rather than constructing local storage paths.
-- Use protected internal Next admin routes for admin asset preview/download. Do not construct storage paths or direct Nest admin URLs in browser code.
-- Persisted admin asset previews must render through protected internal `/admin/api/*` view routes. Unsaved staged file previews may use temporary browser object URLs only and must never be stored in local/session storage.
-- For create forms where files require a persisted backend id, stage files in browser memory, create the record first, then upload staged files through protected internal admin API routes. Keep staged files out of local/session storage.
+- Use protected backend admin routes through approved admin API wrappers for admin asset preview/download. Do not construct storage paths or bearer-token URLs in browser code.
+- Persisted admin asset previews must render through protected backend asset routes. Unsaved staged file previews may use temporary browser object URLs only and must never be stored in local/session storage.
+- For create forms where files require a persisted backend id, stage files in browser memory, create the record first, then upload staged files through credentialed backend admin routes via the approved admin API wrapper. Keep staged files out of local/session storage.
 - Sanitize rich HTML with the project `sanitize-html` helper before rendering CMS, news, page, or similar body content.
 - Never render unsanitized backend HTML with `dangerouslySetInnerHTML`.
 

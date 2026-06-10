@@ -1,37 +1,32 @@
-import { cookies } from 'next/headers';
+import { headers } from 'next/headers';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { getAdminAccountFromToken } from './session';
+import { readBackendAdminSessionFromCookieHeader } from '@/lib/admin-api/auth';
 import { getCurrentAdminAccount } from './server';
 
 vi.mock('next/headers', () => ({
-  cookies: vi.fn(),
+  headers: vi.fn(),
 }));
 
-vi.mock('./session', async (importOriginal) => {
-  const actual = await importOriginal<typeof import('./session')>();
-
+vi.mock('@/lib/admin-api/auth', () => {
   return {
-    ...actual,
-    getAdminAccountFromToken: vi.fn(),
+    readBackendAdminSessionFromCookieHeader: vi.fn(),
   };
 });
 
-const mockedCookies = vi.mocked(cookies);
-const mockedGetAccount = vi.mocked(getAdminAccountFromToken);
+const mockedHeaders = vi.mocked(headers);
+const mockedReadSession = vi.mocked(readBackendAdminSessionFromCookieHeader);
 
 describe('admin server auth helpers', () => {
   beforeEach(() => {
-    mockedCookies.mockReset();
-    mockedGetAccount.mockReset();
+    mockedHeaders.mockReset();
+    mockedReadSession.mockReset();
   });
 
-  it('reads the HttpOnly admin cookie server-side', async () => {
-    mockedCookies.mockResolvedValue({
-      get: vi.fn().mockReturnValue({
-        value: 'admin-token',
-      }),
+  it('forwards the incoming cookie header to the backend session endpoint', async () => {
+    mockedHeaders.mockResolvedValue({
+      get: vi.fn().mockReturnValue('townhall_admin_session=admin-token'),
     } as never);
-    mockedGetAccount.mockResolvedValue({
+    mockedReadSession.mockResolvedValue({
       id: 1,
       email: 'admin@example.com',
       firstName: 'Townhall',
@@ -46,6 +41,8 @@ describe('admin server auth helpers', () => {
       lastName: 'Admin',
       isActive: true,
     });
-    expect(mockedGetAccount).toHaveBeenCalledWith('admin-token');
+    expect(mockedReadSession).toHaveBeenCalledWith(
+      'townhall_admin_session=admin-token',
+    );
   });
 });

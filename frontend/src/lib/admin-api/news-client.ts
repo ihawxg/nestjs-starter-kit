@@ -1,5 +1,11 @@
 import type * as GeneratedApi from '@/lib/api/generated';
 import type { SupportedLocale } from '@/lib/i18n/locales';
+import {
+  AdminApiRequestError,
+  adminFetch,
+  adminFetchJson,
+  getAdminApiUrl,
+} from './admin-fetch';
 
 export type AdminNewsClientStatus = NonNullable<GeneratedApi.CreateNewsDto['status']>;
 export type AdminNewsClientItem = GeneratedApi.NewsResponseDto;
@@ -28,16 +34,16 @@ export async function fetchAdminNewsList(
     }
   }
 
-  const path = `/admin/api/news${searchParams.size > 0 ? `?${searchParams}` : ''}`;
-  const data = await requestJson<{ news: AdminNewsClientList }>(path);
+  const path = `/admin/news${searchParams.size > 0 ? `?${searchParams}` : ''}`;
+  const data = await adminFetchJson<{ news: AdminNewsClientList }>(path);
   return data.news;
 }
 
 export async function fetchAdminNewsItem(
   id: number,
 ): Promise<AdminNewsClientItem> {
-  const data = await requestJson<{ news: AdminNewsClientItem }>(
-    `/admin/api/news/${id}`,
+  const data = await adminFetchJson<{ news: AdminNewsClientItem }>(
+    `/admin/news/${id}`,
   );
   return data.news;
 }
@@ -45,7 +51,7 @@ export async function fetchAdminNewsItem(
 export async function createAdminNewsItem(
   body: GeneratedApi.CreateNewsDto,
 ): Promise<AdminNewsClientItem> {
-  const data = await requestJson<{ news: AdminNewsClientItem }>('/admin/api/news', {
+  const data = await adminFetchJson<{ news: AdminNewsClientItem }>('/admin/news', {
     method: 'POST',
     body: JSON.stringify(body),
   });
@@ -56,8 +62,8 @@ export async function updateAdminNewsItem(
   id: number,
   body: GeneratedApi.UpdateNewsDto,
 ): Promise<AdminNewsClientItem> {
-  const data = await requestJson<{ news: AdminNewsClientItem }>(
-    `/admin/api/news/${id}`,
+  const data = await adminFetchJson<{ news: AdminNewsClientItem }>(
+    `/admin/news/${id}`,
     {
       method: 'PATCH',
       body: JSON.stringify(body),
@@ -69,8 +75,8 @@ export async function updateAdminNewsItem(
 export async function archiveAdminNewsItem(
   id: number,
 ): Promise<AdminNewsClientItem> {
-  const data = await requestJson<{ news: AdminNewsClientItem }>(
-    `/admin/api/news/${id}`,
+  const data = await adminFetchJson<{ news: AdminNewsClientItem }>(
+    `/admin/news/${id}`,
     {
       method: 'DELETE',
     },
@@ -81,8 +87,8 @@ export async function archiveAdminNewsItem(
 export async function restoreAdminNewsItem(
   id: number,
 ): Promise<AdminNewsClientItem> {
-  const data = await requestJson<{ news: AdminNewsClientItem }>(
-    `/admin/api/news/${id}/restore`,
+  const data = await adminFetchJson<{ news: AdminNewsClientItem }>(
+    `/admin/news/${id}/restore`,
     {
       method: 'PATCH',
     },
@@ -94,8 +100,8 @@ export async function assignAdminNewsItemCategories(
   id: number,
   categoryIds: number[],
 ): Promise<AdminNewsClientItem> {
-  const data = await requestJson<{ news: AdminNewsClientItem }>(
-    `/admin/api/news/${id}/categories`,
+  const data = await adminFetchJson<{ news: AdminNewsClientItem }>(
+    `/admin/news/${id}/categories`,
     {
       method: 'PATCH',
       body: JSON.stringify({
@@ -115,8 +121,8 @@ export async function uploadAdminNewsItemAssets(
     body.append('files', file);
   }
 
-  const data = await requestJson<{ assets: AdminNewsClientAsset[] }>(
-    `/admin/api/news/${id}/assets`,
+  const data = await adminFetchJson<{ assets: AdminNewsClientAsset[] }>(
+    `/admin/news/${id}/assets`,
     {
       method: 'POST',
       body,
@@ -130,31 +136,38 @@ export async function removeAdminNewsItemAsset(
   id: number,
   assetId: number,
 ): Promise<void> {
-  await requestJson<{ ok: boolean }>(`/admin/api/news/${id}/assets/${assetId}`, {
+  await adminFetchJson<{ ok: boolean }>(`/admin/news/${id}/assets/${assetId}`, {
     method: 'DELETE',
   });
 }
 
 export function getAdminNewsAssetViewUrl(id: number, assetId: number): string {
-  return `/admin/api/news/${id}/assets/${assetId}/view`;
+  return getAdminApiUrl(
+    `/admin/news/${id}/assets/${assetId}/download?disposition=inline`,
+  );
 }
 
 export function getAdminNewsAssetDownloadUrl(
   id: number,
   assetId: number,
 ): string {
-  return `/admin/api/news/${id}/assets/${assetId}/download`;
+  return getAdminApiUrl(
+    `/admin/news/${id}/assets/${assetId}/download?disposition=attachment`,
+  );
 }
 
 export async function fetchAdminNewsAssetPreviewText(
   id: number,
   assetId: number,
 ): Promise<string> {
-  const response = await fetch(getAdminNewsAssetViewUrl(id, assetId), {
-    headers: {
-      accept: 'text/plain, text/csv, application/json, text/*',
+  const response = await adminFetch(
+    `/admin/news/${id}/assets/${assetId}/download?disposition=inline`,
+    {
+      headers: {
+        accept: 'text/plain, text/csv, application/json, text/*',
+      },
     },
-  });
+  );
 
   if (!response.ok) {
     throw new AdminNewsClientRequestError(
@@ -169,8 +182,8 @@ export async function fetchAdminNewsAssetPreviewText(
 export async function fetchAdminNewsCategories(): Promise<
   AdminNewsClientCategory[]
 > {
-  const data = await requestJson<{ categories: AdminNewsClientCategory[] }>(
-    '/admin/api/news/categories',
+  const data = await adminFetchJson<{ categories: AdminNewsClientCategory[] }>(
+    '/admin/categories?scope=news',
   );
   return data.categories;
 }
@@ -178,11 +191,14 @@ export async function fetchAdminNewsCategories(): Promise<
 export async function createAdminNewsClientCategory(
   body: Omit<GeneratedApi.CreateCategoryDto, 'scope'>,
 ): Promise<AdminNewsClientCategory> {
-  const data = await requestJson<{ category: AdminNewsClientCategory }>(
-    '/admin/api/news/categories',
+  const data = await adminFetchJson<{ category: AdminNewsClientCategory }>(
+    '/admin/categories',
     {
       method: 'POST',
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        ...body,
+        scope: 'news',
+      }),
     },
   );
   return data.category;
@@ -192,11 +208,14 @@ export async function updateAdminNewsClientCategory(
   id: number,
   body: Omit<GeneratedApi.UpdateCategoryDto, 'scope'>,
 ): Promise<AdminNewsClientCategory> {
-  const data = await requestJson<{ category: AdminNewsClientCategory }>(
-    `/admin/api/news/categories/${id}`,
+  const data = await adminFetchJson<{ category: AdminNewsClientCategory }>(
+    `/admin/categories/${id}`,
     {
       method: 'PATCH',
-      body: JSON.stringify(body),
+      body: JSON.stringify({
+        ...body,
+        scope: 'news',
+      }),
     },
   );
   return data.category;
@@ -205,8 +224,8 @@ export async function updateAdminNewsClientCategory(
 export async function deactivateAdminNewsClientCategory(
   id: number,
 ): Promise<AdminNewsClientCategory> {
-  const data = await requestJson<{ category: AdminNewsClientCategory }>(
-    `/admin/api/news/categories/${id}`,
+  const data = await adminFetchJson<{ category: AdminNewsClientCategory }>(
+    `/admin/categories/${id}`,
     {
       method: 'DELETE',
     },
@@ -217,8 +236,8 @@ export async function deactivateAdminNewsClientCategory(
 export async function fetchAdminNewsTranslations(
   id: number,
 ): Promise<AdminNewsClientTranslation[]> {
-  const data = await requestJson<{ translations: AdminNewsClientTranslation[] }>(
-    `/admin/api/news/${id}/translations`,
+  const data = await adminFetchJson<{ translations: AdminNewsClientTranslation[] }>(
+    `/admin/news/${id}/translations`,
   );
   return data.translations;
 }
@@ -228,8 +247,8 @@ export async function saveAdminNewsTranslation(
   locale: SupportedLocale,
   body: GeneratedApi.UpdateLocalizedContentDto,
 ): Promise<GeneratedApi.TranslationUpsertResponseDto> {
-  return requestJson<GeneratedApi.TranslationUpsertResponseDto>(
-    `/admin/api/news/${id}/translations/${locale}`,
+  return adminFetchJson<GeneratedApi.TranslationUpsertResponseDto>(
+    `/admin/news/${id}/translations/${locale}`,
     {
       method: 'PATCH',
       body: JSON.stringify(body),
@@ -241,8 +260,8 @@ export async function autoTranslateAdminNewsTranslation(
   id: number,
   locale: SupportedLocale,
 ): Promise<AdminNewsClientTranslation> {
-  const data = await requestJson<{ translation: AdminNewsClientTranslation }>(
-    `/admin/api/news/${id}/translations/${locale}/auto-translate`,
+  const data = await adminFetchJson<{ translation: AdminNewsClientTranslation }>(
+    `/admin/news/${id}/translations/${locale}/auto-translate`,
     {
       method: 'POST',
     },
@@ -250,43 +269,7 @@ export async function autoTranslateAdminNewsTranslation(
   return data.translation;
 }
 
-type RequestInitWithJson = RequestInit & {
-  json?: boolean;
-};
-
-async function requestJson<T>(
-  input: string,
-  init: RequestInitWithJson = {},
-): Promise<T> {
-  const headers = new Headers(init.headers);
-  if (init.json !== false && init.body && !headers.has('content-type')) {
-    headers.set('content-type', 'application/json');
-  }
-
-  const response = await fetch(input, {
-    ...init,
-    headers,
-  });
-
-  if (!response.ok) {
-    throw new AdminNewsClientRequestError(
-      await readAdminNewsClientErrorMessage(response),
-      response.status,
-    );
-  }
-
-  return (await response.json()) as T;
-}
-
-export class AdminNewsClientRequestError extends Error {
-  constructor(
-    message: string,
-    readonly status: number,
-  ) {
-    super(message);
-    this.name = 'AdminNewsClientRequestError';
-  }
-}
+export class AdminNewsClientRequestError extends AdminApiRequestError {}
 
 async function readAdminNewsClientErrorMessage(
   response: Response,

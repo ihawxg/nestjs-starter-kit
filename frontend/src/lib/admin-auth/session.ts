@@ -1,11 +1,9 @@
 import type { AdminAccount } from '@/lib/admin-api/auth';
-import { readBackendAdminSession } from '@/lib/admin-api/auth';
 import { defaultLocale, isSupportedLocale, type SupportedLocale } from '@/lib/i18n/locales';
 
 export const adminSessionCookieName = 'townhall_admin_session';
+export const adminCsrfCookieName = 'townhall_admin_csrf';
 export const adminSessionMaxAgeSeconds = 60 * 60 * 2;
-export const adminApiLoginPath = '/admin/api/auth/login';
-export const adminApiLogoutPath = '/admin/api/auth/logout';
 
 export type AdminLoginResult =
   | {
@@ -16,30 +14,6 @@ export type AdminLoginResult =
       ok: false;
       message: string;
     };
-
-export function getAdminSessionCookieOptions() {
-  return {
-    httpOnly: true,
-    sameSite: 'lax' as const,
-    secure: process.env.NODE_ENV === 'production',
-    path: '/',
-    maxAge: adminSessionMaxAgeSeconds,
-  };
-}
-
-export function getExpiredAdminSessionCookieOptions() {
-  return {
-    ...getAdminSessionCookieOptions(),
-    maxAge: 0,
-  };
-}
-
-export async function getAdminAccountFromToken(
-  token: string | undefined,
-): Promise<AdminAccount | null> {
-  if (!token) return null;
-  return readBackendAdminSession(token);
-}
 
 export function getAdminDashboardPath(
   locale: SupportedLocale = defaultLocale,

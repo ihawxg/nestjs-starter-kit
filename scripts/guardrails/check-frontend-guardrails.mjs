@@ -643,22 +643,6 @@ function adminDashboardChecks() {
     "frontend/src/app/[locale]/admin/(protected)/not-found.tsx",
     "frontend/src/app/[locale]/admin/(protected)/[...adminNotFound]/page.tsx",
     "frontend/src/app/admin/api/[...adminApiNotFound]/route.ts",
-    "frontend/src/app/admin/api/auth/login/route.ts",
-    "frontend/src/app/admin/api/auth/logout/route.ts",
-    "frontend/src/app/admin/api/auth/session/route.ts",
-    "frontend/src/app/admin/api/news/route.ts",
-    "frontend/src/app/admin/api/news/[id]/route.ts",
-    "frontend/src/app/admin/api/news/[id]/assets/route.ts",
-    "frontend/src/app/admin/api/news/[id]/assets/[assetId]/route.ts",
-    "frontend/src/app/admin/api/news/[id]/assets/[assetId]/download/route.ts",
-    "frontend/src/app/admin/api/news/[id]/assets/[assetId]/view/route.ts",
-    "frontend/src/app/admin/api/news/[id]/categories/route.ts",
-    "frontend/src/app/admin/api/news/[id]/restore/route.ts",
-    "frontend/src/app/admin/api/news/[id]/translations/route.ts",
-    "frontend/src/app/admin/api/news/[id]/translations/[translationLocale]/route.ts",
-    "frontend/src/app/admin/api/news/[id]/translations/[translationLocale]/auto-translate/route.ts",
-    "frontend/src/app/admin/api/news/categories/route.ts",
-    "frontend/src/app/admin/api/news/categories/[categoryId]/route.ts",
     "frontend/src/app/[locale]/admin/(protected)/news/page.tsx",
     "frontend/src/app/[locale]/admin/(protected)/news/new/page.tsx",
     "frontend/src/app/[locale]/admin/(protected)/news/[id]/page.tsx",
@@ -667,8 +651,8 @@ function adminDashboardChecks() {
     "frontend/src/components/admin/admin-login-form.tsx",
     "frontend/src/components/admin/admin-not-found-content.tsx",
     "frontend/src/components/admin/admin-shell.tsx",
+    "frontend/src/lib/admin-api/admin-fetch.ts",
     "frontend/src/lib/admin-api/auth.ts",
-    "frontend/src/lib/admin-api/news.ts",
     "frontend/src/lib/admin-api/news-client.ts",
     "frontend/src/lib/admin-auth/server.ts",
     "frontend/src/lib/admin-auth/session.ts",
@@ -816,10 +800,48 @@ function adminDashboardChecks() {
   const adminApi = path.join(srcRoot, "lib", "admin-api", "auth.ts");
   if (existsSync(adminApi)) {
     const text = read(adminApi);
-    if (!text.includes("userControllerLogin") || !text.includes("adminAuthControllerSession")) {
+    if (
+      !text.includes("/admin/auth/login") ||
+      !text.includes("credentials: 'include'") ||
+      !text.includes("readBackendAdminSessionFromCookieHeader")
+    ) {
       fail.push(
-        "Admin API wrapper must centralize backend login and session generated SDK usage.",
+        "Admin auth wrapper must use backend-owned cookie auth with credentialed backend session calls.",
       );
+    }
+  }
+
+  const adminFetchWrapper = path.join(
+    srcRoot,
+    "lib",
+    "admin-api",
+    "admin-fetch.ts",
+  );
+  if (existsSync(adminFetchWrapper)) {
+    const text = read(adminFetchWrapper);
+    for (const token of [
+      "getPublicApiBaseUrl",
+      "credentials: 'include'",
+      "townhall_admin_csrf",
+      "x-townhall-csrf",
+      "document.cookie",
+    ]) {
+      if (!text.includes(token)) {
+        fail.push(`Admin backend cookie fetch wrapper must include ${token}.`);
+      }
+    }
+  }
+
+  const newsClient = path.join(srcRoot, "lib", "admin-api", "news-client.ts");
+  if (existsSync(newsClient)) {
+    const text = read(newsClient);
+    if (!text.includes("adminFetchJson") || !text.includes("/admin/news")) {
+      fail.push(
+        "News admin browser client must call backend admin routes through the admin fetch wrapper.",
+      );
+    }
+    if (text.includes("/admin/api/news")) {
+      fail.push("News admin browser client must not call Next /admin/api/news proxies.");
     }
   }
 
@@ -828,9 +850,7 @@ function adminDashboardChecks() {
     const text = read(adminSession);
     for (const token of [
       "townhall_admin_session",
-      "httpOnly: true",
-      "sameSite: 'lax'",
-      "path: '/'",
+      "townhall_admin_csrf",
       "getAdminDashboardPath",
       "getAdminLoginPath",
       "switchAdminLocalePath",
@@ -971,10 +991,20 @@ function clientSecurityChecks() {
     if (
       /document\.cookie/.test(text) &&
       !relative.startsWith("frontend/src/server/") &&
-      !relative.startsWith("frontend/src/lib/auth/")
+      !relative.startsWith("frontend/src/lib/auth/") &&
+      relative !== "frontend/src/lib/admin-api/admin-fetch.ts"
     ) {
       fail.push(
-        `Do not manage auth cookies in public/client code; future admin auth must use HttpOnly cookies: ${relative}`,
+        `Do not manage auth cookies outside the approved admin fetch wrapper: ${relative}`,
+      );
+    }
+
+    if (
+      /\/admin\/api\/(?:auth|news)\b/.test(text) &&
+      !relative.startsWith("frontend/src/app/admin/api/[...adminApiNotFound]/")
+    ) {
+      fail.push(
+        `Admin auth/news browser calls must target the backend, not Next admin API proxies: ${relative}`,
       );
     }
 

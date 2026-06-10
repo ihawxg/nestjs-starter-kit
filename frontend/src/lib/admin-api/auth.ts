@@ -1,8 +1,4 @@
 import { getBackendApiBaseUrl } from '@/lib/config/env';
-import {
-  adminAuthControllerSession,
-  userControllerLogin,
-} from '@/lib/api/generated';
 
 export type AdminAccount = {
   id: number;
@@ -19,35 +15,54 @@ export type AdminLoginCredentials = {
 
 export async function loginToBackendAdmin(
   credentials: AdminLoginCredentials,
-): Promise<string> {
-  const result = await userControllerLogin({
-    baseUrl: getBackendApiBaseUrl(),
-    body: credentials,
+): Promise<AdminAccount> {
+  const response = await fetch(new URL('/admin/auth/login', getBackendApiBaseUrl()), {
+    body: JSON.stringify(credentials),
+    cache: 'no-store',
+    credentials: 'include',
+    headers: {
+      'content-type': 'application/json',
+    },
+    method: 'POST',
   });
-  const token = readString(readProperty(result.data, 'token'));
 
-  if (!token) {
-    throw new Error('Backend login did not return an admin token.');
+  if (!response.ok) {
+    throw new Error(await readErrorMessage(response));
   }
 
-  return token;
+  const account = normalizeAdminAccount(
+    readProperty(await response.json(), 'account'),
+  );
+  if (!account) {
+    throw new Error('Backend login did not return admin account data.');
+  }
+
+  return account;
 }
 
-export async function readBackendAdminSession(
-  token: string,
-): Promise<AdminAccount | null> {
-  if (!token) return null;
+export async function logoutBackendAdmin(): Promise<void> {
+  await fetch(new URL('/admin/auth/logout', getBackendApiBaseUrl()), {
+    cache: 'no-store',
+    credentials: 'include',
+    method: 'POST',
+  });
+}
 
-  const result = await adminAuthControllerSession({
-    baseUrl: getBackendApiBaseUrl(),
+export async function readBackendAdminSessionFromCookieHeader(
+  cookieHeader: string | null,
+): Promise<AdminAccount | null> {
+  if (!cookieHeader) return null;
+
+  const result = await fetch(new URL('/admin/auth/session', getBackendApiBaseUrl()), {
+    cache: 'no-store',
     headers: {
-      Authorization: `Bearer ${token}`,
+      cookie: cookieHeader,
     },
   });
 
-  if (result.error) return null;
+  if (!result.ok) return null;
 
-  return normalizeAdminAccount(readProperty(result.data, 'account'));
+  return normalizeAdminAccount(readProperty(await result.json(), 'account'));
 }
 
 function normalizeAdminAccount(value: unknown): AdminAccount | null {
@@ -87,4 +102,25 @@ function readString(value: unknown): string | null {
   if (typeof value !== 'string') return null;
   const trimmed = value.trim();
   return trimmed.length > 0 ? trimmed : null;
+}
+
+async function readErrorMessage(response: Response): Promise<string> {
+  try {
+    const payload = (await response.json()) as {
+      message?: string | string[];
+    };
+    if (Array.isArray(payload.message)) {
+      const joined = payload.message
+        .filter((item) => typeof item === 'string')
+        .join(', ');
+      if (joined) return joined;
+    }
+    if (typeof payload.message === 'string' && payload.message.trim()) {
+      return payload.message;
+    }
+  } catch {
+    // Fall through to generic login error.
+  }
+
+  return 'Login failed';
 }

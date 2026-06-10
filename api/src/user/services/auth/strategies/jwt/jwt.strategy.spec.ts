@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import { JwtStrategy } from './jwt.strategy';
+import { extractJwtFromAdminSessionCookie, JwtStrategy } from './jwt.strategy';
 import { AuthService } from '../../auth.service';
 import { JwtPayload } from '../../jwt-payload';
 
@@ -55,5 +55,28 @@ describe('JWT Strategy', () => {
 
     await expect(strategy.validate(payload)).resolves.toBe(account);
     expect(authService.validateAdminSession).toHaveBeenCalledWith(payload);
+  });
+
+  it('extracts JWTs from backend-owned admin session cookies', () => {
+    expect(
+      extractJwtFromAdminSessionCookie({
+        headers: {
+          cookie: 'other=value; townhall_admin_session=admin-token',
+        },
+      }),
+    ).toBe('admin-token');
+  });
+
+  it('prefers parsed admin session cookies when available', () => {
+    expect(
+      extractJwtFromAdminSessionCookie({
+        cookies: {
+          townhall_admin_session: 'parsed-token',
+        },
+        headers: {
+          cookie: 'townhall_admin_session=header-token',
+        },
+      }),
+    ).toBe('parsed-token');
   });
 });

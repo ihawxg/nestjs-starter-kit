@@ -118,7 +118,7 @@ Use `tanstack-query` for:
 Use `auth` and `security-best-practices` for:
 
 - admin frontend auth
-- HttpOnly cookie strategy
+- backend-owned HttpOnly cookie and CSRF strategy
 - public/admin route separation
 - token and secret exposure review
 

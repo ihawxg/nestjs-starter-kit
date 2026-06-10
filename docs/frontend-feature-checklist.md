@@ -20,16 +20,17 @@ Use this checklist before and after frontend feature work.
 
 - Route code stays under App Router.
 - Public route supports `en` and `bg`.
-- Admin page routes are locale-prefixed under `/en/admin` and `/bg/admin`; internal admin API routes stay under `/admin/api`.
+- Admin page routes are locale-prefixed under `/en/admin` and `/bg/admin`; frontend `/admin/api/*` routes are JSON 404 fallback only.
 - Backend calls from pages/components/features go through `src/lib/api` wrappers.
-- Admin backend calls go through `src/lib/admin-api` wrappers or internal route handlers.
+- Admin backend calls go through `src/lib/admin-api` wrappers.
 - Public wrappers import only public generated SDK functions needed by the feature.
 - Admin generated SDK functions are imported only from `src/lib/admin-api`.
 - No handwritten backend DTO/response/entity types are introduced.
 - Public frontend does not call `/admin/...`.
 - Public frontend does not import `src/components/admin`, `src/lib/admin-api`, or `src/lib/admin-auth`.
 - No JWT or auth state is stored in browser storage.
-- Admin JWTs stay server-only in HttpOnly cookies with path `/`.
+- Admin JWTs stay backend-owned in HttpOnly cookies with path `/`.
+- Admin mutations use the approved admin fetch wrapper so `credentials: include` and `x-townhall-csrf` are applied consistently.
 - Public UI handles empty backend results.
 - Public UI handles English fallback metadata without crashing.
 - Header/footer route navigation comes from `src/lib/navigation/public-navigation.ts`, not backend navigation endpoints.
@@ -74,9 +75,9 @@ Use this checklist before and after frontend feature work.
 - API wrapper tests cover query params and safe public endpoints.
 - Search uses public localized `/search` routes only.
 - Document/media links use safe backend public URLs.
-- Admin media/news asset preview and download links use protected internal `/admin/api/*` routes and never expose direct storage paths or browser-readable JWTs.
+- Admin media/news asset preview and download links use protected backend admin routes through approved wrappers and never expose storage paths or browser-readable JWTs.
 - Admin asset preview cards show safe thumbnails/previews for images, PDFs, CSV, text, and JSON where supported; Office and binary files show a safe metadata fallback with open/download actions. Staged pre-save previews use object URLs or browser `File` APIs only.
-- Admin create flows that attach files before a persisted id exists stage files only in memory, create the record first, then upload through protected internal admin API routes.
+- Admin create flows that attach files before a persisted id exists stage files only in memory, create the record first, then upload through credentialed backend admin routes.
 - Accessibility checks cover header, navigation, language switcher, forms, document lists, and alert banners when these exist.
 - Use Vitest, React Testing Library, jest-dom, user-event, jsdom, MSW, and V8 coverage once `frontend/` exists.
 - Generated API code is not tested directly; project API wrappers are tested.

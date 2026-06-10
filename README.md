@@ -116,7 +116,7 @@ The public frontend lives in `frontend/`.
 
 The global header/footer route menu is frontend-owned in `frontend/src/lib/navigation/public-navigation.ts`; it does not require backend navigation records to appear.
 
-The protected admin dashboard foundation lives under `frontend/src/app/[locale]/admin`, with legacy redirects and internal auth APIs under `frontend/src/app/admin`. It uses internal Next auth route handlers and an HttpOnly cookie so the browser never stores the backend JWT. Mantine is allowed only for admin route/component files; public UI remains custom Tailwind/lucide.
+The protected admin dashboard foundation lives under `frontend/src/app/[locale]/admin`, with legacy redirects and a JSON `/admin/api/*` fallback under `frontend/src/app/admin`. Admin auth is backend-owned: Nest sets an HttpOnly admin session cookie plus a CSRF cookie, and admin browser calls go directly to backend `/admin/...` routes through approved credentialed wrappers. Mantine is allowed only for admin route/component files; public UI remains custom Tailwind/lucide.
 
 Generate the frontend API client from the backend OpenAPI export without starting a dev server:
 

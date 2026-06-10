@@ -15,11 +15,17 @@ const mockedFetch = vi.fn();
 
 describe('admin news browser client', () => {
   beforeEach(() => {
+    vi.stubEnv('NEXT_PUBLIC_API_BASE_URL', 'http://backend.test');
+    Object.defineProperty(document, 'cookie', {
+      configurable: true,
+      value: 'townhall_admin_csrf=csrf-token',
+      writable: true,
+    });
     mockedFetch.mockReset();
     vi.stubGlobal('fetch', mockedFetch);
   });
 
-  it('fetches the filtered admin news list from the internal route', async () => {
+  it('fetches the filtered admin news list directly from the backend admin route', async () => {
     mockedFetch.mockResolvedValue(jsonResponse({
       news: {
         items: [],
@@ -35,7 +41,7 @@ describe('admin news browser client', () => {
     });
 
     expect(mockedFetch).toHaveBeenCalledWith(
-      '/admin/api/news?page=2&status=draft',
+      'http://backend.test/admin/news?page=2&status=draft',
       expect.any(Object),
     );
   });
@@ -55,7 +61,7 @@ describe('admin news browser client', () => {
     });
 
     expect(mockedFetch).toHaveBeenCalledWith(
-      '/admin/api/news',
+      'http://backend.test/admin/news',
       expect.objectContaining({
         method: 'POST',
         body: JSON.stringify({
@@ -68,6 +74,9 @@ describe('admin news browser client', () => {
         }),
       }),
     );
+    const init = mockedFetch.mock.calls[0][1] as RequestInit;
+    expect(init.credentials).toBe('include');
+    expect(new Headers(init.headers).get('x-townhall-csrf')).toBe('csrf-token');
   });
 
   it('throws the internal API error message when create fails', async () => {
@@ -97,7 +106,7 @@ describe('admin news browser client', () => {
     ).rejects.toThrow('summary must be longer than or equal to 2 characters');
   });
 
-  it('assigns categories through the internal admin route', async () => {
+  it('assigns categories through the backend admin route', async () => {
     mockedFetch.mockResolvedValue(jsonResponse({
       news: newsFixture,
     }));
@@ -105,7 +114,7 @@ describe('admin news browser client', () => {
     await assignAdminNewsItemCategories(4, [1, 2]);
 
     expect(mockedFetch).toHaveBeenCalledWith(
-      '/admin/api/news/4/categories',
+      'http://backend.test/admin/news/4/categories',
       expect.objectContaining({
         method: 'PATCH',
         body: JSON.stringify({
@@ -123,7 +132,7 @@ describe('admin news browser client', () => {
     await restoreAdminNewsItem(4);
 
     expect(mockedFetch).toHaveBeenCalledWith(
-      '/admin/api/news/4/restore',
+      'http://backend.test/admin/news/4/restore',
       expect.objectContaining({
         method: 'PATCH',
       }),
@@ -141,7 +150,7 @@ describe('admin news browser client', () => {
     await uploadAdminNewsItemAssets(4, [file]);
 
     expect(mockedFetch).toHaveBeenCalledWith(
-      '/admin/api/news/4/assets',
+      'http://backend.test/admin/news/4/assets',
       expect.objectContaining({
         method: 'POST',
         body: expect.any(FormData),
@@ -164,23 +173,23 @@ describe('admin news browser client', () => {
     await autoTranslateAdminNewsTranslation(4, 'bg');
 
     expect(mockedFetch).toHaveBeenCalledWith(
-      '/admin/api/news/4/translations/bg/auto-translate',
+      'http://backend.test/admin/news/4/translations/bg/auto-translate',
       expect.objectContaining({
         method: 'POST',
       }),
     );
   });
 
-  it('builds internal-only admin asset URLs', () => {
+  it('builds protected backend admin asset URLs', () => {
     expect(getAdminNewsAssetViewUrl(4, 9)).toBe(
-      '/admin/api/news/4/assets/9/view',
+      'http://backend.test/admin/news/4/assets/9/download?disposition=inline',
     );
     expect(getAdminNewsAssetDownloadUrl(4, 9)).toBe(
-      '/admin/api/news/4/assets/9/download',
+      'http://backend.test/admin/news/4/assets/9/download?disposition=attachment',
     );
   });
 
-  it('fetches persisted text previews through the internal view route', async () => {
+  it('fetches persisted text previews through the protected backend view route', async () => {
     mockedFetch.mockResolvedValue(
       new Response('name,value\nBudget,100', {
         status: 200,
@@ -193,13 +202,13 @@ describe('admin news browser client', () => {
     await expect(fetchAdminNewsAssetPreviewText(4, 9)).resolves.toBe(
       'name,value\nBudget,100',
     );
-    expect(mockedFetch).toHaveBeenCalledWith(
-      '/admin/api/news/4/assets/9/view',
-      expect.objectContaining({
-        headers: expect.objectContaining({
-          accept: 'text/plain, text/csv, application/json, text/*',
-        }),
-      }),
+    expect(mockedFetch.mock.calls[0][0]).toBe(
+      'http://backend.test/admin/news/4/assets/9/download?disposition=inline',
+    );
+    const init = mockedFetch.mock.calls[0][1] as RequestInit;
+    expect(init.credentials).toBe('include');
+    expect(new Headers(init.headers).get('accept')).toBe(
+      'text/plain, text/csv, application/json, text/*',
     );
   });
 });

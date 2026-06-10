@@ -48,8 +48,9 @@ Use this file as durable guidance for Codex CLI and other coding agents working 
 - The current public locale root route renders only header, empty main content, and footer. Do not add homepage body sections until a specific public-page implementation batch is requested.
 - The public header has explicit fallback contact chrome requested by the user: `Mon-Fri, 8:30 AM-4:30 PM`, `(555) 014-2800`, and `24 Main Street, Millbrook`. Backend site settings may override these values later.
 - The admin dashboard page routes are localized under `/en/admin` and `/bg/admin`. Legacy `/admin` and `/admin/login` redirect to English admin routes.
-- Internal admin auth API routes stay unlocalized under `/admin/api/*`.
-- Admin frontend auth uses internal Next route handlers and an HttpOnly cookie; never store backend JWTs in browser-readable storage.
+- The backend owns admin auth cookies through `/admin/auth/login`, `/admin/auth/logout`, and `/admin/auth/session`.
+- Admin frontend code calls backend admin APIs directly through approved `frontend/src/lib/admin-api` wrappers with `credentials: 'include'`; never store backend JWTs in browser-readable storage.
+- Frontend `/admin/api/*` routes are JSON 404 fallback only. Do not reintroduce Next `/admin/api/auth/*` or `/admin/api/news/*` proxies.
 - Platform hardening includes audit logs, rate limits, admin account lifecycle, and public search.
 
 ## Backend Feature Rules
@@ -114,14 +115,15 @@ Non-negotiable frontend rules:
 - Runtime env must go through the Zod-backed frontend env helper; do not read public API URLs ad hoc from route or feature code.
 - Use `sanitize-html` through the project helper before rendering rich CMS/news/page HTML.
 - Use TanStack Query for interactive admin CRUD screens and other client flows that actually need client caching/refetching. Server-rendered public reads stay in Server Components and API wrappers.
-- Admin create forms that need files before a backend id exists should stage files in browser memory, create the record first, then upload through protected internal `/admin/api/*` routes. Preview staged files only through browser object URLs or browser `File` APIs, and preview uploaded files only through protected internal admin routes. Do not expose storage paths or backend JWTs to make this work.
+- Admin create forms that need files before a backend id exists should stage files in browser memory, create the record first, then upload through credentialed backend admin routes via the approved admin API wrapper. Preview staged files only through browser object URLs or browser `File` APIs, and preview uploaded files only through protected backend admin routes. Do not expose storage paths or backend JWTs to make this work.
 - Use React Hook Form with Zod/resolvers for non-trivial forms when forms are introduced; do not add form state libraries per feature.
 - Do not store JWTs or auth state in `localStorage` or `sessionStorage`.
-- Admin frontend auth must use HttpOnly cookies only. Cookie path is `/` so both `/en/admin` and `/bg/admin` can validate the same server-owned session.
+- Admin frontend auth must use backend-owned HttpOnly cookies only. Cookie path is `/` so both `/en/admin` and `/bg/admin` can validate the same session.
+- Cookie-authenticated admin mutations must include the readable CSRF cookie value in `x-townhall-csrf`. Bearer-token Swagger/manual admin calls stay supported without CSRF.
 - Admin dashboard code lives under `frontend/src/app/[locale]/admin`, legacy redirects/internal APIs under `frontend/src/app/admin`, and shared admin code under `frontend/src/components/admin`, `frontend/src/lib/admin-api`, and `frontend/src/lib/admin-auth`.
 - Frontend-owned UI strings live in `frontend/messages/en.json` and `frontend/messages/bg.json`, compile through Paraglide into `frontend/src/lib/i18n/paraglide`, and are consumed through `frontend/src/lib/i18n/messages.ts`. Do not add handwritten EN/BG copy objects.
 - Admin generated SDK calls must be wrapped under `frontend/src/lib/admin-api`; public code must not import admin wrappers.
-- Admin browser code calls internal Next `/admin/api/*` routes only. Do not call Nest admin URLs directly from the browser unless backend auth is deliberately redesigned around server-owned cookies and CSRF protection.
+- Admin browser code calls Nest admin URLs directly only through `frontend/src/lib/admin-api/admin-fetch.ts`, which sends credentials and CSRF headers. Do not scatter direct admin fetches through components or feature files.
 - Custom UI components must live under `frontend/src/components/ui` or domain feature folders. Do not add `frontend/src/components/dsfr`.
 - Do not import DSFR, Bootstrap, MUI, Chakra, Ant, or similar external UI/component libraries. Mantine, including admin-only helpers such as `@mantine/dropzone`, is the only current exception and is admin-only.
 - Tailwind utilities are allowed when they use project theme tokens such as `townhall-navy`, `townhall-gold`, and `townhall-cream`. Do not add ad hoc hex colors or inline color styles outside the approved theme file.

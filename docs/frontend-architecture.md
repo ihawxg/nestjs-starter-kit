@@ -16,7 +16,7 @@ Public routes consume published backend APIs only. Admin routes use protected ba
 - Source root: `frontend/src`.
 - Public locale routes: `frontend/src/app/[locale]` with `en` and `bg`.
 - Localized admin page routes: `frontend/src/app/[locale]/admin`.
-- Internal admin API route handlers: `frontend/src/app/admin/api`.
+- Frontend admin API fallback route: `frontend/src/app/admin/api/[...adminApiNotFound]/route.ts`.
 - `/en/admin/login` and `/bg/admin/login` are public only for sign-in; `/en/admin`, `/bg/admin`, and future admin management screens are protected.
 - Active admin sessions that visit a localized admin login page redirect to that locale dashboard.
 - Root `/` redirects to `/en`.
@@ -34,7 +34,7 @@ Public routes consume published backend APIs only. Admin routes use protected ba
 - `lucide-react` icons are allowed for controls and civic UI affordances.
 - Public UI does not use external component libraries.
 - Mantine is allowed only for protected admin route/component files.
-- Admin auth uses internal Next route handlers and an HttpOnly cookie; browser code never receives or stores backend JWTs.
+- Admin auth uses backend-owned HttpOnly cookies plus CSRF. Browser code never receives or stores backend JWTs.
 
 ## Monorepo Shape
 
@@ -81,7 +81,7 @@ Root `package.json` owns workspace-level verification only. Framework commands s
 
 - Public routes must be locale-prefixed: `/en/...` and `/bg/...`.
 - Admin page routes are locale-prefixed: `/en/admin/...` and `/bg/admin/...`.
-- Internal admin API routes are not locale-prefixed and remain under `/admin/api/*`.
+- `/admin/api/*` frontend routes are not product APIs; they exist only as JSON 404 fallback for accidental legacy calls.
 - Unprefixed frontend routes should redirect to `/en` where practical.
 - Locale validation must allow only `en` and `bg`.
 - Frontend slugs are shared across languages because backend slugs are shared.
@@ -96,10 +96,10 @@ Root `package.json` owns workspace-level verification only. Framework commands s
 - Header/footer chrome fallback settings are centralized in `frontend/src/lib/public-site/fallback-settings.ts` so home, not-found, and future public shell pages do not drift.
 - Root `not-found.tsx` renders a locale-aware public 404 shell with the same header/footer chrome and no backend admin calls.
 - `/admin` redirects to `/en/admin`; `/admin/login` redirects to `/en/admin/login`.
-- `/en/admin/login` and `/bg/admin/login` render localized admin sign-in pages and post to internal Next auth route handlers.
+- `/en/admin/login` and `/bg/admin/login` render localized admin sign-in pages and post directly to backend `/admin/auth/login` through the admin auth wrapper.
 - `/en/admin` and `/bg/admin` render the protected localized dashboard foundation after server-side session validation.
 - Unknown protected admin page routes render a Mantine admin 404 inside the protected admin shell.
-- Unknown `/admin/api/*` routes return JSON `404` responses so admin API callers never receive HTML 404 chrome.
+- Unknown `/admin/api/*` routes return JSON `404` responses so accidental legacy admin API callers never receive HTML 404 chrome.
 
 ## API Layer
 
@@ -108,12 +108,12 @@ Root `package.json` owns workspace-level verification only. Framework commands s
 - Backend calls go through small public wrappers under `frontend/src/lib/api`.
 - Public wrappers may import public SDK functions from generated code. Public routes, components, and features must not import generated SDK functions directly.
 - Admin backend calls go through wrappers under `frontend/src/lib/admin-api`.
-- Browser-facing admin auth helpers go through `frontend/src/lib/admin-auth` and call internal `/admin/api/auth/*` routes only.
-- Browser-facing admin CRUD helpers call internal `/admin/api/*` route handlers only. These route handlers read the HttpOnly admin cookie server-side and call Nest admin APIs with the backend JWT.
+- Browser-facing admin auth helpers go through `frontend/src/lib/admin-auth` and `frontend/src/lib/admin-api/auth.ts`; they call backend `/admin/auth/*` with `credentials: include`.
+- Browser-facing admin CRUD helpers call backend `/admin/...` routes only through `frontend/src/lib/admin-api/admin-fetch.ts`, which prefixes `NEXT_PUBLIC_API_BASE_URL`, sends credentials, and adds the CSRF header for unsafe methods.
 - News admin uses TanStack Query with centralized query keys under `frontend/src/features/admin-news`, including list/detail/category/translation cache invalidation after writes.
 - News admin uses Tiptap through Mantine for admin-only rich HTML editing. Tiptap imports stay in approved admin feature files.
-- News admin stages files in browser memory on the create screen, creates the News record first, then uploads staged files through protected internal `/admin/api/news/:id/assets` routes after the backend id exists.
-- Protected admin asset view/download flows proxy through internal Next routes and backend admin routes; they must not expose storage keys, local paths, or direct Nest admin URLs to client code. News admin preview cards use object URLs and browser `File` APIs for unsaved staged image, PDF, CSV, text, and JSON previews. Persisted previews use protected view routes for image/PDF and protected text loading for CSV/text/JSON; Office and other binary files use a safe metadata fallback with open/download actions.
+- News admin stages files in browser memory on the create screen, creates the News record first, then uploads staged files through credentialed backend `/admin/news/:id/assets` routes after the backend id exists.
+- Protected admin asset view/download flows use backend admin download routes with cookie auth; they must not expose storage keys, local paths, or bearer JWTs. News admin preview cards use object URLs and browser `File` APIs for unsaved staged image, PDF, CSV, text, and JSON previews. Persisted previews use protected backend asset routes for image/PDF and protected text loading for CSV/text/JSON; Office and other binary files use a safe metadata fallback with open/download actions.
 - Frontend-owned UI strings live in `frontend/messages/en.json` and `frontend/messages/bg.json`, compile through Paraglide into `frontend/src/lib/i18n/paraglide`, and are consumed through project helpers under `frontend/src/lib/i18n/messages.ts`.
 - Do not call `fetch()` directly from pages, components, or feature folders.
 - Do not handwrite backend DTO, entity, response, or payload types outside generated code.

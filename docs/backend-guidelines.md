@@ -96,7 +96,12 @@ Current role implementation:
 - First admin is created or promoted through `npm run admin:create`.
 - Login is admin-only: disabled accounts and legacy non-admin rows are rejected.
 - JWT validation resolves an active admin account for protected requests; stale, disabled, missing, or legacy non-admin token payloads are rejected.
+- `/admin/auth/login` creates backend-owned admin cookies for the frontend dashboard and returns safe account data only.
+- `/admin/auth/logout` clears backend-owned admin cookies.
 - `GET /admin/auth/session` returns the safe current admin account for protected admin frontend session checks.
+- Protected admin routes accept Bearer tokens for Swagger/manual workflows and backend-owned HttpOnly session cookies for the frontend dashboard.
+- Cookie-authenticated unsafe admin requests require `x-townhall-csrf` matching the signed readable CSRF cookie. Bearer-token requests do not require CSRF.
+- Credentialed CORS must allow only configured frontend origins from `FRONTEND_ALLOWED_ORIGINS`; do not use wildcard origins with credentials.
 - The physical table remains `users` for now; public API language should use admin accounts, not public users.
 
 Admin write routes are blocked until all are true:

@@ -1,13 +1,8 @@
-import { cookies } from 'next/headers';
+import { headers } from 'next/headers';
 import type { AdminAccount } from '@/lib/admin-api/auth';
-import {
-  adminSessionCookieName,
-  getAdminAccountFromToken,
-} from './session';
+import { readBackendAdminSessionFromCookieHeader } from '@/lib/admin-api/auth';
 
 export async function getCurrentAdminAccount(): Promise<AdminAccount | null> {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(adminSessionCookieName)?.value;
-
-  return getAdminAccountFromToken(token);
+  const requestHeaders = await headers();
+  return readBackendAdminSessionFromCookieHeader(requestHeaders.get('cookie'));
 }

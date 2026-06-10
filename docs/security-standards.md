@@ -23,9 +23,12 @@ Current implementation:
 - Login is admin-only; disabled accounts and legacy non-admin rows are rejected.
 - Admin account lifecycle uses `/admin/accounts` while the physical persistence table remains `users`.
 - Protected JWT validation resolves an active admin account before routes run.
+- `POST /admin/auth/login` sets the backend-owned HttpOnly admin session cookie and a readable signed CSRF cookie.
+- `POST /admin/auth/logout` clears backend-owned admin auth cookies.
 - `GET /admin/auth/session` is the backend session check used by the protected frontend admin dashboard.
-- The frontend admin dashboard stores the backend JWT only in an HttpOnly cookie with path `/` so localized `/en/admin` and `/bg/admin` routes can validate it; browser JavaScript must never receive or persist it.
-- Frontend admin browser code calls internal Next admin routes for CRUD and protected downloads. Direct browser-to-Nest admin calls require a deliberate cookie/CSRF auth redesign.
+- The frontend admin dashboard calls backend `/admin/...` APIs directly through approved admin wrappers with `credentials: include`; browser JavaScript must never receive or persist a bearer JWT.
+- Cookie-authenticated unsafe admin requests must send `x-townhall-csrf` matching the readable CSRF cookie. Bearer-token Swagger/manual admin calls remain supported without CSRF.
+- Credentialed CORS must allow only configured frontend origins; never use wildcard origins with credentials.
 
 ## Admin Routes
 

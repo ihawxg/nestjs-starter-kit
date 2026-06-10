@@ -12,6 +12,8 @@ import { AppCacheModule } from '../app-cache/app-cache.module';
 import { RolesGuard } from './guards/roles/roles.guard';
 import { AdminAccountsController } from './controllers/admin-accounts.controller';
 import { AdminAuthController } from './controllers/admin-auth.controller';
+import { APP_GUARD } from '@nestjs/core';
+import { AdminCsrfGuard } from './guards/admin-csrf/admin-csrf.guard';
 
 @Module({
   imports: [
@@ -27,6 +29,10 @@ import { AdminAuthController } from './controllers/admin-auth.controller';
     JwtService,
     JwtStrategy,
     RolesGuard,
+    {
+      provide: APP_GUARD,
+      useClass: AdminCsrfGuard,
+    },
   ],
 })
 export class UserModule {}

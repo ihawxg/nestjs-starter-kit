@@ -601,6 +601,34 @@ export type AdminAccountsControllerUpdateResponses = {
     200: unknown;
 };
 
+export type AdminAuthControllerLoginData = {
+    body: LoginDto;
+    path?: never;
+    query?: never;
+    url: '/admin/auth/login';
+};
+
+export type AdminAuthControllerLoginResponses = {
+    /**
+     * Creates a backend-owned HttpOnly admin session cookie and returns safe account data.
+     */
+    200: unknown;
+};
+
+export type AdminAuthControllerLogoutData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/admin/auth/logout';
+};
+
+export type AdminAuthControllerLogoutResponses = {
+    /**
+     * Clears backend-owned admin session cookies.
+     */
+    200: unknown;
+};
+
 export type AdminAuthControllerSessionData = {
     body?: never;
     path?: never;
