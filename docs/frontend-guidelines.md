@@ -41,6 +41,7 @@
 - Do not handwrite backend response or DTO types in frontend code.
 - Keep frontend-specific view models small and derived from generated types at the API boundary.
 - Public pages must handle empty results and backend English fallback metadata without crashing.
+- Public News list/detail pages are the first implemented public content slice. Keep future public content pages aligned with this pattern: Server Component route, `src/lib/api` wrapper, generated DTOs, Paraglide UI copy, sanitized rich HTML, and backend public download URLs.
 - Read public environment values through `src/lib/config`; do not read `process.env.NEXT_PUBLIC_API_BASE_URL` directly in routes, components, or features.
 
 ## Rendering Defaults
@@ -97,6 +98,7 @@
 - Never expose backend secrets through `NEXT_PUBLIC_*`.
 - Do not trust URL params or search params. Validate and normalize locale, page, limit, type, and slug inputs.
 - Use backend public download routes rather than constructing local storage paths.
+- Public News asset links must use `/en/news/:slug/assets/:assetId/download` or `/bg/news/:slug/assets/:assetId/download` through the public News API helper. Never construct storage keys, local paths, or admin asset URLs in public pages.
 - Use protected backend admin routes through approved admin API wrappers for admin asset preview/download. Do not construct storage paths or bearer-token URLs in browser code.
 - Persisted admin asset previews must render through protected backend asset routes. Unsaved staged file previews may use temporary browser object URLs only and must never be stored in local/session storage.
 - For create forms where files require a persisted backend id, stage files in browser memory, create the record first, then upload staged files through credentialed backend admin routes via the approved admin API wrapper. Keep staged files out of local/session storage.

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import type { PublicShellData } from '@/lib/api/public-shell';
 import type { SupportedLocale } from '@/lib/i18n/locales';
 import { getPublicShellCopy } from '@/lib/i18n/messages';
@@ -8,9 +9,10 @@ import { SiteFooter } from '@/components/ui/site-footer';
 type PublicShellProps = {
   locale: SupportedLocale;
   data: PublicShellData;
+  children?: ReactNode;
 };
 
-export function PublicShell({ locale, data }: PublicShellProps) {
+export function PublicShell({ locale, data, children }: PublicShellProps) {
   const settings = resolvePublicSiteSettings(data.settings, locale);
   const copy = getPublicShellCopy(locale);
 
@@ -26,7 +28,9 @@ export function PublicShell({ locale, data }: PublicShellProps) {
         lang={locale}
         aria-label={copy.mainLabel}
         className="flex-1 bg-townhall-paper"
-      />
+      >
+        {children}
+      </main>
       <SiteFooter
         locale={locale}
         settings={settings}

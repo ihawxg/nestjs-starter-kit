@@ -90,6 +90,7 @@ Root `package.json` owns workspace-level verification only. Framework commands s
 - Backend navigation APIs may still exist for CMS-managed links, but the public shell must not depend on `/navigation/header` or `/navigation/footer` to show its primary menu.
 - The public shell header/footer follows the reference structure from `tanstackstart/my-app/src/public`: utility strip, masthead, navy desktop nav, rich dropdown columns with callout, mobile accordion, footer action strip, contact block, columns, and legal links.
 - The current `/en` and `/bg` root pages intentionally render only the global header, empty main landmark, and footer. Do not add homepage body sections until the homepage feature is explicitly planned.
+- Public News routes are implemented at `/en/news`, `/bg/news`, `/en/news/:slug`, and `/bg/news/:slug`. They use the public shell, server-rendered route data, generated News DTOs, and safe backend public asset download URLs.
 - Empty public shell pages use a full-height flex column so the footer stays at the viewport bottom.
 - Header selected-state styling uses the actual current pathname, not only the locale root path.
 - The public header displays user-requested fallback chrome when backend site settings are empty: `Mon-Fri, 8:30 AM-4:30 PM`, `(555) 014-2800`, and `24 Main Street, Millbrook`. Published site settings may override these values.
@@ -107,6 +108,7 @@ Root `package.json` owns workspace-level verification only. Framework commands s
 - Generated API code lives only under `frontend/src/lib/api/generated` or another approved generated folder.
 - Backend calls go through small public wrappers under `frontend/src/lib/api`.
 - Public wrappers may import public SDK functions from generated code. Public routes, components, and features must not import generated SDK functions directly.
+- Public News uses `frontend/src/lib/api/public-news.ts` as the pattern for read-only public domains: normalize search params in the wrapper, call locale-prefixed public endpoints, return generated DTO shapes, and construct only safe public download URLs.
 - Admin backend calls go through wrappers under `frontend/src/lib/admin-api`.
 - Browser-facing admin auth helpers go through `frontend/src/lib/admin-auth` and `frontend/src/lib/admin-api/auth.ts`; they call backend `/admin/auth/*` with `credentials: include`.
 - Browser-facing admin CRUD helpers call backend `/admin/...` routes only through `frontend/src/lib/admin-api/admin-fetch.ts`, which prefixes `NEXT_PUBLIC_API_BASE_URL`, sends credentials, and adds the CSRF header for unsafe methods.

@@ -2465,6 +2465,20 @@ export const public_nav_meetings_label: ((inputs?: Public_Nav_Meetings_LabelInpu
 /**
 * | output |
 * | --- |
+* | "News" |
+*
+* @param {Public_Nav_News_LabelInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_nav_news_label: ((inputs?: Public_Nav_News_LabelInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_Nav_News_LabelInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
 * | "Facilities, reservations, and public spaces." |
 *
 * @param {Public_Nav_Parks_DescriptionInputs} inputs
@@ -2768,6 +2782,258 @@ export const public_not_found_search: ((inputs?: Public_Not_Found_SearchInputs, 
 export const public_not_found_title: ((inputs?: Public_Not_Found_TitleInputs, options?: {
     locale?: "en" | "bg";
 }) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_Not_Found_TitleInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "Breadcrumb" |
+*
+* @param {Public_News_Breadcrumb_Aria_LabelInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_breadcrumb_aria_label: ((inputs?: Public_News_Breadcrumb_Aria_LabelInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_Breadcrumb_Aria_LabelInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "Home" |
+*
+* @param {Public_News_Breadcrumb_HomeInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_breadcrumb_home: ((inputs?: Public_News_Breadcrumb_HomeInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_Breadcrumb_HomeInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "News" |
+*
+* @param {Public_News_Breadcrumb_NewsInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_breadcrumb_news: ((inputs?: Public_News_Breadcrumb_NewsInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_Breadcrumb_NewsInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "Attachments" |
+*
+* @param {Public_News_Detail_AttachmentsInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_detail_attachments: ((inputs?: Public_News_Detail_AttachmentsInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_Detail_AttachmentsInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "Back to news" |
+*
+* @param {Public_News_Detail_Back_To_NewsInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_detail_back_to_news: ((inputs?: Public_News_Detail_Back_To_NewsInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_Detail_Back_To_NewsInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "Download" |
+*
+* @param {Public_News_Detail_DownloadInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_detail_download: ((inputs?: Public_News_Detail_DownloadInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_Detail_DownloadInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "This item is shown in English because the requested translation is not available yet." |
+*
+* @param {Public_News_Detail_Fallback_NoticeInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_detail_fallback_notice: ((inputs?: Public_News_Detail_Fallback_NoticeInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_Detail_Fallback_NoticeInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "No public files are attached to this news item." |
+*
+* @param {Public_News_Detail_No_AttachmentsInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_detail_no_attachments: ((inputs?: Public_News_Detail_No_AttachmentsInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_Detail_No_AttachmentsInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "Published" |
+*
+* @param {Public_News_Detail_PublishedInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_detail_published: ((inputs?: Public_News_Detail_PublishedInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_Detail_PublishedInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "All news" |
+*
+* @param {Public_News_List_All_CategoriesInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_list_all_categories: ((inputs?: Public_News_List_All_CategoriesInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_List_All_CategoriesInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "No published news is available for this selection." |
+*
+* @param {Public_News_List_EmptyInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_list_empty: ((inputs?: Public_News_List_EmptyInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_List_EmptyInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "Next" |
+*
+* @param {Public_News_List_NextInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_list_next: ((inputs?: Public_News_List_NextInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_List_NextInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "News pagination" |
+*
+* @param {Public_News_List_Pagination_LabelInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_list_pagination_label: ((inputs?: Public_News_List_Pagination_LabelInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_List_Pagination_LabelInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "Page" |
+*
+* @param {Public_News_List_Page_LabelInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_list_page_label: ((inputs?: Public_News_List_Page_LabelInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_List_Page_LabelInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "Previous" |
+*
+* @param {Public_News_List_PreviousInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_list_previous: ((inputs?: Public_News_List_PreviousInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_List_PreviousInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "Read more" |
+*
+* @param {Public_News_List_Read_MoreInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_list_read_more: ((inputs?: Public_News_List_Read_MoreInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_List_Read_MoreInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "Published announcements, updates, and public information from the municipality." |
+*
+* @param {Public_News_List_SubtitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_list_subtitle: ((inputs?: Public_News_List_SubtitleInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_List_SubtitleInputs, {
+    locale?: "en" | "bg";
+}, {}>;
+/**
+* | output |
+* | --- |
+* | "News" |
+*
+* @param {Public_News_List_TitleInputs} inputs
+* @param {{ locale?: "en" | "bg" }} options
+* @returns {LocalizedString}
+*/
+export const public_news_list_title: ((inputs?: Public_News_List_TitleInputs, options?: {
+    locale?: "en" | "bg";
+}) => LocalizedString) & import("../runtime.js").MessageMetadata<Public_News_List_TitleInputs, {
     locale?: "en" | "bg";
 }, {}>;
 /**
@@ -3227,6 +3493,7 @@ export type Public_Nav_Legal_PrivacyInputs = {};
 export type Public_Nav_Legal_Public_RecordsInputs = {};
 export type Public_Nav_Meeting_Agendas_LabelInputs = {};
 export type Public_Nav_Meetings_LabelInputs = {};
+export type Public_Nav_News_LabelInputs = {};
 export type Public_Nav_Parks_DescriptionInputs = {};
 export type Public_Nav_Parks_LabelInputs = {};
 export type Public_Nav_Pay_Bill_LabelInputs = {};
@@ -3249,6 +3516,24 @@ export type Public_Not_Found_EyebrowInputs = {};
 export type Public_Not_Found_HomeInputs = {};
 export type Public_Not_Found_SearchInputs = {};
 export type Public_Not_Found_TitleInputs = {};
+export type Public_News_Breadcrumb_Aria_LabelInputs = {};
+export type Public_News_Breadcrumb_HomeInputs = {};
+export type Public_News_Breadcrumb_NewsInputs = {};
+export type Public_News_Detail_AttachmentsInputs = {};
+export type Public_News_Detail_Back_To_NewsInputs = {};
+export type Public_News_Detail_DownloadInputs = {};
+export type Public_News_Detail_Fallback_NoticeInputs = {};
+export type Public_News_Detail_No_AttachmentsInputs = {};
+export type Public_News_Detail_PublishedInputs = {};
+export type Public_News_List_All_CategoriesInputs = {};
+export type Public_News_List_EmptyInputs = {};
+export type Public_News_List_NextInputs = {};
+export type Public_News_List_Pagination_LabelInputs = {};
+export type Public_News_List_Page_LabelInputs = {};
+export type Public_News_List_PreviousInputs = {};
+export type Public_News_List_Read_MoreInputs = {};
+export type Public_News_List_SubtitleInputs = {};
+export type Public_News_List_TitleInputs = {};
 export type Public_Shell_Footer_Address_LabelInputs = {};
 export type Public_Shell_Footer_Contact_AriaInputs = {};
 export type Public_Shell_Footer_Copyright_PrefixInputs = {};

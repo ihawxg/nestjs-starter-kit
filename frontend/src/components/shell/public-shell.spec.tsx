@@ -78,4 +78,23 @@ describe('PublicShell', () => {
       '/bg/contact',
     );
   });
+
+  it('renders optional public page content inside the main landmark', () => {
+    render(
+      <PublicShell
+        locale="en"
+        data={{
+          settings: null,
+          headerNavigation: getFrontendHeaderNavigation('en'),
+          footerNavigation: getFrontendFooterNavigation('en'),
+        }}
+      >
+        <section aria-label="News content" />
+      </PublicShell>,
+    );
+
+    expect(screen.getByRole('main', { name: 'Public page content' })).toContainElement(
+      screen.getByRole('region', { name: 'News content' }),
+    );
+  });
 });

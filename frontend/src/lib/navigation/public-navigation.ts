@@ -79,6 +79,7 @@ export function getFrontendHeaderNavigation(
     search: copy.search,
     items: [
       link(copy.labels.home, '/'),
+      link(copy.labels.news, '/news'),
       {
         type: 'dropdown',
         label: copy.labels.residents,
@@ -160,6 +161,7 @@ export function getFrontendFooterNavigation(
         title: copy.labels.government,
         links: [
           footerLink(copy.labels.council, '/government/council'),
+          footerLink(copy.labels.news, '/news'),
           footerLink(copy.labels.meetingAgendas, '/meetings/agenda'),
           footerLink(copy.labels.publicNotices, '/notices'),
           footerLink(copy.labels.departments, '/departments'),

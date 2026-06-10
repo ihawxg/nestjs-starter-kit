@@ -866,8 +866,10 @@ export type CategoriesControllerList0Data = {
 };
 
 export type CategoriesControllerList0Responses = {
-    200: unknown;
+    200: CategoriesListResponseDto;
 };
+
+export type CategoriesControllerList0Response = CategoriesControllerList0Responses[keyof CategoriesControllerList0Responses];
 
 export type CategoriesControllerList1Data = {
     body?: never;
@@ -879,8 +881,10 @@ export type CategoriesControllerList1Data = {
 };
 
 export type CategoriesControllerList1Responses = {
-    200: unknown;
+    200: CategoriesListResponseDto;
 };
+
+export type CategoriesControllerList1Response = CategoriesControllerList1Responses[keyof CategoriesControllerList1Responses];
 
 export type CategoriesControllerList2Data = {
     body?: never;
@@ -892,8 +896,10 @@ export type CategoriesControllerList2Data = {
 };
 
 export type CategoriesControllerList2Responses = {
-    200: unknown;
+    200: CategoriesListResponseDto;
 };
+
+export type CategoriesControllerList2Response = CategoriesControllerList2Responses[keyof CategoriesControllerList2Responses];
 
 export type CategoriesAdminControllerListData = {
     body?: never;
@@ -965,8 +971,10 @@ export type NewsControllerList0Data = {
 };
 
 export type NewsControllerList0Responses = {
-    200: unknown;
+    200: NewsListResponseDto;
 };
+
+export type NewsControllerList0Response = NewsControllerList0Responses[keyof NewsControllerList0Responses];
 
 export type NewsControllerList1Data = {
     body?: never;
@@ -980,8 +988,10 @@ export type NewsControllerList1Data = {
 };
 
 export type NewsControllerList1Responses = {
-    200: unknown;
+    200: NewsListResponseDto;
 };
+
+export type NewsControllerList1Response = NewsControllerList1Responses[keyof NewsControllerList1Responses];
 
 export type NewsControllerList2Data = {
     body?: never;
@@ -995,8 +1005,10 @@ export type NewsControllerList2Data = {
 };
 
 export type NewsControllerList2Responses = {
-    200: unknown;
+    200: NewsListResponseDto;
 };
+
+export type NewsControllerList2Response = NewsControllerList2Responses[keyof NewsControllerList2Responses];
 
 export type NewsControllerDetail0Data = {
     body?: never;
@@ -1008,8 +1020,10 @@ export type NewsControllerDetail0Data = {
 };
 
 export type NewsControllerDetail0Responses = {
-    200: unknown;
+    200: NewsItemResponseDto;
 };
+
+export type NewsControllerDetail0Response = NewsControllerDetail0Responses[keyof NewsControllerDetail0Responses];
 
 export type NewsControllerDetail1Data = {
     body?: never;
@@ -1021,8 +1035,10 @@ export type NewsControllerDetail1Data = {
 };
 
 export type NewsControllerDetail1Responses = {
-    200: unknown;
+    200: NewsItemResponseDto;
 };
+
+export type NewsControllerDetail1Response = NewsControllerDetail1Responses[keyof NewsControllerDetail1Responses];
 
 export type NewsControllerDetail2Data = {
     body?: never;
@@ -1034,8 +1050,10 @@ export type NewsControllerDetail2Data = {
 };
 
 export type NewsControllerDetail2Responses = {
-    200: unknown;
+    200: NewsItemResponseDto;
 };
+
+export type NewsControllerDetail2Response = NewsControllerDetail2Responses[keyof NewsControllerDetail2Responses];
 
 export type NewsControllerDownloadAsset0Data = {
     body?: never;
@@ -1048,6 +1066,9 @@ export type NewsControllerDownloadAsset0Data = {
 };
 
 export type NewsControllerDownloadAsset0Responses = {
+    /**
+     * Streams a published news asset for public download.
+     */
     200: unknown;
 };
 
@@ -1062,6 +1083,9 @@ export type NewsControllerDownloadAsset1Data = {
 };
 
 export type NewsControllerDownloadAsset1Responses = {
+    /**
+     * Streams a published news asset for public download.
+     */
     200: unknown;
 };
 
@@ -1076,6 +1100,9 @@ export type NewsControllerDownloadAsset2Data = {
 };
 
 export type NewsControllerDownloadAsset2Responses = {
+    /**
+     * Streams a published news asset for public download.
+     */
     200: unknown;
 };
 

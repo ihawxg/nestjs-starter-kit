@@ -176,6 +176,7 @@
 /** @typedef {{}} Public_Nav_Legal_Public_RecordsInputs */
 /** @typedef {{}} Public_Nav_Meeting_Agendas_LabelInputs */
 /** @typedef {{}} Public_Nav_Meetings_LabelInputs */
+/** @typedef {{}} Public_Nav_News_LabelInputs */
 /** @typedef {{}} Public_Nav_Parks_DescriptionInputs */
 /** @typedef {{}} Public_Nav_Parks_LabelInputs */
 /** @typedef {{}} Public_Nav_Pay_Bill_LabelInputs */
@@ -198,6 +199,24 @@
 /** @typedef {{}} Public_Not_Found_HomeInputs */
 /** @typedef {{}} Public_Not_Found_SearchInputs */
 /** @typedef {{}} Public_Not_Found_TitleInputs */
+/** @typedef {{}} Public_News_Breadcrumb_Aria_LabelInputs */
+/** @typedef {{}} Public_News_Breadcrumb_HomeInputs */
+/** @typedef {{}} Public_News_Breadcrumb_NewsInputs */
+/** @typedef {{}} Public_News_Detail_AttachmentsInputs */
+/** @typedef {{}} Public_News_Detail_Back_To_NewsInputs */
+/** @typedef {{}} Public_News_Detail_DownloadInputs */
+/** @typedef {{}} Public_News_Detail_Fallback_NoticeInputs */
+/** @typedef {{}} Public_News_Detail_No_AttachmentsInputs */
+/** @typedef {{}} Public_News_Detail_PublishedInputs */
+/** @typedef {{}} Public_News_List_All_CategoriesInputs */
+/** @typedef {{}} Public_News_List_EmptyInputs */
+/** @typedef {{}} Public_News_List_NextInputs */
+/** @typedef {{}} Public_News_List_Pagination_LabelInputs */
+/** @typedef {{}} Public_News_List_Page_LabelInputs */
+/** @typedef {{}} Public_News_List_PreviousInputs */
+/** @typedef {{}} Public_News_List_Read_MoreInputs */
+/** @typedef {{}} Public_News_List_SubtitleInputs */
+/** @typedef {{}} Public_News_List_TitleInputs */
 /** @typedef {{}} Public_Shell_Footer_Address_LabelInputs */
 /** @typedef {{}} Public_Shell_Footer_Contact_AriaInputs */
 /** @typedef {{}} Public_Shell_Footer_Copyright_PrefixInputs */
@@ -924,6 +943,10 @@ export const public_nav_meetings_label = /** @type {(inputs: Public_Nav_Meetings
 	return /** @type {LocalizedString} */ (`Meetings`)
 };
 
+export const public_nav_news_label = /** @type {(inputs: Public_Nav_News_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`News`)
+};
+
 export const public_nav_parks_description = /** @type {(inputs: Public_Nav_Parks_DescriptionInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Facilities, reservations, and public spaces.`)
 };
@@ -1010,6 +1033,78 @@ export const public_not_found_search = /** @type {(inputs: Public_Not_Found_Sear
 
 export const public_not_found_title = /** @type {(inputs: Public_Not_Found_TitleInputs) => LocalizedString} */ () => {
 	return /** @type {LocalizedString} */ (`Page not found`)
+};
+
+export const public_news_breadcrumb_aria_label = /** @type {(inputs: Public_News_Breadcrumb_Aria_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Breadcrumb`)
+};
+
+export const public_news_breadcrumb_home = /** @type {(inputs: Public_News_Breadcrumb_HomeInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Home`)
+};
+
+export const public_news_breadcrumb_news = /** @type {(inputs: Public_News_Breadcrumb_NewsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`News`)
+};
+
+export const public_news_detail_attachments = /** @type {(inputs: Public_News_Detail_AttachmentsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Attachments`)
+};
+
+export const public_news_detail_back_to_news = /** @type {(inputs: Public_News_Detail_Back_To_NewsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Back to news`)
+};
+
+export const public_news_detail_download = /** @type {(inputs: Public_News_Detail_DownloadInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Download`)
+};
+
+export const public_news_detail_fallback_notice = /** @type {(inputs: Public_News_Detail_Fallback_NoticeInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`This item is shown in English because the requested translation is not available yet.`)
+};
+
+export const public_news_detail_no_attachments = /** @type {(inputs: Public_News_Detail_No_AttachmentsInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No public files are attached to this news item.`)
+};
+
+export const public_news_detail_published = /** @type {(inputs: Public_News_Detail_PublishedInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Published`)
+};
+
+export const public_news_list_all_categories = /** @type {(inputs: Public_News_List_All_CategoriesInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`All news`)
+};
+
+export const public_news_list_empty = /** @type {(inputs: Public_News_List_EmptyInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`No published news is available for this selection.`)
+};
+
+export const public_news_list_next = /** @type {(inputs: Public_News_List_NextInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Next`)
+};
+
+export const public_news_list_pagination_label = /** @type {(inputs: Public_News_List_Pagination_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`News pagination`)
+};
+
+export const public_news_list_page_label = /** @type {(inputs: Public_News_List_Page_LabelInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Page`)
+};
+
+export const public_news_list_previous = /** @type {(inputs: Public_News_List_PreviousInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Previous`)
+};
+
+export const public_news_list_read_more = /** @type {(inputs: Public_News_List_Read_MoreInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Read more`)
+};
+
+export const public_news_list_subtitle = /** @type {(inputs: Public_News_List_SubtitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`Published announcements, updates, and public information from the municipality.`)
+};
+
+export const public_news_list_title = /** @type {(inputs: Public_News_List_TitleInputs) => LocalizedString} */ () => {
+	return /** @type {LocalizedString} */ (`News`)
 };
 
 export const public_shell_footer_address_label = /** @type {(inputs: Public_Shell_Footer_Address_LabelInputs) => LocalizedString} */ () => {

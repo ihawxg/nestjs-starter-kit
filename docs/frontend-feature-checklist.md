@@ -15,6 +15,7 @@ Use this checklist before and after frontend feature work.
 - Confirm whether the feature needs client fetching, forms, rich HTML rendering, date formatting, or new env values before adding package usage.
 - Confirm whether new styling can reuse existing navy/gold civic theme tokens before adding or changing theme values.
 - Confirm whether public page mockups under `docs/frontend-design/pages` need regeneration.
+- For public content pages, use the implemented News slice as the reference route/wrapper/component pattern.
 
 ## Implementation Checklist
 
@@ -44,6 +45,7 @@ Use this checklist before and after frontend feature work.
 - Legacy `/admin` and `/admin/login` redirect to English localized admin routes.
 - Unknown `/admin/api/*` routes return JSON 404 responses.
 - Pagination is present for list screens.
+- Public News routes are implemented at `/:locale/news` and `/:locale/news/:slug`; keep future public list/detail domains consistent with this structure.
 - UI primitives stay under `frontend/src/components/ui` or the owning feature folder.
 - No external UI/component library imports are added for public UI.
 - Mantine imports are allowed only in protected admin route/component files and approved admin feature folders such as `frontend/src/features/admin-news`.

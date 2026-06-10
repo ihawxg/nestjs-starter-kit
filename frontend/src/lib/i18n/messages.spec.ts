@@ -3,6 +3,7 @@ import { supportedLocales } from './locales';
 import {
   getAdminCopy,
   getPublicNavigationCopy,
+  getPublicNewsCopy,
   getPublicNotFoundCopy,
   getPublicShellCopy,
   getPublicSiteFallbackCopy,
@@ -31,7 +32,9 @@ describe('Paraglide message facade', () => {
 
   it('returns localized public navigation copy from generated messages', () => {
     expect(getPublicNavigationCopy('en').labels.residents).toBe('Residents');
+    expect(getPublicNavigationCopy('en').labels.news).toBe('News');
     expect(getPublicNavigationCopy('bg').labels.residents).toBe('Граждани');
+    expect(getPublicNavigationCopy('bg').labels.news).toBe('Новини');
     expect(getPublicNavigationCopy('bg').descriptions.waterSewer).toBe(
       'Сметки, заявки и известия за услуги.',
     );
@@ -43,5 +46,11 @@ describe('Paraglide message facade', () => {
     expect(getPublicNotFoundCopy('bg').title).toBe('Страницата не е намерена');
     expect(getPublicShellCopy('bg').header.mainMenu).toBe('Основно меню');
     expect(getPublicShellCopy('bg').footer.addressLabel).toBe('Адрес');
+  });
+
+  it('returns localized public news copy from generated messages', () => {
+    expect(getPublicNewsCopy('en').list.title).toBe('News');
+    expect(getPublicNewsCopy('bg').list.title).toBe('Новини');
+    expect(getPublicNewsCopy('bg').detail.download).toBe('Изтегли');
   });
 });

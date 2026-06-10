@@ -175,6 +175,7 @@
 /** @typedef {{}} Public_Nav_Legal_Public_RecordsInputs */
 /** @typedef {{}} Public_Nav_Meeting_Agendas_LabelInputs */
 /** @typedef {{}} Public_Nav_Meetings_LabelInputs */
+/** @typedef {{}} Public_Nav_News_LabelInputs */
 /** @typedef {{}} Public_Nav_Parks_DescriptionInputs */
 /** @typedef {{}} Public_Nav_Parks_LabelInputs */
 /** @typedef {{}} Public_Nav_Pay_Bill_LabelInputs */
@@ -197,6 +198,24 @@
 /** @typedef {{}} Public_Not_Found_HomeInputs */
 /** @typedef {{}} Public_Not_Found_SearchInputs */
 /** @typedef {{}} Public_Not_Found_TitleInputs */
+/** @typedef {{}} Public_News_Breadcrumb_Aria_LabelInputs */
+/** @typedef {{}} Public_News_Breadcrumb_HomeInputs */
+/** @typedef {{}} Public_News_Breadcrumb_NewsInputs */
+/** @typedef {{}} Public_News_Detail_AttachmentsInputs */
+/** @typedef {{}} Public_News_Detail_Back_To_NewsInputs */
+/** @typedef {{}} Public_News_Detail_DownloadInputs */
+/** @typedef {{}} Public_News_Detail_Fallback_NoticeInputs */
+/** @typedef {{}} Public_News_Detail_No_AttachmentsInputs */
+/** @typedef {{}} Public_News_Detail_PublishedInputs */
+/** @typedef {{}} Public_News_List_All_CategoriesInputs */
+/** @typedef {{}} Public_News_List_EmptyInputs */
+/** @typedef {{}} Public_News_List_NextInputs */
+/** @typedef {{}} Public_News_List_Pagination_LabelInputs */
+/** @typedef {{}} Public_News_List_Page_LabelInputs */
+/** @typedef {{}} Public_News_List_PreviousInputs */
+/** @typedef {{}} Public_News_List_Read_MoreInputs */
+/** @typedef {{}} Public_News_List_SubtitleInputs */
+/** @typedef {{}} Public_News_List_TitleInputs */
 /** @typedef {{}} Public_Shell_Footer_Address_LabelInputs */
 /** @typedef {{}} Public_Shell_Footer_Contact_AriaInputs */
 /** @typedef {{}} Public_Shell_Footer_Copyright_PrefixInputs */
@@ -393,6 +412,7 @@ export const public_nav_legal_privacy: (inputs: Public_Nav_Legal_PrivacyInputs) 
 export const public_nav_legal_public_records: (inputs: Public_Nav_Legal_Public_RecordsInputs) => LocalizedString;
 export const public_nav_meeting_agendas_label: (inputs: Public_Nav_Meeting_Agendas_LabelInputs) => LocalizedString;
 export const public_nav_meetings_label: (inputs: Public_Nav_Meetings_LabelInputs) => LocalizedString;
+export const public_nav_news_label: (inputs: Public_Nav_News_LabelInputs) => LocalizedString;
 export const public_nav_parks_description: (inputs: Public_Nav_Parks_DescriptionInputs) => LocalizedString;
 export const public_nav_parks_label: (inputs: Public_Nav_Parks_LabelInputs) => LocalizedString;
 export const public_nav_pay_bill_label: (inputs: Public_Nav_Pay_Bill_LabelInputs) => LocalizedString;
@@ -415,6 +435,24 @@ export const public_not_found_eyebrow: (inputs: Public_Not_Found_EyebrowInputs) 
 export const public_not_found_home: (inputs: Public_Not_Found_HomeInputs) => LocalizedString;
 export const public_not_found_search: (inputs: Public_Not_Found_SearchInputs) => LocalizedString;
 export const public_not_found_title: (inputs: Public_Not_Found_TitleInputs) => LocalizedString;
+export const public_news_breadcrumb_aria_label: (inputs: Public_News_Breadcrumb_Aria_LabelInputs) => LocalizedString;
+export const public_news_breadcrumb_home: (inputs: Public_News_Breadcrumb_HomeInputs) => LocalizedString;
+export const public_news_breadcrumb_news: (inputs: Public_News_Breadcrumb_NewsInputs) => LocalizedString;
+export const public_news_detail_attachments: (inputs: Public_News_Detail_AttachmentsInputs) => LocalizedString;
+export const public_news_detail_back_to_news: (inputs: Public_News_Detail_Back_To_NewsInputs) => LocalizedString;
+export const public_news_detail_download: (inputs: Public_News_Detail_DownloadInputs) => LocalizedString;
+export const public_news_detail_fallback_notice: (inputs: Public_News_Detail_Fallback_NoticeInputs) => LocalizedString;
+export const public_news_detail_no_attachments: (inputs: Public_News_Detail_No_AttachmentsInputs) => LocalizedString;
+export const public_news_detail_published: (inputs: Public_News_Detail_PublishedInputs) => LocalizedString;
+export const public_news_list_all_categories: (inputs: Public_News_List_All_CategoriesInputs) => LocalizedString;
+export const public_news_list_empty: (inputs: Public_News_List_EmptyInputs) => LocalizedString;
+export const public_news_list_next: (inputs: Public_News_List_NextInputs) => LocalizedString;
+export const public_news_list_pagination_label: (inputs: Public_News_List_Pagination_LabelInputs) => LocalizedString;
+export const public_news_list_page_label: (inputs: Public_News_List_Page_LabelInputs) => LocalizedString;
+export const public_news_list_previous: (inputs: Public_News_List_PreviousInputs) => LocalizedString;
+export const public_news_list_read_more: (inputs: Public_News_List_Read_MoreInputs) => LocalizedString;
+export const public_news_list_subtitle: (inputs: Public_News_List_SubtitleInputs) => LocalizedString;
+export const public_news_list_title: (inputs: Public_News_List_TitleInputs) => LocalizedString;
 export const public_shell_footer_address_label: (inputs: Public_Shell_Footer_Address_LabelInputs) => LocalizedString;
 export const public_shell_footer_contact_aria: (inputs: Public_Shell_Footer_Contact_AriaInputs) => LocalizedString;
 export const public_shell_footer_copyright_prefix: (inputs: Public_Shell_Footer_Copyright_PrefixInputs) => LocalizedString;
@@ -612,6 +650,7 @@ export type Public_Nav_Legal_PrivacyInputs = {};
 export type Public_Nav_Legal_Public_RecordsInputs = {};
 export type Public_Nav_Meeting_Agendas_LabelInputs = {};
 export type Public_Nav_Meetings_LabelInputs = {};
+export type Public_Nav_News_LabelInputs = {};
 export type Public_Nav_Parks_DescriptionInputs = {};
 export type Public_Nav_Parks_LabelInputs = {};
 export type Public_Nav_Pay_Bill_LabelInputs = {};
@@ -634,6 +673,24 @@ export type Public_Not_Found_EyebrowInputs = {};
 export type Public_Not_Found_HomeInputs = {};
 export type Public_Not_Found_SearchInputs = {};
 export type Public_Not_Found_TitleInputs = {};
+export type Public_News_Breadcrumb_Aria_LabelInputs = {};
+export type Public_News_Breadcrumb_HomeInputs = {};
+export type Public_News_Breadcrumb_NewsInputs = {};
+export type Public_News_Detail_AttachmentsInputs = {};
+export type Public_News_Detail_Back_To_NewsInputs = {};
+export type Public_News_Detail_DownloadInputs = {};
+export type Public_News_Detail_Fallback_NoticeInputs = {};
+export type Public_News_Detail_No_AttachmentsInputs = {};
+export type Public_News_Detail_PublishedInputs = {};
+export type Public_News_List_All_CategoriesInputs = {};
+export type Public_News_List_EmptyInputs = {};
+export type Public_News_List_NextInputs = {};
+export type Public_News_List_Pagination_LabelInputs = {};
+export type Public_News_List_Page_LabelInputs = {};
+export type Public_News_List_PreviousInputs = {};
+export type Public_News_List_Read_MoreInputs = {};
+export type Public_News_List_SubtitleInputs = {};
+export type Public_News_List_TitleInputs = {};
 export type Public_Shell_Footer_Address_LabelInputs = {};
 export type Public_Shell_Footer_Contact_AriaInputs = {};
 export type Public_Shell_Footer_Copyright_PrefixInputs = {};

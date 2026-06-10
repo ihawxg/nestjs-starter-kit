@@ -214,6 +214,7 @@ export type PublicNavigationCopy = {
     legalPublicRecords: string;
     meetingAgendas: string;
     meetings: string;
+    news: string;
     parks: string;
     payBill: string;
     permits: string;
@@ -243,6 +244,33 @@ export type PublicNotFoundCopy = {
   body: string;
   home: string;
   search: string;
+};
+
+export type PublicNewsCopy = {
+  breadcrumbs: {
+    ariaLabel: string;
+    home: string;
+    news: string;
+  };
+  list: {
+    title: string;
+    subtitle: string;
+    allCategories: string;
+    empty: string;
+    readMore: string;
+    previous: string;
+    next: string;
+    paginationLabel: string;
+    pageLabel: string;
+  };
+  detail: {
+    published: string;
+    attachments: string;
+    download: string;
+    fallbackNotice: string;
+    noAttachments: string;
+    backToNews: string;
+  };
 };
 
 export type PublicSiteFallbackCopy = {
@@ -523,6 +551,7 @@ export function getPublicNavigationCopy(locale: SupportedLocale): PublicNavigati
       legalPublicRecords: text(m.public_nav_legal_public_records, locale),
       meetingAgendas: text(m.public_nav_meeting_agendas_label, locale),
       meetings: text(m.public_nav_meetings_label, locale),
+      news: text(m.public_nav_news_label, locale),
       parks: text(m.public_nav_parks_label, locale),
       payBill: text(m.public_nav_pay_bill_label, locale),
       permits: text(m.public_nav_permits_label, locale),
@@ -554,6 +583,35 @@ export function getPublicNotFoundCopy(locale: SupportedLocale): PublicNotFoundCo
     body: text(m.public_not_found_body, locale),
     home: text(m.public_not_found_home, locale),
     search: text(m.public_not_found_search, locale),
+  };
+}
+
+export function getPublicNewsCopy(locale: SupportedLocale): PublicNewsCopy {
+  return {
+    breadcrumbs: {
+      ariaLabel: text(m.public_news_breadcrumb_aria_label, locale),
+      home: text(m.public_news_breadcrumb_home, locale),
+      news: text(m.public_news_breadcrumb_news, locale),
+    },
+    list: {
+      title: text(m.public_news_list_title, locale),
+      subtitle: text(m.public_news_list_subtitle, locale),
+      allCategories: text(m.public_news_list_all_categories, locale),
+      empty: text(m.public_news_list_empty, locale),
+      readMore: text(m.public_news_list_read_more, locale),
+      previous: text(m.public_news_list_previous, locale),
+      next: text(m.public_news_list_next, locale),
+      paginationLabel: text(m.public_news_list_pagination_label, locale),
+      pageLabel: text(m.public_news_list_page_label, locale),
+    },
+    detail: {
+      published: text(m.public_news_detail_published, locale),
+      attachments: text(m.public_news_detail_attachments, locale),
+      download: text(m.public_news_detail_download, locale),
+      fallbackNotice: text(m.public_news_detail_fallback_notice, locale),
+      noAttachments: text(m.public_news_detail_no_attachments, locale),
+      backToNews: text(m.public_news_detail_back_to_news, locale),
+    },
   };
 }
 

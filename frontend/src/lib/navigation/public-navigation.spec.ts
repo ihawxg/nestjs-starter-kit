@@ -16,6 +16,7 @@ describe('frontend public navigation', () => {
     ]);
     expect(navigation.items.map((item) => item.label)).toEqual([
       'Home',
+      'News',
       'Residents',
       'Business',
       'Government',
@@ -40,11 +41,11 @@ describe('frontend public navigation', () => {
       label: 'Плащане',
       href: '/pay',
     });
-    expect(navigation.items[1]).toMatchObject({
+    expect(navigation.items[2]).toMatchObject({
       type: 'dropdown',
       label: 'Граждани',
     });
-    const residents = navigation.items[1];
+    const residents = navigation.items[2];
     expect(residents.type === 'dropdown' ? residents.columns[1]?.items[3] : null).toMatchObject({
       label: 'Общински съвет',
       href: '/government/council',
@@ -59,6 +60,7 @@ describe('frontend public navigation', () => {
       'Government',
       'Access',
     ]);
+    expect(navigation.columns[1]?.links.map((link) => link.label)).toContain('News');
     expect(navigation.actionLinks[0]).toMatchObject({
       label: 'Contact hall',
       href: '/contact',
